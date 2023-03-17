@@ -18,7 +18,7 @@ public class RoomRestController {
     @Autowired
     private RoomService roomService;
 
-    @GetMapping("/rooms")
+    @GetMapping("/rooms_rest")
     public List<Room> getRooms(){
         return roomService.getRooms();
     }

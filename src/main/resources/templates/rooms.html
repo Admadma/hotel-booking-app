@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th scope="col">Number of beds</th>
+        <th scope="col">Has a balcony</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="room: ${rooms}">
+        <td th:text="${room.getNumberOfBeds}"></td>
+        <td th:text="${room.isHasBalcony}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
