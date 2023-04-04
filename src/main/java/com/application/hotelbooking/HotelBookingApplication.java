@@ -1,11 +1,18 @@
 package com.application.hotelbooking;
 
+import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.Room;
+import com.application.hotelbooking.domain.User;
+import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.repositories.RoomRepository;
+import com.application.hotelbooking.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @SpringBootApplication
 public class HotelBookingApplication {
@@ -16,11 +23,28 @@ public class HotelBookingApplication {
 
 //	//Code used to generate demo data
 //	@Bean
-//	public CommandLineRunner demo(RoomRepository repository) {
+//	public CommandLineRunner demo(RoomRepository roomRepository, UserRepository userRepository, ReservationRepository reservationRepository) {
 //		return (args) -> {
-//			repository.save(new Room(2, true));
-//			repository.save(new Room(1, true));
-//			repository.save(new Room(4, false));
+////			roomRepository.save(new Room(3, true));
+////			roomRepository.save(new Room(4, true));
+////			roomRepository.save(new Room(1, true));
+////			roomRepository.save(new Room(3, false));
+////
+////			Room room = new Room(2, true);
+////			User user = new User("First User", "42");
+////			Reservation reservation = new Reservation(room, user, LocalDate.now(), LocalDate.now().plusDays(7));
+////
+////			roomRepository.save(room);
+////			userRepository.save(user);
+////			reservationRepository.save(reservation);
+////
+////			Room room2 = new Room(4, false);
+////			User user2 = new User("Second User", "1234");
+////			Reservation reservation2 = new Reservation(room2, user2, LocalDate.now().plusDays(1), LocalDate.now().plusDays(8));
+////
+////			roomRepository.save(room2);
+////			userRepository.save(user2);
+////			reservationRepository.save(reservation2);
 //		};
 //	}
 

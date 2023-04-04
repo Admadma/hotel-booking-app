@@ -10,12 +10,19 @@
     <tr>
         <th scope="col">Number of beds</th>
         <th scope="col">Has a balcony</th>
+        <th scope="col">Create Booking</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="room: ${rooms}">
         <td th:text="${room.getNumberOfBeds}"></td>
         <td th:text="${room.isHasBalcony}"></td>
+        <td>
+            <form action="book-room">
+                <input type="hidden"  th:value="${room.id}" th:name="roomId">
+                <button type="submit" value="Rooms">Book this room</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>

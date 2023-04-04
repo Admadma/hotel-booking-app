@@ -12,17 +12,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "rooms")
-public class Room {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue
     private Long id;
-    private int numberOfBeds;
-    private boolean hasBalcony;
 
-    public Room(int numberOfBeds, boolean hasBalcony) {
-        this.numberOfBeds = numberOfBeds;
-        this.hasBalcony = hasBalcony;
+    private String username;
+    private String password;
+
+    // This constructor is only needed to create dummy data
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 }

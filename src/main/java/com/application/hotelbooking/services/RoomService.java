@@ -16,12 +16,11 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-//    public RoomService(RoomRepository roomRepository) {
-//        LOGGER.info("Creating roomService");
-//        this.roomRepository = roomRepository;
-//    }
-
     public List<Room> getRooms(){
         return roomRepository.findAll();
+    }
+
+    public Room getRoom(Long roomId){
+        return roomRepository.findRoomById(roomId);
     }
 }
