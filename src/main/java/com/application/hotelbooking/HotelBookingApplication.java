@@ -1,11 +1,7 @@
 package com.application.hotelbooking;
 
-import com.application.hotelbooking.domain.Reservation;
-import com.application.hotelbooking.domain.Room;
-import com.application.hotelbooking.domain.User;
-import com.application.hotelbooking.repositories.ReservationRepository;
-import com.application.hotelbooking.repositories.RoomRepository;
-import com.application.hotelbooking.repositories.UserRepository;
+import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,8 +19,18 @@ public class HotelBookingApplication {
 
 //	//Code used to generate demo data
 //	@Bean
-//	public CommandLineRunner demo(RoomRepository roomRepository, UserRepository userRepository, ReservationRepository reservationRepository) {
+//	public CommandLineRunner demo(SingleRoomRepository singleRoomRepository, FamilyRoomRepository familyRoomRepository, UserRepository userRepository, ReservationRepository reservationRepository) {
 //		return (args) -> {
+////			singleRoomRepository.save(new SingleRoom(101, 1));
+////			singleRoomRepository.save(new SingleRoom(102, 1));
+////			singleRoomRepository.save(new SingleRoom(103, 1));
+////			familyRoomRepository.save(new FamilyRoom(201, 2, 1));
+////			familyRoomRepository.save(new FamilyRoom(202, 3, 1));
+////			familyRoomRepository.save(new FamilyRoom(203, 1, 1));
+////
+////			userRepository.save(new User("First User", "42"));
+////			userRepository.save(new User("Second User", "1234"));
+//
 ////			roomRepository.save(new Room(3, true));
 ////			roomRepository.save(new Room(4, true));
 ////			roomRepository.save(new Room(1, true));

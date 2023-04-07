@@ -15,8 +15,8 @@
     </thead>
     <tbody>
     <tr th:each="room: ${rooms}">
-        <td th:text="${room.getNumberOfBeds}"></td>
-        <td th:text="${room.isHasBalcony}"></td>
+<!--        <td th:text="${room.getNumberOfBeds}"></td>-->
+<!--        <td th:text="${room.isHasBalcony}"></td>-->
         <td>
             <form action="book-room">
                 <input type="hidden"  th:value="${room.id}" th:name="roomId">
@@ -26,6 +26,16 @@
     </tr>
     </tbody>
 </table>
+
+<form action="select-room-type">
+    <input type="hidden"  th:value="familyRoom" th:name="roomType">
+    <button type="submit" value="Rooms">Select family rooms</button>
+</form>
+
+<form action="select-room-type">
+    <input type="hidden"  th:value="singleRoom" th:name="roomType">
+    <button type="submit" value="Rooms">Select single rooms</button>
+</form>
 
 </body>
 </html>

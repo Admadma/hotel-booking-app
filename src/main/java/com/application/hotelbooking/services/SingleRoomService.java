@@ -10,26 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class RoomService {
+@Service("singleRoomService")
+public class SingleRoomService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomService.class);
-//    @Autowired
-//    private RoomBaseRepository roomRepository;
-
-    @Autowired
-    @Qualifier("familyRoomRepository")
-    private RoomBaseRepository familyRoomRepository;
-
     @Autowired
     @Qualifier("singleRoomRepository")
-    private RoomBaseRepository singleRoomRepository;
+    private RoomBaseRepository roomRepository;
 
     public List<Room> getRooms(){
-        return familyRoomRepository.findAll();
+        return roomRepository.findAll();
     }
 
     public Room getRoom(Long roomId){
-        return familyRoomRepository.findRoomById(roomId);
+        return roomRepository.findRoomById(roomId);
     }
 }
