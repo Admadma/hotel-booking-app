@@ -1,12 +1,14 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.Reservation;
+import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ReservationService {
@@ -63,6 +65,14 @@ public class ReservationService {
                 throw new InvalidRoomTypeException();
         }
     }
+
+    public List<Reservation> getReservations(){
+        return reservationRepository.findAll();
+    }
+
+//    public List<Reservation> getReservationsOfRoom(Room room){
+//        return reservationRepository.getReservationsOfRoom(room);
+//    }
 
     public long countRoomsOfGivenType(String roomType){
 

@@ -24,6 +24,7 @@ public class HotelBookingApplication {
 ////			singleRoomRepository.save(new SingleRoom(101, 1));
 ////			singleRoomRepository.save(new SingleRoom(102, 1));
 ////			singleRoomRepository.save(new SingleRoom(103, 1));
+////			singleRoomRepository.save(new SingleRoom(104, 1));
 ////			familyRoomRepository.save(new FamilyRoom(201, 2, 1));
 ////			familyRoomRepository.save(new FamilyRoom(202, 3, 1));
 ////			familyRoomRepository.save(new FamilyRoom(203, 1, 1));
