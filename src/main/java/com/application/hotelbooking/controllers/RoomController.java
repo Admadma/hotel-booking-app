@@ -19,16 +19,12 @@ public class RoomController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomController.class);
 
-//    @Autowired
-//    private RoomService roomService;
-
     @Autowired
-    @Qualifier("familyRoomService")
-    private FamilyRoomService familyRoomService;
+    private RoomService roomService;
 
     @GetMapping("/rooms")
     public String getRooms(Model model){
-        model.addAttribute("rooms", familyRoomService.getRooms());
+        model.addAttribute("rooms", roomService.getRooms());
 
         return "rooms";
     }

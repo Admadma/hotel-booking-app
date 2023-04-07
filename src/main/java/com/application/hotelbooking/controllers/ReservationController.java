@@ -47,6 +47,8 @@ public class ReservationController {
 
 
         reservationService.getReservations().forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId()));
+        System.out.println("Reservations for room of given id:");
+        reservationService.getReservationsOfRoom(5l).forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId() + " start_date: " + reservation1.getStartDate()));
 
 
         return "redirect:/hotelbooking/rooms";

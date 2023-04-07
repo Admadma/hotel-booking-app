@@ -19,8 +19,10 @@ public class HotelBookingApplication {
 
 //	//Code used to generate demo data
 //	@Bean
-//	public CommandLineRunner demo(SingleRoomRepository singleRoomRepository, FamilyRoomRepository familyRoomRepository, UserRepository userRepository, ReservationRepository reservationRepository) {
+//	public CommandLineRunner demo(RoomRepository roomRepository, SingleRoomRepository singleRoomRepository, FamilyRoomRepository familyRoomRepository, UserRepository userRepository, ReservationRepository reservationRepository) {
 //		return (args) -> {
+////			roomRepository.save(new SingleRoom(111, 1));
+////			roomRepository.save(new FamilyRoom(211, 2, 1));
 ////			singleRoomRepository.save(new SingleRoom(101, 1));
 ////			singleRoomRepository.save(new SingleRoom(102, 1));
 ////			singleRoomRepository.save(new SingleRoom(103, 1));

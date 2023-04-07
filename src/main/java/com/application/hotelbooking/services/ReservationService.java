@@ -47,6 +47,7 @@ public class ReservationService {
             case "familyRoom":
                 reservation = new Reservation(
                         // TODO: later needs logic for checking start-end date, and whether there is a room available
+                        // TODO: JOINED inheritance strategy allows the use of a common RoomRepository for all rooms. Now I will only need to decide what room object to create and persist it the same way.
                         familyRoomService.getRooms().get(0),
                         userService.getUserByName("First User"),
                         LocalDate.now(),
@@ -70,9 +71,9 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-//    public List<Reservation> getReservationsOfRoom(Room room){
-//        return reservationRepository.getReservationsOfRoom(room);
-//    }
+    public List<Reservation> getReservationsOfRoom(Long room_id){
+        return reservationRepository.getReservationsOfRoom(room_id, LocalDate.now().minusDays(1));
+    }
 
     public long countRoomsOfGivenType(String roomType){
 
