@@ -41,9 +41,9 @@ public class ReservationController {
 
         System.out.println("There are "+ reservationService.countRoomsOfGivenType(roomType) + " rooms of type: " + roomType);
 
-//        Reservation reservation = reservationService.createReservationOnGivenRoomType(roomType);
-//
-//        System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
+        Reservation reservation = reservationService.createReservationOnGivenRoomType(roomType);
+
+        System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
 
 
 

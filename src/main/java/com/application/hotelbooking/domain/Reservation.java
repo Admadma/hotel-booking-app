@@ -18,8 +18,8 @@ public class Reservation {
     @GeneratedValue
     private Long id;
 
-//    @OneToOne
-//    private Room room;
+    @OneToOne
+    private Room room;
 
     @OneToOne
     private User user;
@@ -28,7 +28,7 @@ public class Reservation {
     private LocalDate endDate;
 
     public Reservation(Room room, User user, LocalDate startDate, LocalDate endDate) {
-//        this.room = room;
+        this.room = room;
         this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;

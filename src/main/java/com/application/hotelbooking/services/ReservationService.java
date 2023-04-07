@@ -44,6 +44,7 @@ public class ReservationService {
         switch (roomType){
             case "familyRoom":
                 reservation = new Reservation(
+                        // TODO: later needs logic for checking start-end date, and whether there is a room available
                         familyRoomService.getRooms().get(0),
                         userService.getUserByName("First User"),
                         LocalDate.now(),
