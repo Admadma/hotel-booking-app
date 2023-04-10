@@ -3,6 +3,8 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.repositories.ReservationRepository;
+import com.application.hotelbooking.services.exceptions.InvalidRoomTypeException;
+import com.application.hotelbooking.services.exceptions.InvalidTimePeriodException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,7 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public Reservation reserve(String roomType){
+    public Reservation reserve(String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
         // get list of {type} rooms (all of them, not just from the reservations)
         // for each room check if it is present in the reservations table
@@ -63,24 +65,35 @@ public class ReservationService {
 //                // get a list of familyRooms
 //        }
 //        roomService
+
+        if (selectedStartDate.isAfter(selectedEndDate)) {
+            throw new InvalidTimePeriodException();
+        }
+
         List<Room> rooms = roomService.findAllRoomsOfGivenType(roomType);
 
-        Room room = findFreeRoom(rooms, LocalDate.now(), LocalDate.now().plusDays(7));
+        Room room = findFreeRoom(rooms, selectedStartDate, selectedEndDate);
 
+        Reservation reservation = new Reservation(
+                room,
+                userService.getUserByName("First User"),
+                selectedStartDate,
+                selectedEndDate
+        );
 
-
-
-        return  null;
+        return reservationRepository.save(reservation);
     }
 
-    private Room findFreeRoom(List<Room> rooms, LocalDate startDate, LocalDate endDate){
+    private Room findFreeRoom(List<Room> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate){
         List<Reservation> reservations;
         for (Room room: rooms) {
             reservations = reservationRepository.getReservationsOfRoom(room.getId());
             if (reservations.isEmpty()){
+                // if the room has no reservations associated with it, that means we can simply reserve it
                 return room;
             }
-            if (isRoomAvailableInTimePeriod(reservations, startDate, endDate)){
+            if (isRoomAvailableInTimePeriod(reservations, selectedStartDate, selectedEndDate)){
+                // if there are reservations associated with the room then we need to check if any of them conflicts with the selected time epriod
                 return room;
             }
         }
@@ -88,11 +101,19 @@ public class ReservationService {
         return null;
     }
 
-    private boolean isRoomAvailableInTimePeriod(List<Reservation> reservations, LocalDate startDate, LocalDate endDate){
-        for (Reservation reservation : reservations){
-//            if (reservation.getStartDate() >)
+    private boolean isRoomAvailableInTimePeriod(List<Reservation> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
+        for (Reservation reservation : reservations) {
+            // A1---A2  B1---B2
+            // B1 > A2
+            // or
+            // B1---B2 A1---A2
+            // B2 < A1
+            // (B1 > A2 or B2 < A1) == true means that the time periods do not overlap. If it is false then they do overlap
+            if (!(reservation.getStartDate().isAfter(selectedEndDate) || reservation.getEndDate().isBefore(selectedStartDate))) {
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
 

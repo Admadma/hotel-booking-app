@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping(path = "hotelbooking")
 public class ReservationController {
@@ -39,19 +41,15 @@ public class ReservationController {
     @RequestMapping(value = "/select-room-type")
     public String getFamilyRoomData(@ModelAttribute("roomType") String roomType){
 
-        System.out.println("There are "+ reservationService.countRoomsOfGivenType(roomType) + " rooms of type: " + roomType);
+//        System.out.println("There are "+ reservationService.countRoomsOfGivenType(roomType) + " rooms of type: " + roomType);
+//        Reservation reservation = reservationService.createReservationOnGivenRoomType(roomType);
+//        System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
+//        reservationService.getReservations().forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId()));
+//        System.out.println("Reservations for room of given id:");
+//        reservationService.getReservationsOfRoom(5l).forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId() + " start_date: " + reservation1.getStartDate()));
 
-        Reservation reservation = reservationService.createReservationOnGivenRoomType(roomType);
-
-        System.out.println("saved reservation");
-
+        Reservation reservation =reservationService.reserve(roomType, LocalDate.now(), LocalDate.now().plusDays(7));
         System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
-
-
-        reservationService.getReservations().forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId()));
-        System.out.println("Reservations for room of given id:");
-        reservationService.getReservationsOfRoom(5l).forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId() + " start_date: " + reservation1.getStartDate()));
-
 
         return "redirect:/hotelbooking/rooms";
     }
