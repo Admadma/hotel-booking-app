@@ -43,6 +43,8 @@ public class ReservationController {
 
         Reservation reservation = reservationService.createReservationOnGivenRoomType(roomType);
 
+        System.out.println("saved reservation");
+
         System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
 
 

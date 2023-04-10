@@ -12,10 +12,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Reservation findReservationById(Long id);
 
-//    @Query("SELECT * FROM reservations WHERE room_id=?1")
-//    @Query("SELECT * FROM reservations;")
     @Query(
-        value = "SELECT * FROM reservations r WHERE r.room_id = ?1 AND r.start_date > ?2",
+        value = "SELECT * FROM reservations r WHERE r.room_id = ?1",
         nativeQuery = true)
-    List<Reservation> getReservationsOfRoom(Long room_id, LocalDate endDate);
+    List<Reservation> getReservationsOfRoom(Long room_id);
 }

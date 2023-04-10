@@ -1,5 +1,6 @@
 package com.application.hotelbooking.domain;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "single_rooms")
+@DiscriminatorValue("singleRoom")
 public class SingleRoom extends Room{
 
     private int singleBeds;
