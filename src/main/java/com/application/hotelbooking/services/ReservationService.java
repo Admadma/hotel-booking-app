@@ -5,6 +5,7 @@ import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.services.exceptions.InvalidRoomTypeException;
 import com.application.hotelbooking.services.exceptions.InvalidTimePeriodException;
+import com.application.hotelbooking.services.exceptions.NoRoomsAvailableException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,7 +85,7 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    private Room findFreeRoom(List<Room> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate){
+    private Room findFreeRoom(List<Room> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
         List<Reservation> reservations;
         for (Room room: rooms) {
             reservations = reservationRepository.getReservationsOfRoom(room.getId());
@@ -97,8 +98,7 @@ public class ReservationService {
                 return room;
             }
         }
-        // TODO: handle case if there is no available room of given type and time period
-        return null;
+        throw new NoRoomsAvailableException();
     }
 
     private boolean isRoomAvailableInTimePeriod(List<Reservation> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
@@ -109,7 +109,7 @@ public class ReservationService {
             // B1---B2 A1---A2
             // B2 < A1
             // (B1 > A2 or B2 < A1) == true means that the time periods do not overlap. If it is false then they do overlap
-            if (!(reservation.getStartDate().isAfter(selectedEndDate) || reservation.getEndDate().isBefore(selectedStartDate))) {
+            if (!(reservation.getStartDate().isAfter(selectedEndDate) || reservation.getEndDate().minusDays(1).isBefore(selectedStartDate))) {
                 return false;
             }
         }

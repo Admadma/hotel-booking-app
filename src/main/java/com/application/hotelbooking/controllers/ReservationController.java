@@ -48,8 +48,13 @@ public class ReservationController {
 //        System.out.println("Reservations for room of given id:");
 //        reservationService.getReservationsOfRoom(5l).forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId() + " start_date: " + reservation1.getStartDate()));
 
-        Reservation reservation =reservationService.reserve(roomType, LocalDate.now(), LocalDate.now().plusDays(7));
-        System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
+        try {
+            Reservation reservation =reservationService.reserve(roomType, LocalDate.now(), LocalDate.now().plusDays(7));
+            System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
+        } catch (Exception e) {
+            System.out.println(e.getClass());
+        }
+        reservationService.getReservations().forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId()));
 
         return "redirect:/hotelbooking/rooms";
     }
