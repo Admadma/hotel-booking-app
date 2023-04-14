@@ -34,4 +34,11 @@ public class ReservationController {
 
         return "redirect:/hotelbooking/rooms";
     }
+
+    @RequestMapping(value = "/clear-reservations")
+    public String clearReservations(){
+        reservationService.clearReservations();
+
+        return "redirect:/hotelbooking/rooms";
+    }
 }

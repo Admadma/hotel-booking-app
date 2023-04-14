@@ -74,4 +74,8 @@ public class ReservationService {
     public List<Reservation> getReservationsOfRoom(Long room_id){
         return reservationRepository.getReservationsOfRoom(room_id);
     }
+
+    public void clearReservations(){
+        reservationRepository.deleteAll();
+    }
 }
