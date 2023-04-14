@@ -11,9 +11,15 @@
 	<groupId>com.application</groupId>
 	<artifactId>hotel-booking-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>hotel-booking</name>
+    <packaging>pom</packaging>
+    <name>hotel-booking</name>
 	<description>Hotel booking application</description>
-	<properties>
+    <modules>
+        <module>hotel-booking-app-domain</module>
+        <module>hotel-booking-app-service</module>
+        <module>hotel-booking-app-web</module>
+    </modules>
+    <properties>
 		<java.version>19</java.version>
 	</properties>
 	<dependencies>

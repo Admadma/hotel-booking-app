@@ -1,14 +1,7 @@
 package com.application.hotelbooking;
 
-import com.application.hotelbooking.domain.*;
-import com.application.hotelbooking.repositories.*;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @SpringBootApplication
 public class HotelBookingApplication {

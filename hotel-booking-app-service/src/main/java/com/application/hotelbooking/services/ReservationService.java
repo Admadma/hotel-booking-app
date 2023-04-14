@@ -3,8 +3,8 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.repositories.ReservationRepository;
-import com.application.hotelbooking.services.exceptions.InvalidTimePeriodException;
-import com.application.hotelbooking.services.exceptions.NoRoomsAvailableException;
+import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
+import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

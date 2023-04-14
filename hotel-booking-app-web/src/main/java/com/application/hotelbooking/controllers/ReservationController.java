@@ -1,6 +1,7 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.Reservation;
+import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
 import com.application.hotelbooking.services.ReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,14 @@ public class ReservationController {
         // TODO: user can edit the html code and change the room id. Code needs to check that there was no tampering with the parameters (e.g. clicking book this room but the id was changed to a different room)
         try {
             Reservation reservation =reservationService.reserve(roomType, LocalDate.now(), LocalDate.now().plusDays(7));
-            System.out.println("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
-        } catch (Exception e) {
-            System.out.println(e.getClass());
+            LOGGER.info("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
+        } catch (NoRoomsAvailableException nae) {
+            LOGGER.error("Could not make a reservation because there are no free rooms of that type");
         }
-        reservationService.getReservations().forEach(reservation1 -> System.out.println("Room id: " + reservation1.getRoom().getId()));
+        LOGGER.info("Id of rooms that have a reservation:");
+        for (Reservation reservation: reservationService.getReservations()) {
+            LOGGER.info("Room id: " + reservation.getRoom().getId());
+        }
 
         return "redirect:/hotelbooking/rooms";
     }
@@ -38,10 +42,7 @@ public class ReservationController {
     @RequestMapping(value = "/clear-reservations")
     public String clearReservations(){
         reservationService.clearReservations();
-        LOGGER.trace("reservations cleared");
-        LOGGER.debug("reservations cleared");
-        LOGGER.info("reservations cleared");
-        LOGGER.warn("reservations cleared");
+        LOGGER.info("Cleared reservations");
 
         return "redirect:/hotelbooking/rooms";
     }

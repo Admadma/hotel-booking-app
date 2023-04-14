@@ -1,4 +1,4 @@
-package com.application.hotelbooking.services.exceptions;
+package com.application.hotelbooking.exceptions;
 
 public class NoRoomsAvailableException extends RuntimeException{
 }
