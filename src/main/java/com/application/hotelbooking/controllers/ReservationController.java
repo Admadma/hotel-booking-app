@@ -38,6 +38,10 @@ public class ReservationController {
     @RequestMapping(value = "/clear-reservations")
     public String clearReservations(){
         reservationService.clearReservations();
+        LOGGER.trace("reservations cleared");
+        LOGGER.debug("reservations cleared");
+        LOGGER.info("reservations cleared");
+        LOGGER.warn("reservations cleared");
 
         return "redirect:/hotelbooking/rooms";
     }

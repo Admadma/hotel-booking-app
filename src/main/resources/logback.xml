@@ -1,8 +1,16 @@
 <configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+	<property name="LOG_FILE" value="logs/hotel_booking.log"/>
 
 	<appender name="fileAppender" class="ch.qos.logback.core.FileAppender">
-		<file>hotel_booking.log</file>
+		<file>${LOG_FILE}</file>
 		<append>false</append>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
 		</encoder>
@@ -12,7 +20,8 @@
 		<appender-ref ref="fileAppender" />
 	</root>
 
-	<logger name="com.application" level="debug" />
-	<logger name="org.springframework" level="info" />
+	<logger name="com.application" level="trace">
+		<appender-ref ref="consoleAppender" />
+	</logger>
 
 </configuration>
