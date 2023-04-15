@@ -35,7 +35,7 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(
                 room,
-                userService.getUserByName("First User"),
+                userService.getUserByName("First User").get(0),
                 selectedStartDate,
                 selectedEndDate
         );
