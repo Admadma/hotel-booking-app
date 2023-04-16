@@ -17,8 +17,14 @@ public class UserService {
         return userRepository.findUserByUsername(username);
     }
 
+    public boolean userExists(String username){
+        // This also fails if there are more than one match for the given username
+        // TODO: UNIQUE restraint on username in database and handle user registration
+        return getUserByName(username).size() == 1;
+    }
+
     public void deleteUserByName(String username){
-        if (getUserByName(username).size() == 1){
+        if (userExists(username)){
             userRepository.delete(getUserByName(username).get(0));
         }
     }

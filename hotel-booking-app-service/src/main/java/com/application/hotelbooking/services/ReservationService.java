@@ -26,7 +26,7 @@ public class ReservationService {
 
     public Reservation reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
-        if (!userExists(username)){
+        if (!userService.userExists(username)){
             throw new InvalidUserException("Could not find this exact user in the database: " + username);
         }
 
@@ -46,12 +46,6 @@ public class ReservationService {
         );
 
         return reservationRepository.save(reservation);
-    }
-
-    private boolean userExists(String username) {
-        // This also fails if there are more than one match for the given username
-        // TODO: UNIQUE restraint on username in database and handle user registration
-        return userService.getUserByName(username).size() == 1;
     }
 
     private Room findFreeRoom(List<Room> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
