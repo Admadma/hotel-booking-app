@@ -1,6 +1,7 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.Reservation;
+import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.UserService;
@@ -33,6 +34,9 @@ public class ReservationController {
         try {
             Reservation reservation =reservationService.reserve(roomType, auth.getName(), LocalDate.now(), LocalDate.now().plusDays(7));
             LOGGER.info("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
+        } catch (InvalidUserException iue){
+            // TODO: if this error occurs, maybe I should log out the user
+            LOGGER.error(iue.getMessage());
         } catch (NoRoomsAvailableException nae) {
             LOGGER.error("Could not make a reservation because there are no free rooms of that type");
         }
