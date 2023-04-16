@@ -15,13 +15,9 @@ public class RoomController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomController.class);
 
-    @Autowired
-    private RoomService roomService;
-
     @GetMapping("/rooms")
-    public String getRooms(Model model){
-        model.addAttribute("rooms", roomService.getRooms());
-
+    public String getRooms(){
+        LOGGER.info("Navigating to rooms page");
         return "rooms";
     }
 }

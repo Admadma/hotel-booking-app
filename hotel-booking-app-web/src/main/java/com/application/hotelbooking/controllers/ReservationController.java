@@ -25,6 +25,7 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    // TODO: remove this later. Controllers should not use more than one service
     @Autowired
     private UserService userService;
 
