@@ -1,9 +1,7 @@
 package com.application.hotelbooking.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +17,9 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false)
     private String password;
 
     // This constructor is only needed to create dummy data

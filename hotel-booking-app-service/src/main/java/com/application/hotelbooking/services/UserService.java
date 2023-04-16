@@ -33,8 +33,8 @@ public class UserService {
         }
     }
 
-    public void addUser(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public void addNewUser(String username, String password){
+        User user = new User(username, passwordEncoder.encode(password));
         userRepository.save(user);
     }
 }
