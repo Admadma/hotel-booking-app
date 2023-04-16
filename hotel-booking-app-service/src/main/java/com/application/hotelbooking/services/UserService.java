@@ -16,4 +16,10 @@ public class UserService {
     public List<User> getUserByName(String username){
         return userRepository.findUserByUsername(username);
     }
+
+    public void deleteUserByName(String username){
+        if (getUserByName(username).size() == 1){
+            userRepository.delete(getUserByName(username).get(0));
+        }
+    }
 }

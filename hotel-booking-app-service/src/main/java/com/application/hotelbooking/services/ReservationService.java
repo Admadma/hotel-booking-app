@@ -23,8 +23,12 @@ public class ReservationService {
     @Autowired
     private UserService userService;
 
-    public Reservation reserve(String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate){
+    public Reservation reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
+//        if (isUserExists()){
+//
+//        }
+
         if (selectedStartDate.isAfter(selectedEndDate)) {
             throw new InvalidTimePeriodException();
         }
@@ -35,7 +39,7 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(
                 room,
-                userService.getUserByName("First User").get(0),
+                userService.getUserByName(username).get(0),
                 selectedStartDate,
                 selectedEndDate
         );
