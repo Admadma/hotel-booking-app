@@ -2,6 +2,7 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.Room;
+import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
@@ -23,8 +24,12 @@ public class ReservationService {
     @Autowired
     private UserService userService;
 
-    public Reservation reserve(String roomType, LocalDate selectedStartDate, LocalDate selectedEndDate){
+    public Reservation reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
+        if (!userService.userExists(username)){
+            throw new InvalidUserException("Could not find this exact user in the database: " + username);
+        }
+
         if (selectedStartDate.isAfter(selectedEndDate)) {
             throw new InvalidTimePeriodException();
         }
@@ -35,7 +40,7 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(
                 room,
-                userService.getUserByName("First User"),
+                userService.getUserByName(username).get(0),
                 selectedStartDate,
                 selectedEndDate
         );
