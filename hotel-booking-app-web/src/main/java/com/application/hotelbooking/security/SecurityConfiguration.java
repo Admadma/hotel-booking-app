@@ -17,7 +17,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/hotelbooking/home", "/hotelbooking/register/**").permitAll();
+                    auth.requestMatchers("/hotelbooking/home", "/hotelbooking/register/**", "/error/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(Customizer.withDefaults());

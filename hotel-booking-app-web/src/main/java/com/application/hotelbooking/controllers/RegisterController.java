@@ -26,8 +26,7 @@ public class RegisterController {
     public String addNewUser(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
-//            return "redirect:/hotelbooking/registration?error"; // this does not work
-            return "redirect:/hotelbooking/home";
+            return "redirect:/hotelbooking/register?error";
         }
         userService.addNewUser(userDto.getUsername(), userDto.getPassword());
         LOGGER.info("Added user: " + userService.getUserByName(userDto.getUsername()));
