@@ -7,6 +7,10 @@
 <body>
 
 <form th:action="@{/hotelbooking/register/add-new-user}" th:object="${user}">
+
+    <div th:if="${#fields.hasErrors('global')}">
+        <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"/>
+    </div>
     <div>
         <label for="username"></label> <input type="text" th:field="*{username}"
                                                   id="username" placeholder="username">
