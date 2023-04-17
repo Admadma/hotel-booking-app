@@ -13,4 +13,12 @@ public class UserDto {
     private String username;
     @NotEmpty(message = "Please enter a password")
     private String password;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
