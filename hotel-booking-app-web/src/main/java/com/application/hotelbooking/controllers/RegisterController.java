@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +27,22 @@ public class RegisterController {
     public String addNewUser(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
-//            return "redirect:/hotelbooking/register?some_parameter_that_could_also_be_an_error_message";
             return "register";
         }
-        userService.addNewUser(userDto.getUsername(), userDto.getPassword());
-        LOGGER.info("Added user: " + userService.getUserByName(userDto.getUsername()));
+        if (userService.userExists(userDto.getUsername())){
+            result.rejectValue("username", null, "That name is already taken");
+            LOGGER.info("That username is taken");
+            return "register";
+        }
+
+        try {
+            userService.addNewUser(userDto.getUsername(), userDto.getPassword());
+            LOGGER.info("Added user: " + userService.getUserByName(userDto.getUsername()));
+        } catch (Exception e){
+            LOGGER.error("Failed to add user. Error message: " + e.getMessage());
+            result.addError(new ObjectError("globalError", "Registration failed. Please use different credentials or try again later."));
+            return "register";
+        }
 
         return "redirect:/hotelbooking/home";
     }

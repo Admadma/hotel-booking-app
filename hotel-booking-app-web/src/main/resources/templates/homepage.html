@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Demo app home</title>
 </head>
 <body>
+<nav>
+    <a th:href="@{?lang=en}">English</a>
+    <a th:href="@{?lang=hu}">Magyar</a>
+    <span th:text="#{lang.change}"></span>:
+    <select th:action="@{/hotelbooking/home}" id="locales">
+        <a th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
+        <a th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
+        <option value="" th:href="@{?lang=en}" th:text="#{lang.eng}"></option>
+        <option value="en"  ><a th:href="@{?lang=en}" th:text="#{lang.eng}"></a></option>
+        <option value="hu" th:text="#{lang.hun}" ><a th:href="@{?lang=hu}"></a></option>
+    </select>
+    <h1 th:text="#{greeting}"></h1>
+</nav>
+
 This is the home page.
 </body>
 </html>

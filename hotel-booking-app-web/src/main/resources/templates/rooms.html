@@ -5,6 +5,19 @@
     <title>Title</title>
 </head>
 <body>
+<nav>
+    <a th:href="@{?lang=en}">English</a>
+    <a th:href="@{?lang=hu}">Magyar</a>
+    <span th:text="#{lang.change}"></span>:
+    <select th:action="@{/hotelbooking/home}" id="locales">
+        <a th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
+        <a th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
+        <option value="" th:href="@{?lang=en}" th:text="#{lang.eng}"></option>
+        <option value="en"  ><a th:href="@{?lang=en}" th:text="#{lang.eng}"></a></option>
+        <option value="hu" th:text="#{lang.hun}" ><a th:href="@{?lang=hu}"></a></option>
+    </select>
+    <h1 th:text="#{greeting}"></h1>
+</nav>
 
 <form action="select-room-type">
     <input type="hidden"  th:value="familyRoom" th:name="roomType">
