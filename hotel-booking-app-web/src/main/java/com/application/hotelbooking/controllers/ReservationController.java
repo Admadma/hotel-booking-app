@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,7 +31,7 @@ public class ReservationController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/select-room-type")
+//    @RequestMapping(value = "/select-room-type")
     public String reserveRoom(@ModelAttribute("roomType") String roomType, Authentication auth, HttpSession http){
         // TODO: later surround this with a try-catch. Exceptions can be for example: time period is invalid
         // TODO: user can edit the html code and change the room id. Code needs to check that there was no tampering with the parameters (e.g. clicking book this room but the id was changed to a different room)
@@ -56,6 +58,7 @@ public class ReservationController {
         return "redirect:/hotelbooking/rooms";
     }
 
+    // This will be useful for experimenting with admin user privileges
     @RequestMapping(value = "/clear-reservations")
     public String clearReservations(){
         reservationService.clearReservations();
@@ -71,5 +74,15 @@ public class ReservationController {
         LOGGER.info("Name of deleted user: " + auth.getName());
 
         return "redirect:/hotelbooking/rooms";
+    }
+
+    @GetMapping("/reservation")
+    public String getRooms(Model model, HttpSession session){
+        LOGGER.info("Navigating to reservation page");
+
+        LOGGER.info("The attribute: " + session.getAttribute("roomType"));
+        model.addAttribute("roomType", session.getAttribute("roomType"));
+
+        return "reservation";
     }
 }
