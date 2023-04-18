@@ -20,5 +20,13 @@
 </nav>
 <div th:text="${roomType}" ></div>
 
+<form th:action="@{/hotelbooking/reservation/select-date}" th:object="${dateRange}">
+    <input type="date" th:field="*{startDate}"/>
+    <input type="date" th:field="*{endDate}"/>
+    <button type="submit" value="Rooms">delete-current-user</button>
+</form>
+
+
+
 </body>
 </html>
