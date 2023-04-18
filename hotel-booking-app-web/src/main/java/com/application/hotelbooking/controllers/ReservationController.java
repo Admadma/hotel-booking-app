@@ -36,6 +36,7 @@ public class ReservationController {
 
         // auth -> some_validator -> checks whether there is exactly one instance of that user in the database. -> if false -> invalidate http and redirect to login page
 
+        LOGGER.debug("room type: " + roomType);
         try {
             Reservation reservation =reservationService.reserve(roomType, auth.getName(), LocalDate.now(), LocalDate.now().plusDays(7));
             LOGGER.info("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
