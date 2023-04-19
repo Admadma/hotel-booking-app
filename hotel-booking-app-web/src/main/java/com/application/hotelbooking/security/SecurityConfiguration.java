@@ -20,7 +20,12 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/hotelbooking/home", "/hotelbooking/register/**", "/error/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
-                .formLogin(Customizer.withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/hotelbooking/login")
+                        .defaultSuccessUrl("/hotelbooking/home")
+                        .permitAll())
+                .logout()
+                .logoutSuccessUrl("/hotelbooking/home");
         return http.build();
     }
 
