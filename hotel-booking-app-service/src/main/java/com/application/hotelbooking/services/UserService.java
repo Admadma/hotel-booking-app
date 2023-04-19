@@ -1,11 +1,15 @@
 package com.application.hotelbooking.services;
 
+import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -33,8 +37,19 @@ public class UserService {
         }
     }
 
-    public void addNewUser(String username, String password){
-        User user = new User(username, passwordEncoder.encode(password));
+    @Transactional
+    public void addNewUser(String username, String password, Collection<Role> roles){
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRoles(roles);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void createAdminUserIfNotFound(String username, String password, Collection<Role> roles){
+        if (userRepository.findUserByUsername(username).isEmpty()){
+            addNewUser(username, password, roles);
+        }
     }
 }

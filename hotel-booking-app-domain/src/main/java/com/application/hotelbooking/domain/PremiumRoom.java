@@ -7,9 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @DiscriminatorValue("premiumRoom")
-public class PremiumRoom {
+public class PremiumRoom extends Room{
 }

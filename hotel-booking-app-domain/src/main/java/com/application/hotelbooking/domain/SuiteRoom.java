@@ -7,9 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @DiscriminatorValue("suiteRoom")
-public class SuiteRoom {
+public class SuiteRoom extends Room{
+
 }
