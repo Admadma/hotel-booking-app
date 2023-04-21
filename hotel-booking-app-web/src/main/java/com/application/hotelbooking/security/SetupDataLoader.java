@@ -3,7 +3,8 @@ package com.application.hotelbooking.security;
 import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
-import jakarta.transaction.Transactional;
+import com.application.hotelbooking.transformers.RoleViewTransformer;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,6 +22,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleViewTransformer roleViewTransformer;
 
 
     @Override

@@ -3,7 +3,8 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.repositories.RoleRepository;
-import jakarta.transaction.Transactional;
+import com.application.hotelbooking.transformers.RoleTransformer;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class RoleService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private RoleTransformer roleTransformer;
 
     @Transactional
     public Role createRoleIfNotFound(String roleName){
