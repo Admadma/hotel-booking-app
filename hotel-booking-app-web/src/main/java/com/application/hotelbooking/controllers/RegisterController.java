@@ -4,8 +4,9 @@ import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.dto.UserDto;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.RoleRepository;
+import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
-import com.application.hotelbooking.transformers.RoleTransformer;
+import com.application.hotelbooking.transformers.RoleViewTransformer;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,10 @@ public class RegisterController {
     private UserService userService;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     @Autowired
-    private RoleTransformer roleTransformer;
+    private RoleViewTransformer roleViewTransformer;
 
     @RequestMapping(value = "/register/add-new-user")
     public String addNewUser(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result){
@@ -44,18 +45,13 @@ public class RegisterController {
             return "register";
         }
 
-        Collection<RoleModel> roles= List.of(roleRepository.findRoleByName("USER")).stream().map(role -> roleTransformer.transformToModel(role)).collect(Collectors.toList());
-        roles.forEach(roleModel -> System.out.println(roleModel.getName()));
-
         try {
             userService.addNewUser(
                     userDto.getUsername(),
                     userDto.getPassword(),
-                    List.of(roleRepository.findRoleByName("USER")).stream().map(role -> roleTransformer.transformToModel(role)).collect(Collectors.toList()) //TODO: use something other than repository
+                    roleService.getRoles(List.of("USER"))
             );
-//            System.out.println("added user");
-//            System.out.println(userDto.getUsername());
-//            System.out.println(userService.getUserByName(userDto.getUsername()));
+            LOGGER.info("back to controller");
             LOGGER.info("Added user: " + userService.getUserByName(userDto.getUsername()).get(0).getUsername());
         } catch (UserAlreadyExistsException uae) {
             result.rejectValue("username", null, "That name is already taken");

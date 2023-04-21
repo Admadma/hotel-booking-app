@@ -3,13 +3,11 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.domain.User;
-import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,25 +50,19 @@ public class UserService {
             User user = new User();
             user.setUsername(username);
             user.setPassword(passwordEncoder.encode(password));
-//            user.setRoles(roles.stream().map(roleModel -> roleTransformer.transformToRole(roleModel)).collect(Collectors.toList()));
             user.setRoles(roleTransformer.transformToRoles(roles));
             System.out.println("saving");
             userRepository.save(user);
             System.out.println("saved");
-//            System.out.println(getUserByName(username).get(0).getUsername());
-//            System.out.println(user.getRoles().iterator().next().getName());
-////            System.out.println(user.getRoles().iterator().next().toString());
-//            System.out.println(getUserByName(username).get(0).getRoles().iterator().next().getName());
-//            System.out.println(getUserByName(username).get(0).getUsername());
         } else {
             throw new UserAlreadyExistsException("That username is taken.");
         }
     }
 
     @Transactional
-    public void createAdminUserIfNotFound(String username, String password, Collection<Role> roles){
+    public void createAdminUserIfNotFound(String username, String password, Collection<RoleModel> roles){
         if (userRepository.findUserByUsername(username).isEmpty()){
-            addNewUser(username, password, roles.stream().map(role -> roleTransformer.transformToModel(role)).collect(Collectors.toList()));
+            addNewUser(username, password, roles);
         }
     }
 }

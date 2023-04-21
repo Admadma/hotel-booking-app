@@ -1,6 +1,7 @@
 package com.application.hotelbooking.security;
 
 import com.application.hotelbooking.domain.Role;
+import com.application.hotelbooking.domain.RoleView;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.RoleViewTransformer;
@@ -32,10 +33,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (alreadySetup)
             return;
-        Role adminRole = roleService.createRoleIfNotFound("ADMIN");
-        Role userRole = roleService.createRoleIfNotFound("USER");
+        RoleView adminRole = roleViewTransformer.transformToRoleView(roleService.createRoleIfNotFound("ADMIN"));
+        RoleView userRole = roleViewTransformer.transformToRoleView(roleService.createRoleIfNotFound("USER"));
 
-        userService.createAdminUserIfNotFound("admin", "adminadmin", List.of(adminRole));
+        userService.createAdminUserIfNotFound(
+                "admin",
+                "adminadmin",
+                roleViewTransformer.transformToRoleModels(List.of(adminRole)));
 
 
         alreadySetup = true;

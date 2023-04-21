@@ -1,12 +1,15 @@
 package com.application.hotelbooking.services;
 
-
-import com.application.hotelbooking.domain.Role;
+import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.repositories.RoleRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleService {
@@ -18,13 +21,24 @@ public class RoleService {
     private RoleTransformer roleTransformer;
 
     @Transactional
-    public Role createRoleIfNotFound(String roleName){
-        Role role = roleRepository.findRoleByName(roleName);
-        if (role == null){
-            role = new Role();
-            role.setName(roleName);
-            roleRepository.save(role);
+    public RoleModel createRoleIfNotFound(String roleName){
+        if (roleRepository.findRoleByName(roleName) == null){
+            RoleModel roleModel = new RoleModel();
+            roleModel.setName(roleName);
+            roleRepository.save(roleTransformer.transformToRole(roleModel));
         }
-        return roleRepository.findRoleByName(roleName);
+        return roleTransformer.transformToRoleModel(roleRepository.findRoleByName(roleName));
+    }
+
+    private boolean roleExists(String roleName) {
+        return roleRepository.findRoleByName(roleName) == null;
+    }
+
+    public Collection<RoleModel> getRoles(List<String> roleNames){
+        return roleTransformer.transformToRoleModels(
+                roleRepository.findAll().stream()
+                        .filter(role -> roleNames.contains(role.getName()))
+                        .collect(Collectors.toList())
+        );
     }
 }
