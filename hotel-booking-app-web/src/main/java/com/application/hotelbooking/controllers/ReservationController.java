@@ -45,6 +45,9 @@ public class ReservationController {
         LOGGER.info("Start date: " + dateRangeDto.getStartDate());
         LOGGER.info("End date: " + dateRangeDto.getEndDate());
         LOGGER.debug("room type: " + roomType);
+
+        // TODO: most of this logic should be in the service layer
+        // controller --> transform  ----dto----> service --> transform ---dto---> save
         try {
             Reservation reservation =reservationService.reserve(
                     roomType,

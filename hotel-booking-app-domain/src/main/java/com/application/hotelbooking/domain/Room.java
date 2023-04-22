@@ -11,9 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="room_type",
-        discriminatorType = DiscriminatorType.STRING)
+@Table(name = "rooms")
 public class Room {
 
     @Id
@@ -21,11 +19,13 @@ public class Room {
     private Long id;
 
     private int roomNumber;
+    private int singleBeds;
+    private int doubleBeds;
+
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")
     private List<Reservation> reservations;
 
-    public Room(int roomNumber) {
-        this.roomNumber = roomNumber;
-    }
 }
