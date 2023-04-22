@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +21,9 @@ public class Room {
     private Long id;
 
     private int roomNumber;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")
+    private List<Reservation> reservations;
 
     public Room(int roomNumber) {
         this.roomNumber = roomNumber;

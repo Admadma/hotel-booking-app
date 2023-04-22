@@ -18,7 +18,7 @@ public class Reservation {
     @GeneratedValue
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private Room room;
 
     @OneToOne
