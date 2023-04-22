@@ -18,12 +18,13 @@ public class Room {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RoomType roomType;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")

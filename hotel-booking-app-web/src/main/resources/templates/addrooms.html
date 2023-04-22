@@ -39,5 +39,37 @@
 </nav>
 
 
+
+<form th:action="@{create-new-room}" th:object="${roomView}">
+
+    <div th:if="${#fields.hasErrors('global')}">
+        <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"/>
+    </div>
+    <div>
+        <label for="roomNumber"></label> <input type="number" th:field="*{roomNumber}" id="roomNumber">
+        <p  th:if="${#fields.hasErrors('roomNumber')}" th:class="${#fields.hasErrors('roomNumber')}? error">Invalid value or that room number is already taken.</p>
+    </div>
+    <div>
+        <label for="singleBeds"></label>
+        <input type="number" th:field="*{singleBeds}" id="singleBeds">
+        <p  th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error">Invalid value.</p>
+    </div>
+
+    <div>
+        <label for="doubleBeds"></label>
+        <input type="number" th:field="*{doubleBeds}" id="doubleBeds">
+        <p  th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error">Invalid value.</p>
+    </div>
+
+    <div>
+        <label for="roomType"></label> <input type="text" th:field="*{roomType}" id="roomType">
+        <p  th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error">Invalid room type.</p>
+    </div>
+    <div>
+        <button type="submit">Create room</button>
+    </div>
+</form>
+
+
 </body>
 </html>

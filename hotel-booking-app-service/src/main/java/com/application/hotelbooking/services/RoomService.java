@@ -2,6 +2,7 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.transformers.RoomTransformer;
 import org.slf4j.Logger;
@@ -42,8 +43,19 @@ public class RoomService {
         return findAllRoomsOfGivenType(roomType).isEmpty();
     }
 
-    public void createRoom(RoomModel roomModel){
-        roomRepository.save(roomTransformer.transformToRoom(roomModel));
+    public boolean roomNumberAlreadyExists(int roomNumber){
+        if (roomRepository.findRoomByRoomNumber(roomNumber) == null){
+            return false;
+        }
+        return true;
+    }
+
+    public void createRoom(RoomModel roomModel) throws InvalidRoomException{
+        if (!roomNumberAlreadyExists(roomModel.getRoomNumber())) {
+            roomRepository.save(roomTransformer.transformToRoom(roomModel));
+        } else {
+            throw new InvalidRoomException("That roomNumber is already taken.");
+        }
     }
 
 //    private Room roomFactoryCreate(String roomType,){
