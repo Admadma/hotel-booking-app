@@ -1,8 +1,10 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.Room;
+import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.repositories.RoomRepository;
+import com.application.hotelbooking.transformers.RoomTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private RoomTransformer roomTransformer;
+
     public List<Room> getRooms(){
         return roomRepository.findAll();
     }
@@ -26,8 +31,8 @@ public class RoomService {
         return roomRepository.findRoomById(roomId);
     }
 
-    public List<Room> findAllRoomsOfGivenType(String roomType){
-        return roomRepository.findAllRoomsOfGivenType(roomType);
+    public List<RoomModel> findAllRoomsOfGivenType(String roomType){
+        return roomTransformer.transformToRoomModels(roomRepository.findAllRoomsOfGivenType(roomType));
     }
 
     public boolean isRoomTypeNotAvailable(String roomType){
@@ -36,7 +41,7 @@ public class RoomService {
 
     public void createRoom(){
         Room room = new Room();
-        room.setRoomNumber(204);
+        room.setRoomNumber(205);
         room.setDoubleBeds(1);
         room.setSingleBeds(2);
         room.setRoomType(RoomType.FAMILY_ROOM);

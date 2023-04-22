@@ -1,11 +1,15 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.Reservation;
+import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.Room;
+import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
+import com.application.hotelbooking.transformers.ReservationTransformer;
+import com.application.hotelbooking.transformers.RoomTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,12 @@ public class ReservationService {
     @Autowired
     private UserTransformer userTransformer;
 
+    @Autowired
+    private ReservationTransformer reservationTransformer;
+
+    @Autowired
+    private RoomTransformer roomTransformer;
+
     public Reservation reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
         if (!userService.userExists(username)){
@@ -38,12 +48,12 @@ public class ReservationService {
             throw new InvalidTimePeriodException();
         }
 
-        List<Room> rooms = roomService.findAllRoomsOfGivenType(roomType);
+        List<RoomModel> rooms = roomService.findAllRoomsOfGivenType(roomType);
 
-        Room room = findFreeRoom(rooms, selectedStartDate, selectedEndDate);
+        RoomModel room = findFreeRoom(rooms, selectedStartDate, selectedEndDate);
 
         Reservation reservation = new Reservation(
-                room,
+                roomTransformer.transformToRoom(room),
                 userTransformer.transformToUser(userService.getUserByName(username).get(0)),
                 selectedStartDate,
                 selectedEndDate
@@ -52,24 +62,24 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    private Room findFreeRoom(List<Room> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
-        List<Reservation> reservations;
-        for (Room room: rooms) {
-            reservations = reservationRepository.getReservationsOfRoom(room.getId());
+    private RoomModel findFreeRoom(List<RoomModel> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
+        List<ReservationModel> reservations;
+        for (RoomModel room: rooms) {
+            reservations = reservationTransformer.transformToReservationModels(reservationRepository.getReservationsOfRoom(room.getId()));
             if (reservations.isEmpty()){
                 // if the room has no reservations associated with it, that means we can simply reserve it
                 return room;
             }
             if (isRoomAvailableInTimePeriod(reservations, selectedStartDate, selectedEndDate)){
-                // if there are reservations associated with the room then we need to check if any of them conflicts with the selected time epriod
+                // if there are reservations associated with the room then we need to check if any of them conflicts with the selected time period
                 return room;
             }
         }
         throw new NoRoomsAvailableException();
     }
 
-    private boolean isRoomAvailableInTimePeriod(List<Reservation> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
-        for (Reservation reservation : reservations) {
+    private boolean isRoomAvailableInTimePeriod(List<ReservationModel> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
+        for (ReservationModel reservation : reservations) {
             if (!(reservation.getStartDate().isAfter(selectedEndDate) || reservation.getEndDate().minusDays(1).isBefore(selectedStartDate))) {
                 return false;
             }
