@@ -29,4 +29,10 @@ public class RoleViewTransformer {
                 .map(roleView -> modelMapper.map(roleView, RoleModel.class))
                 .collect(Collectors.toList());
     }
+
+//    public Collection<RoleView> transformToRoleViews(Collection<RoleModel> roleModels){
+//        return roleModels.stream()
+//                .map(roleModel -> modelMapper.map(roleModel, RoleView.class))
+//                .collect(Collectors.toList());
+//    }
 }

@@ -7,6 +7,7 @@ import com.application.hotelbooking.repositories.RoleRepository;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.RoleViewTransformer;
+import com.application.hotelbooking.transformers.UserViewTransformer;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,8 @@ public class RegisterController {
     private RoleService roleService;
 
     @Autowired
+    private UserViewTransformer userViewTransformer;
+    @Autowired
     private RoleViewTransformer roleViewTransformer;
 
     @RequestMapping(value = "/register/add-new-user")
@@ -52,7 +55,7 @@ public class RegisterController {
                     roleService.getRoles(List.of("USER"))
             );
             LOGGER.info("back to controller");
-            LOGGER.info("Added user: " + userService.getUserByName(userDto.getUsername()).get(0).getUsername());
+            LOGGER.info("Added user: " + userViewTransformer.transformToUserView(userService.getUserByName(userDto.getUsername()).get(0)).getUsername());
         } catch (UserAlreadyExistsException uae) {
             result.rejectValue("username", null, "That name is already taken");
             LOGGER.info("That username is taken");

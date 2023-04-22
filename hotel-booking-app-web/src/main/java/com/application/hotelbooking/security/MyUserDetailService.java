@@ -1,6 +1,7 @@
 package com.application.hotelbooking.security;
 
 import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.transformers.UserViewTransformer;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +15,13 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserViewTransformer userViewTransformer;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (userService.getUserByName(username).size() == 1){
-            UserDetails user = new MyUserDetails(userService.getUserByName(username).get(0)); // TODO: transform to UserView before passing to MyUserDetails
+            UserDetails user = new MyUserDetails(userViewTransformer.transformToUserView(userService.getUserByName(username).get(0)));
             user.getAuthorities().stream().forEach(grantedAuthority -> System.out.println(grantedAuthority.getAuthority()));
             return user;
         } else {

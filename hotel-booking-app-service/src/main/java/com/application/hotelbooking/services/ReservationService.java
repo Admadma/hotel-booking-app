@@ -6,6 +6,7 @@ import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
+import com.application.hotelbooking.transformers.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class ReservationService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserTransformer userTransformer;
+
     public Reservation reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
         if (!userService.userExists(username)){
@@ -40,7 +44,7 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(
                 room,
-                userService.getUserByName(username).get(0),
+                userTransformer.transformToUser(userService.getUserByName(username).get(0)),
                 selectedStartDate,
                 selectedEndDate
         );

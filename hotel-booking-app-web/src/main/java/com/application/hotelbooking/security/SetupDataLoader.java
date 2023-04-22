@@ -1,6 +1,5 @@
 package com.application.hotelbooking.security;
 
-import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.domain.RoleView;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
