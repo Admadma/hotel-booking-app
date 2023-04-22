@@ -3,6 +3,7 @@ package com.application.hotelbooking;
 import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.repositories.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +21,10 @@ public class HotelBookingApplication {
 		SpringApplication.run(HotelBookingApplication.class, args);
 	}
 
-
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 
 ////	//Code used to generate demo data
 //	@Bean

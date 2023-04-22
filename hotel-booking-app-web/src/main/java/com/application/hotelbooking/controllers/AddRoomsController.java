@@ -13,14 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(path = "hotelbooking")
-public class AdminPageController {
+public class AddRoomsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminPageController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddRoomsController.class);
 
-    @GetMapping("/admin")
-    public String admin(){
-        LOGGER.info("Navigating to admin page");
 
-        return "adminpage";
+
+    @GetMapping("/addRooms")
+    public String addRooms(){
+        LOGGER.info("Navigating to addrooms page");
+
+        return "addrooms";
     }
 }

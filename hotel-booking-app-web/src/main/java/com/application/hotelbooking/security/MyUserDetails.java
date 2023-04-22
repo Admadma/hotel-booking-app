@@ -1,43 +1,36 @@
 package com.application.hotelbooking.security;
 
-import com.application.hotelbooking.domain.Role;
-import com.application.hotelbooking.domain.User;
-import com.application.hotelbooking.repositories.RoleRepository;
-import com.application.hotelbooking.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.application.hotelbooking.domain.RoleView;
+import com.application.hotelbooking.domain.UserView;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class MyUserDetails implements UserDetails {
 
-    // TODO: Define different users: Guest, Admin with different authorities
+    private UserView userView;
 
-    private User user;
-
-    public MyUserDetails(User user) {
-        this.user = user;
+    public MyUserDetails(UserView userView) {
+        this.userView = userView;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> roles = getGrantedAuthorities(user.getRoles());
+        Collection<GrantedAuthority> roles = getGrantedAuthorities(userView.getRoles());
         return roles;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return userView.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return userView.getUsername();
     }
 
     @Override
@@ -61,7 +54,7 @@ public class MyUserDetails implements UserDetails {
         return true;
     }
 
-    private Collection<GrantedAuthority> getGrantedAuthorities(Collection<Role> roles){
+    private Collection<GrantedAuthority> getGrantedAuthorities(Collection<RoleView> roles){
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 }

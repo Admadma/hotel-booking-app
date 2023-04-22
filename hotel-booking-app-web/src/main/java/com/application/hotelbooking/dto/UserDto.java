@@ -13,6 +13,6 @@ public class UserDto {
     @NotEmpty(message = "Please enter a username")
     private String username;
     @NotEmpty(message = "Please enter a password")
-    @Size(min = 8, max = 25)
+    @Size(min = 1, max = 25) // TODO: change back to 8
     private String password;
 }
