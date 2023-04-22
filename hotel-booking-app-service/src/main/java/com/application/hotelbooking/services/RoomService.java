@@ -1,6 +1,5 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.repositories.RoomRepository;
@@ -23,29 +22,28 @@ public class RoomService {
     @Autowired
     private RoomTransformer roomTransformer;
 
-    public List<Room> getRooms(){
-        return roomRepository.findAll();
+    public List<RoomModel> getRooms(){
+        return roomTransformer.transformToRoomModels(roomRepository.findAll());
     }
 
-    public Room getRoom(Long roomId){
-        return roomRepository.findRoomById(roomId);
+    public RoomModel getRoom(Long roomId){
+        return roomTransformer.transformToRoomModel(roomRepository.findRoomById(roomId));
     }
 
     public List<RoomModel> findAllRoomsOfGivenType(String roomType){
         return roomTransformer.transformToRoomModels(roomRepository.findAllRoomsOfGivenType(roomType));
     }
 
+    public List<RoomModel> findAllRoomsOfGivenType(RoomType roomType){
+        return roomTransformer.transformToRoomModels(roomRepository.findAllRoomsOfGivenType(roomType.toString()));
+    }
+
     public boolean isRoomTypeNotAvailable(String roomType){
         return findAllRoomsOfGivenType(roomType).isEmpty();
     }
 
-    public void createRoom(){
-        Room room = new Room();
-        room.setRoomNumber(205);
-        room.setDoubleBeds(1);
-        room.setSingleBeds(2);
-        room.setRoomType(RoomType.FAMILY_ROOM);
-        roomRepository.save(room);
+    public void createRoom(RoomModel roomModel){
+        roomRepository.save(roomTransformer.transformToRoom(roomModel));
     }
 
 //    private Room roomFactoryCreate(String roomType,){

@@ -64,5 +64,48 @@
     <button type="submit" class="btn btn-light my-2 my-sm-0" th:text="save-new-family-room"/>
 </form>
 
+
+------------
+
+
+<form th:action="@{create-new-room}" th:object="${roomView}">
+
+    <div th:if="${#fields.hasErrors('global')}">
+        <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"/>
+    </div>
+    <div>
+        <label for="roomNumber"></label> <input type="text" th:field="*{roomNumber}"
+                                              id="roomNumber" placeholder="roomNumber">
+        <ul>
+            <li th:each="err : ${#fields.errors('roomNumber')}" th:text="${err}" class="error" />
+        </ul>
+    </div>
+    <div>
+        <label for="singleBeds"></label> <input type="text" th:field="*{singleBeds}"
+                                              id="singleBeds" placeholder="singleBeds">
+        <ul>
+            <li th:each="err : ${#fields.errors('singleBeds')}" th:text="${err}" class="error" />
+        </ul>
+    </div>
+    <div>
+        <label for="doubleBeds"></label> <input type="text" th:field="*{doubleBeds}"
+                                                id="doubleBeds" placeholder="doubleBeds">
+        <ul>
+            <li th:each="err : ${#fields.errors('doubleBeds')}" th:text="${err}" class="error" />
+        </ul>
+    </div>
+
+    <div>
+        <label for="roomType"></label> <input type="text" th:field="*{roomType}"
+                                              id="roomType" placeholder="roomType">
+        <ul>
+            <li th:each="err : ${#fields.errors('roomType')}" th:text="${err}" class="error" />
+        </ul>
+    </div>
+    <div>
+        <button type="submit">Create room</button>
+    </div>
+</form>
+
 </body>
 </html>

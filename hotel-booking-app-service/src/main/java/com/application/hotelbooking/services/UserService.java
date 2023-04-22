@@ -1,8 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.domain.RoleModel;
-import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.UserRepository;

@@ -1,8 +1,11 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.Room;
+import com.application.hotelbooking.domain.RoomModel;
+import com.application.hotelbooking.domain.RoomView;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.transformers.RoomViewTransformer;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +28,15 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private RoomViewTransformer roomViewTransformer;
+
 
     // Receive request with room type -> store room type in session -> redirect to reservation page (should each room have their own description/reservation page or make one generic?)
     @RequestMapping(value = "/select-room-type")
     public String reserveRoom(@ModelAttribute("roomType") String roomType, BindingResult result, Authentication auth, HttpSession session){
         // Validate the received room type (users can edit html code and enter different strings)
-        roomType = "FAMILY_ROOM";
+//        roomType = "FAMILY_ROOM";
         if (roomService.isRoomTypeNotAvailable(roomType)){
             LOGGER.error("User attempted to select a room of invalid type: " + roomType);
             result.addError(new ObjectError("globalError", "There are currently no rooms of that type."));
@@ -42,10 +48,28 @@ public class RoomController {
     }
 
 
-    @RequestMapping(value = "/save-new-family-room")
-    public String saveNewFamilyRoom(){
+    @RequestMapping(value = "/create-new-room")
+    public String saveNewFamilyRoom(@Valid @ModelAttribute("roomView") RoomView roomView, BindingResult result){
         // TODO: room number unique validation before saving
-        roomService.createRoom();
+        if (result.hasErrors()){
+            LOGGER.info("Error while validating");
+            LOGGER.info("Room number: " + roomView.getRoomNumber());
+            LOGGER.info("Room id: " + roomView.getId());
+            return "rooms";
+        }
+
+        LOGGER.info("Room number: " + roomView.getRoomNumber());
+        LOGGER.info("Room type: " + roomView.getRoomType());
+        LOGGER.info("Room id: " + roomView.getId());
+
+        try {
+            roomService.createRoom(roomViewTransformer.transformToRoomModel(roomView));
+        } catch (Exception e) {
+            LOGGER.error("Failed to save room: " + roomView);
+//            result.addError(new ObjectError("globalError", "Failed to save room."));
+            result.rejectValue("roomNumber", null, "That roomNumber is already taken");
+            return "rooms";
+        }
 //        FamilyRoomView room = new FamilyRoomView();
 //        room.setRoomNumber(206);
 //        room.setDoubleBeds(1);
@@ -58,8 +82,11 @@ public class RoomController {
 
 
     @GetMapping("/rooms")
-    public String getRooms(){
+    public String getRooms(Model model){
         LOGGER.info("Navigating to rooms page");
+        RoomView roomView = new RoomView();
+        model.addAttribute("roomView", roomView);
+
         return "rooms";
     }
 }

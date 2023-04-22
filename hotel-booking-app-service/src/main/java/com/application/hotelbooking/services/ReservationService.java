@@ -2,7 +2,6 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.ReservationModel;
-import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.repositories.ReservationRepository;
@@ -38,7 +37,7 @@ public class ReservationService {
     @Autowired
     private RoomTransformer roomTransformer;
 
-    public Reservation reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
+    public ReservationModel reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
         if (!userService.userExists(username)){
             throw new InvalidUserException("Could not find this exact user in the database: " + username);
@@ -59,7 +58,31 @@ public class ReservationService {
                 selectedEndDate
         );
 
-        return reservationRepository.save(reservation);
+        return reservationTransformer.transformToReservationModel(reservationRepository.save(reservation));
+    }
+
+    public ReservationModel reserve(ReservationModel reservationModel, String username){
+        // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
+        if (!userService.userExists(username)){
+            throw new InvalidUserException("Could not find this exact user in the database: " + username);
+        }
+
+        if (reservationModel.getStartDate().isAfter(reservationModel.getEndDate())) {
+            throw new InvalidTimePeriodException();
+        }
+
+        List<RoomModel> rooms = roomService.findAllRoomsOfGivenType(reservationModel.getRoom().getRoomType());
+
+        RoomModel room = findFreeRoom(rooms, reservationModel.getStartDate(), reservationModel.getEndDate());
+
+        Reservation reservation = new Reservation(
+                roomTransformer.transformToRoom(room),
+                userTransformer.transformToUser(userService.getUserByName(username).get(0)),
+                reservationModel.getStartDate(),
+                reservationModel.getEndDate()
+        );
+
+        return reservationTransformer.transformToReservationModel(reservationRepository.save(reservation));
     }
 
     private RoomModel findFreeRoom(List<RoomModel> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {

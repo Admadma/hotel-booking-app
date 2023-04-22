@@ -1,12 +1,14 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.Reservation;
+import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.dto.DateRangeDto;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,9 @@ public class ReservationController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ReservationViewTransformer reservationViewTransformer;
+
     @RequestMapping(value = "/reservation/select-date")
     public String reserveRoom(@ModelAttribute("dateRange") DateRangeDto dateRangeDto, Authentication auth, HttpSession session){
         // TODO: later surround this with a try-catch. Exceptions can be for example: time period is invalid
@@ -46,14 +51,14 @@ public class ReservationController {
         LOGGER.info("End date: " + dateRangeDto.getEndDate());
         LOGGER.debug("room type: " + roomType);
 
-        // TODO: most of this logic should be in the service layer
-        // controller --> transform  ----dto----> service --> transform ---dto---> save
         try {
-            Reservation reservation =reservationService.reserve(
-                    roomType,
-                    auth.getName(),
-                    dateRangeDto.getStartDate(),
-                    dateRangeDto.getEndDate()
+            ReservationView reservation = reservationViewTransformer.transformToReservationView(
+                    reservationService.reserve(
+                            roomType,
+                            auth.getName(),
+                            dateRangeDto.getStartDate(),
+                            dateRangeDto.getEndDate()
+                    )
             );
             LOGGER.info("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
         } catch (InvalidUserException iue){
