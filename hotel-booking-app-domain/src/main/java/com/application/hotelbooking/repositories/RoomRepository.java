@@ -12,7 +12,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     Room findRoomById(Long id);
 
     @Query(
-            value = "SELECT * FROM room r WHERE r.room_type = ?1",
+            value = "SELECT * FROM rooms r WHERE r.room_type = ?1",
             nativeQuery = true)
     List<Room> findAllRoomsOfGivenType(String roomType);
 }
