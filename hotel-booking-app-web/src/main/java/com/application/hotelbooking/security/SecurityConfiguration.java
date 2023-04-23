@@ -28,6 +28,7 @@ public class SecurityConfiguration {
                         .defaultSuccessUrl("/hotelbooking/home")
                         .permitAll())
                 .logout()
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/hotelbooking/home");
         return http.build();
     }
