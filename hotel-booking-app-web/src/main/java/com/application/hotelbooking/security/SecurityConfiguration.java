@@ -2,7 +2,6 @@ package com.application.hotelbooking.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,8 +19,10 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/register/**", "/error/**").permitAll();
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
 //                    auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
+                    auth.requestMatchers("/images/*").permitAll();
                     auth.anyRequest().hasAnyAuthority("USER");
-                })
+//                    auth.anyRequest().permitAll(); // TODO: remove this. I only added this to skip login on each run
+                 })
                 .formLogin(form -> form
                         .loginPage("/hotelbooking/login")
                         .defaultSuccessUrl("/hotelbooking/home")

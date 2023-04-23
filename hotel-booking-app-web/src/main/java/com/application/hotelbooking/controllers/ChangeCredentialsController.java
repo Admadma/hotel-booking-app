@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "hotelbooking")
 public class ChangeCredentialsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RoomController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChangeCredentialsController.class);
 
     @Autowired
     private UserService userService;
