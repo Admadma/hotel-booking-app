@@ -6,6 +6,7 @@ import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,17 +47,22 @@ public class UserService {
         }
     }
 
+    private void save(UserModel userModel){
+        userRepository.save(userTransformer.transformToUser(userModel));
+    }
+
     @Transactional
     public void addNewUser(String username, String password, Collection<RoleModel> roles) throws UserAlreadyExistsException{
         System.out.println("-----------------");
         if (!userExists(username)){
             UserModel userModel = new UserModel();
             userModel.setUsername(username);
+            userModel.setVersion(1l);
             userModel.setPassword(passwordEncoder.encode(password));
             userModel.setRoles(roles);
 
             System.out.println("saving");
-            userRepository.save(userTransformer.transformToUser(userModel));
+            save(userModel);
             System.out.println("saved");
         } else {
             throw new UserAlreadyExistsException("That username is taken.");
@@ -68,5 +74,17 @@ public class UserService {
         if (userRepository.findUserByUsername(username).isEmpty()){
             addNewUser(username, password, roles);
         }
+    }
+
+    public void changePassword(String username, String newPassword, Long version) throws OptimisticLockException{
+        UserModel user = getUserByName(username).get(0);
+        if (user.getVersion().equals(version)){
+            user.setPassword(passwordEncoder.encode(newPassword));
+            user.setVersion(++version);
+            save(user);
+        } else {
+            throw new OptimisticLockException();
+        }
+
     }
 }

@@ -4,6 +4,7 @@ import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomView;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.RoomViewTransformer;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -30,15 +31,14 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    @Autowired
-    private RoomViewTransformer roomViewTransformer;
+//    @Autowired
+//    private RoomViewTransformer roomViewTransformer;
 
 
-    // Receive request with room type -> store room type in session -> redirect to reservation page (should each room have their own description/reservation page or make one generic?)
+
+
     @RequestMapping(value = "/select-room-type")
-    public String reserveRoom(@ModelAttribute("roomType") String roomType, BindingResult result, Authentication auth, HttpSession session){
-        // Validate the received room type (users can edit html code and enter different strings)
-//        roomType = "FAMILY_ROOM";
+    public String reserveRoom(@ModelAttribute("roomType") String roomType, BindingResult result, HttpSession session){
         if (roomService.isRoomTypeNotAvailable(roomType)){
             LOGGER.error("User attempted to select a room of invalid type: " + roomType);
             result.addError(new ObjectError("globalError", "There are currently no rooms of that type."));

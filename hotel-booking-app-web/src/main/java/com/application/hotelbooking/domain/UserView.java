@@ -12,6 +12,7 @@ import java.util.Collection;
 public class UserView {
 
     private Long id;
+    private Long version;
     private String username;
     private String password;
     private Collection<RoleView> roles;

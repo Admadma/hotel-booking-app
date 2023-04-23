@@ -12,6 +12,7 @@ import java.util.Collection;
 public class UserModel {
 
     private Long id;
+    private Long version;
     private String username;
     private String password;
     private Collection<RoleModel> roles;

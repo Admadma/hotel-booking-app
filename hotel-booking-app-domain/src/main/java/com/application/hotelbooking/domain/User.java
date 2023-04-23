@@ -20,6 +20,8 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    private Long version;
+
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
