@@ -39,13 +39,30 @@
 </nav>
 <div th:text="${roomType}" ></div>
 
-<form th:action="@{/hotelbooking/reservation/select-date}" th:object="${dateRange}">
-    <input type="date" th:field="*{startDate}"/>
-    <input type="date" th:field="*{endDate}"/>
-    <button type="submit" value="Rooms" th:text="#{reservation.reserve}"/>
-</form>
+<!--<form th:action="@{/hotelbooking/reservation/select-date}" th:object="${dateRange}">-->
+<!--    <input type="date" th:field="*{startDate}"/>-->
+<!--    <input type="date" th:field="*{endDate}"/>-->
+<!--    <button type="submit" value="Rooms" th:text="#{reservation.reserve}"/>-->
+<!--</form>-->
 
-
+<div class="container" style="width: 28rem; padding-top: 3em;">
+    <ul class="list-group">
+        <li class="list-group-item active">Select date</li>
+        <li class="list-group-item">
+            <form th:action="@{/hotelbooking/reservation/select-date}" th:object="${dateRange}">
+                <div th:if="${param.error}" class="alert alert-danger">
+                    Invalid username or password.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    You have been logged out.
+                </div>
+                <div class="input-group mb-3" ><input class="form-control" type="date" th:field="*{startDate}"/></div>
+                <div class="input-group mb-3" ><input class="form-control" type="date" th:field="*{endDate}"/></div>
+                <div><button type="submit" class="btn btn-primary" value="Reservation" th:text="#{reservation.reserve}"/></div>
+            </form>
+        </li>
+    </ul>
+</div>
 
 </body>
 </html>
