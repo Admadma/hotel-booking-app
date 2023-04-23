@@ -2,8 +2,10 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.UserView;
 import com.application.hotelbooking.dto.ChangeCredentialsDto;
+import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.UserViewTransformer;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +35,20 @@ public class ChangeCredentialsController {
     public String changePassword(@ModelAttribute("credentials") ChangeCredentialsDto changeCredentialsDto, BindingResult result, Authentication auth, HttpSession session, Model model){
 
         Long version = Long.valueOf(session.getAttribute("version").toString());
-        String oldPW = userService.getUserByName(auth.getName()).get(0).getPassword();
+        try {
+            userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), changeCredentialsDto.getOldPassword(), version);
+        } catch (OptimisticLockException ole){
+            LOGGER.error("OptimisticLockException while changing password.");
+            result.addError(new ObjectError("globalError", "Failed to change password."));
+            return "account";
+        } catch (CredentialMismatchException cme){
+            LOGGER.error("CredentialMismatchException while changing password.");
+            result.rejectValue("oldPassword", null, cme.getMessage());
+            return "account";
+        }
+        LOGGER.info("Successfully changed password!");
 
-        userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), version);
-        LOGGER.info("old password: " + oldPW);
-        LOGGER.info("new password: " + userService.getUserByName(auth.getName()).get(0).getPassword());
-
-        return "account";
+        return "redirect:/hotelbooking/account?success";
     }
 
     @GetMapping("/account")

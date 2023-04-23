@@ -2,6 +2,7 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
@@ -76,15 +77,25 @@ public class UserService {
         }
     }
 
-    public void changePassword(String username, String newPassword, Long version) throws OptimisticLockException{
+    public void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException{
         UserModel user = getUserByName(username).get(0);
-        if (user.getVersion().equals(version)){
-            user.setPassword(passwordEncoder.encode(newPassword));
-            user.setVersion(++version);
-            save(user);
-        } else {
+        if (!userVersionMatches(version, user)){
             throw new OptimisticLockException();
         }
+        if (!oldPasswordMatches(user, oldPassword)){
+            throw new CredentialMismatchException("The provided old password does mot match.");
+        }
 
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setVersion(++version);
+        save(user);
+    }
+
+    private boolean userVersionMatches(Long version, UserModel user) {
+        return user.getVersion().equals(version);
+    }
+
+    private boolean oldPasswordMatches(UserModel userModel, String oldPassword){
+        return passwordEncoder.matches(oldPassword, userModel.getPassword());
     }
 }

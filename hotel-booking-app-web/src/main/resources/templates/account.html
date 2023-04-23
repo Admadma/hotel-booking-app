@@ -49,11 +49,14 @@ transform: translateX(-50%);">
             <div class ="container justify-content-center card">
                 <h1 class = "text-center"> Change password </h1>
                 <div class = "card-body">
+                    <div th:if="${param.success}" class="alert alert-success">
+                        Password changed successfully!
+                    </div>
                     <form th:action="@{change-password}" th:object="${credentials}" method="POST">
                         <div class ="form-group">
                             <label> oldPassword: </label>
                             <input
-                                    type = "text"
+                                    type = "password"
                                     name = "oldPassword"
                                     th:field = "*{oldPassword}"
                                     class = "form-control"
@@ -63,7 +66,7 @@ transform: translateX(-50%);">
                         <div class ="form-group">
                             <label> newPassword: </label>
                             <input
-                                    type = "text"
+                                    type = "password"
                                     name = "newPassword"
                                     th:field = "*{newPassword}"
                                     class = "form-control"
