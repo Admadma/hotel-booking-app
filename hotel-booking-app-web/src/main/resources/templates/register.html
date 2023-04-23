@@ -37,33 +37,41 @@
         </ul>
     </div>
 </nav>
-<form th:action="@{/hotelbooking/register/add-new-user}" th:object="${user}">
+<!--<form th:action="@{/hotelbooking/register/add-new-user}" th:object="${user}">-->
 
-    <div th:if="${#fields.hasErrors('global')}">
-        <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"/>
-    </div>
-    <div>
-        <label for="username"></label> <input type="text" th:field="*{username}"
-                                                  id="username" placeholder="username">
-        <ul>
-            <li th:each="err : ${#fields.errors('username')}" th:text="${err}" class="error" />
-        </ul>
-    </div>
-    <div>
-        <label for="password"></label> <input type="password" th:field="*{password}"
-                                                  id="password" placeholder="password">
-        <ul>
-            <li th:each="err : ${#fields.errors('password')}" th:text="${err}" class="error" />
-        </ul>
-    </div>
-    <div>
-        <button type="submit" value="Rooms">Register</button>
-    </div>
-</form>
+<!--    <div th:if="${#fields.hasErrors('global')}">-->
+<!--        <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"/>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <label for="username"></label> <input type="text" th:field="*{username}"-->
+<!--                                                  id="username" placeholder="username">-->
+<!--        <ul>-->
+<!--            <li th:each="err : ${#fields.errors('username')}" th:text="${err}" class="error" />-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <label for="password"></label> <input type="password" th:field="*{password}"-->
+<!--                                                  id="password" placeholder="password">-->
+<!--        <ul>-->
+<!--            <li th:each="err : ${#fields.errors('password')}" th:text="${err}" class="error" />-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <button type="submit" value="Rooms">Register</button>-->
+<!--    </div>-->
+<!--</form>-->
 
-<div class = "container">
-    <div class = "row">
-        <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+<div class = "container" style="height: 20rem; position: relative;">
+    <div style="margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+transform: translateY(-50%);
+transform: translateX(-50%);">
+    <div class = "row" >
+<!--        <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">-->
+<!--        <div class ="col-lg-12 col-md-12 col-sm-12 container justify-content-center card">-->
+        <div class ="container justify-content-center card">
             <h1 class = "text-center"> Create New Student </h1>
             <div class = "card-body">
                 <form th:action="@{/hotelbooking/register/add-new-user}" th:object="${user}" method="POST">
@@ -98,6 +106,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 </body>
