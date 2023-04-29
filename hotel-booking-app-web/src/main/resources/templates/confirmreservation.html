@@ -19,15 +19,28 @@
     <button type="submit" class="btn btn-primary" value="Reservation" th:text="#{reservation.reserve}"/>
 </form>
 
-<div class="container text-center" style="width: 28rem; padding-top: 3em;">
-    <div class="collapse navbar-collapse row justify-content-between" id="navbarNav">
-        <div class="col-7">
-            col1
-        </div>
-        <div class="col-5 row justify-content-end">
-            col2
-        </div>
+<div class="container" style="width: 42rem; padding-top: 3em; font-size: 1.5rem; background-color: #FFFFFF">
+    <div class="row justify-content-between">
+        <div class="col-6" style="border: solid" th:text="#{reservation.roomType}"/>
+        <div class="col-6 row justify-content-end" style="border: solid" th:insert="fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})"/>
     </div>
+    <div class="row justify-content-between">
+        <div class="col-6" style="border: solid" th:text="#{reservation.roomNumber}"/>
+        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.room.roomNumber}"/>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-6" style="border: solid" th:text="#{reservation.startDate}"/>
+        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.startDate}"/>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-6" style="border: solid" th:text="#{reservation.endDate}"/>
+        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.endDate}"/>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-6" style="border: solid" th:text="#{reservation.pricePerNight}"/>
+        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.room.pricePerNight}+' HUF'"/>
+    </div>
+
 </div>
 
 </body>
