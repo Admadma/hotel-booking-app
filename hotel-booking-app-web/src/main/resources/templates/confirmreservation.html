@@ -15,32 +15,44 @@
     Failed to reserve room because someone already made a reservation with it. Please try reserving a different room.
 </div>
 
-<form th:action="@{confirm-reservation}">
-    <button type="submit" class="btn btn-primary" value="Reservation" th:text="#{reservation.reserve}"/>
-</form>
-
-<div class="container" style="width: 42rem; padding-top: 3em; font-size: 1.5rem; background-color: #FFFFFF">
-    <div class="row justify-content-between">
-        <div class="col-6" style="border: solid" th:text="#{reservation.roomType}"/>
-        <div class="col-6 row justify-content-end" style="border: solid" th:insert="fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})"/>
+<div class="container rounded" style="width: 42rem; margin-top: 3rem; font-size: 1.5rem; background-color: #FFFFFF">
+    <div class="row justify-content-between" style="background-color: #EEEEEE">
+        <div class="col-6" th:text="#{reservation.roomType}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:insert="fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})" />
     </div>
     <div class="row justify-content-between">
-        <div class="col-6" style="border: solid" th:text="#{reservation.roomNumber}"/>
-        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.room.roomNumber}"/>
+        <div class="col-6" th:text="#{reservation.roomNumber}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${reservation.room.roomNumber}"/>
+    </div>
+    <div class="row justify-content-between" style="background-color: #EEEEEE">
+        <div class="col-6" th:text="#{reservation.singleBeds}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${reservation.room.singleBeds}"/>
     </div>
     <div class="row justify-content-between">
-        <div class="col-6" style="border: solid" th:text="#{reservation.startDate}"/>
-        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.startDate}"/>
+        <div class="col-6" th:text="#{reservation.doubleBeds}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${reservation.room.doubleBeds}"/>
+    </div>
+    <div class="row justify-content-between" style="background-color: #EEEEEE">
+        <div class="col-6" th:text="#{reservation.startDate}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${reservation.startDate}"/>
     </div>
     <div class="row justify-content-between">
-        <div class="col-6" style="border: solid" th:text="#{reservation.endDate}"/>
-        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.endDate}"/>
+        <div class="col-6" th:text="#{reservation.endDate}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${reservation.endDate}"/>
     </div>
-    <div class="row justify-content-between">
-        <div class="col-6" style="border: solid" th:text="#{reservation.pricePerNight}"/>
-        <div class="col-6 row justify-content-end" style="border: solid" th:text="${reservation.room.pricePerNight}+' HUF'"/>
+    <div class="row justify-content-between" style="background-color: #EEEEEE">
+        <div class="col-6" th:text="#{reservation.pricePerNight}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${reservation.room.pricePerNight}+' HUF'"/>
     </div>
-
+    <div class="row justify-content-between" style="margin-top: 1rem; font-size: 1.8rem; background-color: #f9ffa1">
+        <div class="col-6" th:text="#{reservation.totalPrice}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${reservation.totalPrice}+' HUF'"/>
+    </div>
+    <div class="row justify-content-center" style="padding: 1.5em;">
+        <form th:action="@{confirm-reservation}">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="Reservation" th:text="#{reservation.reserve}"/>
+        </form>
+    </div>
 </div>
 
 </body>

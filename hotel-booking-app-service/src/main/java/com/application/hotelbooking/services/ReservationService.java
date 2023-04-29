@@ -60,6 +60,7 @@ public class ReservationService {
                 .user(userService.getUsersByName(username).get(0))
                 .startDate(selectedStartDate)
                 .endDate(selectedEndDate)
+                .totalPrice(getTotalPrice(room, selectedStartDate, selectedEndDate))
                 .build();
     }
 
@@ -92,6 +93,10 @@ public class ReservationService {
             }
         }
         return true;
+    }
+
+    private int getTotalPrice(RoomModel roomModel, LocalDate startDate, LocalDate endDate){
+        return roomModel.getPricePerNight() * endDate.compareTo(startDate);
     }
 
     public ReservationModel getReservationById(Long id){

@@ -26,11 +26,5 @@ public class Reservation {
 
     private LocalDate startDate;
     private LocalDate endDate;
-
-    public Reservation(Room room, User user, LocalDate startDate, LocalDate endDate) {
-        this.room = room;
-        this.user = user;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+    private int totalPrice;
 }

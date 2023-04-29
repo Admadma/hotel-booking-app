@@ -16,4 +16,5 @@ public class ReservationView {
     private UserModel user;
     private LocalDate startDate;
     private LocalDate endDate;
+    private int totalPrice;
 }

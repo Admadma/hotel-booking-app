@@ -9,6 +9,7 @@ import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class ReservationController {
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;
 
-    @RequestMapping(value = "/select-date")
+    @RequestMapping(value = "/select-date", headers = "Referer=")
     public String selectDate(@ModelAttribute("dateRange") DateRangeDto dateRangeDto, Authentication auth, HttpSession session){
         String roomType = session.getAttribute("roomType").toString();
 
@@ -85,7 +86,7 @@ public class ReservationController {
         return "redirect:/hotelbooking/rooms";
     }
 
-    @GetMapping("/reservation")
+    @RequestMapping("/reservation")
     public String getRooms(Model model, HttpSession session){
         LOGGER.info("Navigating to reservation page");
 

@@ -18,10 +18,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/register/**", "/error/**").permitAll();
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
-//                    auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
+                    auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/images/*").permitAll();
                     auth.anyRequest().hasAnyAuthority("USER");
-//                    auth.anyRequest().permitAll(); // TODO: remove this. I only added this to skip login on each run
                  })
                 .formLogin(form -> form
                         .loginPage("/hotelbooking/login")
