@@ -32,7 +32,7 @@ public class RoomService {
     }
 
     public List<RoomModel> findAllRoomsOfGivenType(String roomType){
-        return roomTransformer.transformToRoomModels(roomRepository.findAllRoomsOfGivenType(roomType));
+        return roomTransformer.transformToRoomModels(roomRepository.findAllByRoomType(RoomType.valueOf(roomType)));
     }
 
     public boolean isRoomTypeNotAvailable(String roomType){
