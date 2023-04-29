@@ -30,6 +30,7 @@ public class RoomController {
             return "rooms";
         }
         session.setAttribute("roomType", RoomType.valueOf(roomType));
+//        session.setAttribute("selectedRoom", roomService.find(roomType));
 
         return "redirect:reservation";
     }

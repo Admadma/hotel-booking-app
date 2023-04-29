@@ -1,12 +1,13 @@
 <div th:fragment="navbar">
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
         <a class="navbar-brand" style="font-size: 2.5rem" th:href="@{/hotelbooking/home}">HotelBooking</a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav" style="font-size: 2.5rem">
+        <div class="collapse navbar-collapse row justify-content-between" id="navbarNav">
+            <div class="col-7">
+            <ul class="navbar-nav" style="font-size: 2rem">
                 <li class="nav-item">
                     <div class="dropdown">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" th:text="#{lang.current}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="btn btn-secondary dropdown-toggle" style="font-size: 2rem" href="#" th:text="#{lang.current}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="font-size: 2rem">
                             <a class="dropdown-item" th:text="#{lang.hun}" th:href="@{?lang=hu}"></a>
                             <a class="dropdown-item" th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
                         </div>
@@ -16,17 +17,28 @@
                     <a class="nav-link" th:href="@{/hotelbooking/rooms}" th:text="#{navbar.rooms}" />
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/hotelbooking/login}" th:text="#{navbar.login}" />
+                    <a class="nav-link" th:href="@{/hotelbooking/myreservations}" th:text="#{navbar.myreservations}" />
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/hotelbooking/account}" th:text="#{navbar.account}" />
+                </li>
+            </ul>
+            </div>
+            <div class="col-5 row justify-content-end">
+            <ul class="navbar-nav" style="font-size: 2rem;">
+                <li class="nav-item">
+                    <a class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" th:href="@{/hotelbooking/register}" th:text="#{navbar.register}" />
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" th:href="@{/hotelbooking/login}" th:text="#{navbar.login}" />
                 </li>
                 <li class="nav-item">
                     <form th:action="@{/logout}" method="post">
-                        <button type="submit" th:text="#{navbar.logout}"/>
+                        <button class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" type="submit" th:text="#{navbar.logout}"/>
                     </form>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/hotelbooking/register}" th:text="#{navbar.register}" />
-                </li>
             </ul>
+            </div>
         </div>
     </nav>
 </div>

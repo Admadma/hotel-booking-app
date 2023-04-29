@@ -9,34 +9,7 @@
   <title th:text="#{title.login}" />
 </head>
 <body style="background-color: #73D89F">
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
-  <a class="navbar-brand" th:href="@{/hotelbooking/home}">HotelBooking</a>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <div class="dropdown">
-          <span th:text="#{lang.change}" style="color:white"></span>:
-          <a class="btn btn-secondary dropdown-toggle" href="#" th:text="#{lang.current}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" th:href="@{?lang=hu}" th:text="#{lang.hun}"></a>
-            <a class="dropdown-item" th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item">
-        <h1 th:text="#{greeting}" style="color:white"></h1>
-      </li>
-      <li class="nav-item">
-        <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/login}" th:text="Login" />
-      </li>
-      <li class="nav-item">
-        <form th:action="@{/logout}" method="post">
-          <button type="submit" class="btn btn-light my-2 my-sm-0" th:text="Logout"/>
-        </form>
-      </li>
-    </ul>
-  </div>
-</nav>
+<div th:insert="fragments/navbar ::navbar"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em;">
   <ul class="list-group">

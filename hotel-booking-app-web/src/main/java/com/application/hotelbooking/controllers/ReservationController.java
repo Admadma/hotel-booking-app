@@ -96,6 +96,7 @@ public class ReservationController {
         model.addAttribute("dateRange", dateRange);
         model.addAttribute("roomType", session.getAttribute("roomType"));
 
+
         return "reservation";
     }
 }
