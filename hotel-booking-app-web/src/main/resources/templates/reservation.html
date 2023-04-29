@@ -14,7 +14,9 @@
 
 <div class="container text-center" style="width: 28rem; padding-top: 3em;">
     <ul class="list-group">
-        <li class="list-group-item active" th:text="${roomType.label}"/>
+        <li class="list-group-item active">
+            <div th:insert="fragments/roomtypenames ::roomtypenames(${roomType})"/>
+        </li>
         <li class="list-group-item">Select date</li>
         <li class="list-group-item">
             <form th:action="@{/hotelbooking/reservation/select-date}" th:object="${dateRange}">

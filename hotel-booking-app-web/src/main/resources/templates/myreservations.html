@@ -24,7 +24,7 @@
 <table class = "table table-striped table-bordered text-center">
     <thead class = "table-dark">
     <tr>
-        <th scope="col"> Room Type </th>
+        <th > Room Type </th>
         <th> Room Number </th>
         <th> Start Date </th>
         <th> End Date </th>
@@ -38,7 +38,7 @@
         <td colspan="5"> You have not made any reservations yet. </td>
     </tr>
     <tr th:each="reservation : ${reservations}">
-        <td><span th:text="${reservation.room.roomType.label}"> </span></td>
+        <td th:insert="fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})" hidden="true"></td>
         <td><span th:text="${reservation.room.roomNumber}"> </span></td>
         <td><span th:text="${reservation.startDate}"> </span></td>
         <td><span th:text="${reservation.endDate}"> </span></td>
