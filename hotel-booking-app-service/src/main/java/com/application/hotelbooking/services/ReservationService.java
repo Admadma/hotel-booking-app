@@ -39,7 +39,6 @@ public class ReservationService {
     private Clock clock;
 
     public ReservationModel reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
-        // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
         if (!userService.userExists(username)){
             throw new InvalidUserException("Could not find this exact user in the database: " + username);
         }
@@ -65,7 +64,7 @@ public class ReservationService {
     private RoomModel findFreeRoom(List<RoomModel> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
         List<ReservationModel> reservations;
         for (RoomModel room: rooms) {
-            reservations = reservationTransformer.transformToReservationModels(reservationRepository.getReservationsOfRoom(room.getId()));
+            reservations = reservationTransformer.transformToReservationModels(reservationRepository.findAllByRoom(roomTransformer.transformToRoom(room)));
             if (reservations.isEmpty()){
                 // if the room has no reservations associated with it, that means we can simply reserve it
                 return room;
