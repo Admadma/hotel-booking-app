@@ -1,6 +1,5 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.exceptions.*;
@@ -53,39 +52,14 @@ public class ReservationService {
 
         RoomModel room = findFreeRoom(rooms, selectedStartDate, selectedEndDate);
 
-        //TODO: use reservationmodel
-        Reservation reservation = new Reservation(
-                roomTransformer.transformToRoom(room),
-                userTransformer.transformToUser(userService.getUserByName(username).get(0)),
-                selectedStartDate,
-                selectedEndDate
-        );
+        ReservationModel reservationModel = ReservationModel.builder()
+                .room(room)
+                .user(userService.getUserByName(username).get(0))
+                .startDate(selectedStartDate)
+                .endDate(selectedEndDate)
+                .build();
 
-        return reservationTransformer.transformToReservationModel(reservationRepository.save(reservation));
-    }
-
-    public ReservationModel reserve(ReservationModel reservationModel, String username){
-        // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
-        if (!userService.userExists(username)){
-            throw new InvalidUserException("Could not find this exact user in the database: " + username);
-        }
-
-        if (reservationModel.getStartDate().isAfter(reservationModel.getEndDate())) {
-            throw new InvalidTimePeriodException();
-        }
-
-        List<RoomModel> rooms = roomService.findAllRoomsOfGivenType(reservationModel.getRoom().getRoomType());
-
-        RoomModel room = findFreeRoom(rooms, reservationModel.getStartDate(), reservationModel.getEndDate());
-
-        Reservation reservation = new Reservation(
-                roomTransformer.transformToRoom(room),
-                userTransformer.transformToUser(userService.getUserByName(username).get(0)),
-                reservationModel.getStartDate(),
-                reservationModel.getEndDate()
-        );
-
-        return reservationTransformer.transformToReservationModel(reservationRepository.save(reservation));
+        return reservationTransformer.transformToReservationModel(reservationRepository.save(reservationTransformer.transformToReservation(reservationModel)));
     }
 
     private RoomModel findFreeRoom(List<RoomModel> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
@@ -116,9 +90,6 @@ public class ReservationService {
     public ReservationModel getReservationById(Long id){
         return reservationTransformer.transformToReservationModel(reservationRepository.findById(id).get());
     }
-    public List<Reservation> getReservations(){
-        return reservationRepository.findAll();
-    }
     public void deleteReservationOfUser(String username, Long reservationId){
         if (reservationNotExists(reservationId)){
             throw new CancellationErrorException("Could nto find reservation with id:" + reservationId);
@@ -136,10 +107,6 @@ public class ReservationService {
 
     public List<ReservationModel> getReservationsOfUser(String username){
         return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUser(userTransformer.transformToUser(userService.getUserByName(username).get(0))));
-    }
-
-    public List<Reservation> getReservationsOfRoom(Long room_id){
-        return reservationRepository.getReservationsOfRoom(room_id);
     }
 
     public void clearReservations(){
