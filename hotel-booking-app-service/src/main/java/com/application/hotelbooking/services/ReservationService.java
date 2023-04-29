@@ -11,6 +11,7 @@ import com.application.hotelbooking.transformers.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,13 +36,16 @@ public class ReservationService {
     @Autowired
     private RoomTransformer roomTransformer;
 
+    @Autowired
+    private Clock clock;
+
     public ReservationModel reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
         // TODO selecting room type and time period might be entered separately in the future. Maybe not, if clicking on a room type first navigates to info page, and this method is only called once something (like time period) on that page is selected
         if (!userService.userExists(username)){
             throw new InvalidUserException("Could not find this exact user in the database: " + username);
         }
 
-        if (selectedStartDate.isAfter(selectedEndDate)) {
+        if (selectedStartDate.isBefore(LocalDate.now(clock)) || selectedStartDate.isAfter(selectedEndDate)) {
             throw new InvalidTimePeriodException();
         }
 

@@ -1,5 +1,6 @@
 package com.application.hotelbooking.controllers;
 
+import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.services.RoomService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class RoomController {
             result.addError(new ObjectError("globalError", "There are currently no rooms of that type."));
             return "rooms";
         }
-        session.setAttribute("roomType", roomType);
+        session.setAttribute("roomType", RoomType.valueOf(roomType));
 
         return "redirect:reservation";
     }

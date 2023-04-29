@@ -42,14 +42,7 @@ public class ReservationController {
 
     @RequestMapping(value = "/reservation/select-date")
     public String reserveRoom(@ModelAttribute("dateRange") DateRangeDto dateRangeDto, Authentication auth, HttpSession session){
-        // TODO: later surround this with a try-catch. Exceptions can be for example: time period is invalid
-        // TODO: user can edit the html code and change the room id. Code needs to check that there was no tampering with the parameters (e.g. clicking book this room but the id was changed to a different room)
-
-        // auth -> some_validator -> checks whether there is exactly one instance of that user in the database. -> if false -> invalidate http and redirect to login page
         String roomType = session.getAttribute("roomType").toString();
-        LOGGER.info("Start date: " + dateRangeDto.getStartDate());
-        LOGGER.info("End date: " + dateRangeDto.getEndDate());
-        LOGGER.debug("room type: " + roomType);
 
         try {
             ReservationView reservation = reservationViewTransformer.transformToReservationView(
@@ -64,22 +57,17 @@ public class ReservationController {
         } catch (InvalidUserException iue){
             LOGGER.error(iue.getMessage());
             session.invalidate();
-            // After invalidating, I don't want to reach the rest of this method
             return "redirect:/login";
         } catch (InvalidTimePeriodException itp) {
             LOGGER.error("Invalid time period selected.");
-            return "redirect:/hotelbooking/reservation";
+            return "redirect:/hotelbooking/reservation?errorDate";
         }
         catch (NoRoomsAvailableException nae) {
             LOGGER.error("Could not make a reservation because there are no free rooms of that type");
+            return "redirect:/hotelbooking/reservation?errorNoRooms";
         }
 
-        LOGGER.info("Id of rooms that have a reservation:");
-        for (Reservation reservation: reservationService.getReservations()) {
-            LOGGER.info("Room id: " + reservation.getRoom().getId());
-        }
-
-        return "redirect:/hotelbooking/rooms";
+        return "redirect:/hotelbooking/myreservations";
     }
 
     // This will be useful for experimenting with admin user privileges
