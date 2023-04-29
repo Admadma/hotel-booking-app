@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services;
 
+import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;

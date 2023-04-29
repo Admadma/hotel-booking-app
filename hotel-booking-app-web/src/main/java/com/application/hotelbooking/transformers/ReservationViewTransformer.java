@@ -24,9 +24,9 @@ public class ReservationViewTransformer {
         return modelMapper.map(reservationView, ReservationModel.class);
     }
 
-//    public List<ReservationModel> transformToReservationModels(List<Reservation> reservations){
-//        return reservations.stream()
-//                .map(reservation -> modelMapper.map(reservation, ReservationModel.class))
-//                .collect(Collectors.toList());
-//    }
+    public List<ReservationView> transformToReservationViews(List<ReservationModel> reservations){
+        return reservations.stream()
+                .map(reservation -> modelMapper.map(reservation, ReservationView.class))
+                .collect(Collectors.toList());
+    }
 }

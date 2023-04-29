@@ -1,9 +1,16 @@
 package com.application.hotelbooking.domain;
 
 public enum RoomType {
-    FAMILY_ROOM,
-    SINGLE_ROOM,
-    DOUBLE_ROOM,
-    TWIN_ROOM,
-    SUITE_ROOM,
+    FAMILY_ROOM("Family Room"),
+    SINGLE_ROOM("Single Room"),
+    DOUBLE_ROOM("Double Room"),
+    TWIN_ROOM("Twin Room"),
+    SUITE_ROOM("Suite Room");
+
+    public final String label;
+
+    private RoomType(String label){
+        this.label=label;
+    }
+
 }

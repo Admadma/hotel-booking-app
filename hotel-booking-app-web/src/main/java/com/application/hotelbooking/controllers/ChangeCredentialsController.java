@@ -39,8 +39,8 @@ public class ChangeCredentialsController {
             userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), changeCredentialsDto.getOldPassword(), version);
         } catch (OptimisticLockException ole){
             LOGGER.error("OptimisticLockException while changing password.");
-            result.addError(new ObjectError("globalError", "Failed to change password."));
-            return "account";
+//            result.addError(new ObjectError("globalError", "Failed to change password."));
+            return "redirect:/hotelbooking/account?error";
         } catch (CredentialMismatchException cme){
             LOGGER.error("CredentialMismatchException while changing password.");
             result.rejectValue("oldPassword", null, cme.getMessage());

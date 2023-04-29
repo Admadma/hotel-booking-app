@@ -27,11 +27,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // This constructor is only needed to create dummy data
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Reservation> reservations;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

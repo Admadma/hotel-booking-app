@@ -3,10 +3,8 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.RoomModel;
-import com.application.hotelbooking.exceptions.InvalidUserException;
+import com.application.hotelbooking.exceptions.*;
 import com.application.hotelbooking.repositories.ReservationRepository;
-import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
-import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
 import com.application.hotelbooking.transformers.ReservationTransformer;
 import com.application.hotelbooking.transformers.RoomTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
@@ -51,6 +49,7 @@ public class ReservationService {
 
         RoomModel room = findFreeRoom(rooms, selectedStartDate, selectedEndDate);
 
+        //TODO: use reservationmodel
         Reservation reservation = new Reservation(
                 roomTransformer.transformToRoom(room),
                 userTransformer.transformToUser(userService.getUserByName(username).get(0)),
@@ -109,8 +108,30 @@ public class ReservationService {
         }
         return true;
     }
+
+    public ReservationModel getReservationById(Long id){
+        return reservationTransformer.transformToReservationModel(reservationRepository.findById(id).get());
+    }
     public List<Reservation> getReservations(){
         return reservationRepository.findAll();
+    }
+    public void deleteReservationOfUser(String username, Long reservationId){
+        if (reservationNotExists(reservationId)){
+            throw new CancellationErrorException("Could nto find reservation with id:" + reservationId);
+        }
+        ReservationModel reservation = getReservationById(reservationId);
+        if (!reservation.getUser().getUsername().equals(username)){
+            throw new CancellationErrorException("The selected reservation doesn't belong to the current user");
+        }
+        reservationRepository.delete(reservationTransformer.transformToReservation(reservation));
+    }
+
+    private boolean reservationNotExists(Long reservationId){
+        return reservationRepository.findById(reservationId).isEmpty();
+    }
+
+    public List<ReservationModel> getReservationsOfUser(String username){
+        return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUser(userTransformer.transformToUser(userService.getUserByName(username).get(0))));
     }
 
     public List<Reservation> getReservationsOfRoom(Long room_id){

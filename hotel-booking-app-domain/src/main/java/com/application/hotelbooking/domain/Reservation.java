@@ -21,7 +21,7 @@ public class Reservation {
     @ManyToOne
     private Room room;
 
-    @OneToOne
+    @ManyToOne
     private User user;
 
     private LocalDate startDate;

@@ -49,6 +49,9 @@ transform: translateX(-50%);">
             <div class ="container justify-content-center card">
                 <h1 class = "text-center"> Change password </h1>
                 <div class = "card-body">
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        Failed to change password.
+                    </div>
                     <div th:if="${param.success}" class="alert alert-success">
                         Password changed successfully!
                     </div>

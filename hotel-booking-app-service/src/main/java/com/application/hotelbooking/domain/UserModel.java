@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +16,6 @@ public class UserModel {
     private Long version;
     private String username;
     private String password;
+    private List<ReservationModel> reservations;
     private Collection<RoleModel> roles;
 }
