@@ -17,11 +17,13 @@ public class Room {
     @Id
     @GeneratedValue
     private Long id;
+    private Long version;
 
     @Column(unique = true, nullable = false)
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
+    private int pricePerNight;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

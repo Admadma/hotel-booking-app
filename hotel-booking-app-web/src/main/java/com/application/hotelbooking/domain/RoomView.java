@@ -16,10 +16,13 @@ public class RoomView {
 
     @Null
     private Long id;
+    @Null
+    private Long version;
 
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
+    private int pricePerNight;
     @NotNull
     private RoomType roomType;
     @Null

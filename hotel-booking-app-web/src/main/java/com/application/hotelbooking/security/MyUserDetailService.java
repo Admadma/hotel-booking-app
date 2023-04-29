@@ -20,8 +20,8 @@ public class MyUserDetailService implements UserDetailsService {
     private UserViewTransformer userViewTransformer;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (userService.getUserByName(username).size() == 1){
-            UserDetails user = new MyUserDetails(userViewTransformer.transformToUserView(userService.getUserByName(username).get(0)));
+        if (userService.getUsersByName(username).size() == 1){
+            UserDetails user = new MyUserDetails(userViewTransformer.transformToUserView(userService.getUsersByName(username).get(0)));
             user.getAuthorities().stream().forEach(grantedAuthority -> System.out.println(grantedAuthority.getAuthority()));
             return user;
         } else {

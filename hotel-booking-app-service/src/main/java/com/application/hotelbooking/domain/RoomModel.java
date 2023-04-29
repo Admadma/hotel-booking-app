@@ -12,10 +12,12 @@ import java.util.List;
 public class RoomModel {
 
     private Long id;
+    private Long version;
 
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
+    private int pricePerNight;
     private RoomType roomType;
     private List<ReservationModel> reservations;
 }

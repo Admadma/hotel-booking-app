@@ -1,6 +1,5 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.UserView;
 import com.application.hotelbooking.dto.ChangeCredentialsDto;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.services.UserService;
@@ -14,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +54,7 @@ public class ChangeCredentialsController {
         LOGGER.info("Navigating to account page");
         ChangeCredentialsDto changeCredentialsDto = new ChangeCredentialsDto();
         model.addAttribute("credentials", changeCredentialsDto);
-        session.setAttribute("version", userViewTransformer.transformToUserView(userService.getUserByName(auth.getName()).get(0)).getVersion());
+        session.setAttribute("version", userViewTransformer.transformToUserView(userService.getUsersByName(auth.getName()).get(0)).getVersion());
         return "account";
     }
 }

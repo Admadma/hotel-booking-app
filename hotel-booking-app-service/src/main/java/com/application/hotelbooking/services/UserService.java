@@ -1,6 +1,5 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -32,20 +30,17 @@ public class UserService {
     @Autowired
     private RoleTransformer roleTransformer;
 
-    public List<UserModel> getUserByName(String username){
-        // TODO: either make it return only one, or rename the method
+    public List<UserModel> getUsersByName(String username){
         return userTransformer.transformToUserModels(userRepository.findUserByUsername(username)).stream().toList();
     }
 
     public boolean userExists(String username){
-        // This also fails if there are more than one match for the given username
-        // TODO: UNIQUE restraint on username in database and handle user registration
-        return getUserByName(username).size() == 1;
+        return getUsersByName(username).size() == 1;
     }
 
     public void deleteUserByName(String username){
         if (userExists(username)){
-            userRepository.delete(userTransformer.transformToUser(getUserByName(username).get(0)));
+            userRepository.delete(userTransformer.transformToUser(getUsersByName(username).get(0)));
         }
     }
 
@@ -55,17 +50,13 @@ public class UserService {
 
     @Transactional
     public void addNewUser(String username, String password, Collection<RoleModel> roles) throws UserAlreadyExistsException{
-        System.out.println("-----------------");
         if (!userExists(username)){
             UserModel userModel = new UserModel();
             userModel.setUsername(username);
             userModel.setVersion(1l);
             userModel.setPassword(passwordEncoder.encode(password));
             userModel.setRoles(roles);
-
-            System.out.println("saving");
             save(userModel);
-            System.out.println("saved");
         } else {
             throw new UserAlreadyExistsException("That username is taken.");
         }
@@ -79,7 +70,7 @@ public class UserService {
     }
 
     public void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException{
-        UserModel user = getUserByName(username).get(0);
+        UserModel user = getUsersByName(username).get(0);
         if (!userVersionMatches(version, user)){
             throw new OptimisticLockException();
         }

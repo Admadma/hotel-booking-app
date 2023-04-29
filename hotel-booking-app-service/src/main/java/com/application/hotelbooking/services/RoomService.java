@@ -48,10 +48,20 @@ public class RoomService {
 
     public void createRoom(RoomModel roomModel) throws InvalidRoomException{
         if (!roomNumberAlreadyExists(roomModel.getRoomNumber())) {
+            roomModel.setVersion(1l);
             roomRepository.save(roomTransformer.transformToRoom(roomModel));
         } else {
             throw new InvalidRoomException("That roomNumber is already taken.");
         }
+    }
+
+    public void updateRoomVersion(RoomModel roomModel){
+        roomModel.setVersion(roomModel.getVersion() + 1);
+        roomRepository.save(roomTransformer.transformToRoom(roomModel));
+    }
+
+    public boolean roomVersionMatches(RoomModel roomModel) {
+        return getRoom(roomModel.getId()).getVersion().equals(roomModel.getVersion());
     }
 
 //    private Room roomFactoryCreate(String roomType,){

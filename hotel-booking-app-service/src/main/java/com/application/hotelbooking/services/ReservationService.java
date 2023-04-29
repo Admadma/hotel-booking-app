@@ -7,6 +7,7 @@ import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.transformers.ReservationTransformer;
 import com.application.hotelbooking.transformers.RoomTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,27 +39,34 @@ public class ReservationService {
     @Autowired
     private Clock clock;
 
-    public ReservationModel reserve(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
-        if (!userService.userExists(username)){
-            throw new InvalidUserException("Could not find this exact user in the database: " + username);
+    public ReservationModel reserve(ReservationModel reservationModel){
+        // It is possible that after entering time period and finding a room, the user doesn't immediately reserve it.
+        // In the meantime someone else might take it, so I need to check if the room had any new reservations since then (new reservations => the version of the room increased).
+        if (!roomService.roomVersionMatches(reservationModel.getRoom())){
+            throw new OptimisticLockException();
         }
+        ReservationModel reservation = reservationTransformer.transformToReservationModel(reservationRepository.save(reservationTransformer.transformToReservation(reservationModel)));
+        roomService.updateRoomVersion(reservationModel.getRoom());
+        return reservation;
+    }
 
-        if (selectedStartDate.isBefore(LocalDate.now(clock)) || selectedStartDate.isAfter(selectedEndDate)) {
-            throw new InvalidTimePeriodException();
-        }
+    public ReservationModel prepareReservation(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
+        isTimePeriodValid(selectedStartDate, selectedEndDate);
 
-        List<RoomModel> rooms = roomService.findAllRoomsOfGivenType(roomType);
+        RoomModel room = findFreeRoom(roomService.findAllRoomsOfGivenType(roomType), selectedStartDate, selectedEndDate);
 
-        RoomModel room = findFreeRoom(rooms, selectedStartDate, selectedEndDate);
-
-        ReservationModel reservationModel = ReservationModel.builder()
+        return ReservationModel.builder()
                 .room(room)
-                .user(userService.getUserByName(username).get(0))
+                .user(userService.getUsersByName(username).get(0))
                 .startDate(selectedStartDate)
                 .endDate(selectedEndDate)
                 .build();
+    }
 
-        return reservationTransformer.transformToReservationModel(reservationRepository.save(reservationTransformer.transformToReservation(reservationModel)));
+    private void isTimePeriodValid(LocalDate selectedStartDate, LocalDate selectedEndDate) {
+        if (selectedStartDate.isBefore(LocalDate.now(clock)) || selectedStartDate.isAfter(selectedEndDate)) {
+            throw new InvalidTimePeriodException();
+        }
     }
 
     private RoomModel findFreeRoom(List<RoomModel> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
@@ -105,7 +113,7 @@ public class ReservationService {
     }
 
     public List<ReservationModel> getReservationsOfUser(String username){
-        return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUser(userTransformer.transformToUser(userService.getUserByName(username).get(0))));
+        return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUser(userTransformer.transformToUser(userService.getUsersByName(username).get(0))));
     }
 
     public void clearReservations(){

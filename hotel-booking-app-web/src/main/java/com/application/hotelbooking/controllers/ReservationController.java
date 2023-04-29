@@ -40,24 +40,21 @@ public class ReservationController {
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;
 
-    @RequestMapping(value = "/reservation/select-date")
-    public String reserveRoom(@ModelAttribute("dateRange") DateRangeDto dateRangeDto, Authentication auth, HttpSession session){
+    @RequestMapping(value = "/select-date")
+    public String selectDate(@ModelAttribute("dateRange") DateRangeDto dateRangeDto, Authentication auth, HttpSession session){
         String roomType = session.getAttribute("roomType").toString();
 
         try {
             ReservationView reservation = reservationViewTransformer.transformToReservationView(
-                    reservationService.reserve(
+                    reservationService.prepareReservation(
                             roomType,
                             auth.getName(),
                             dateRangeDto.getStartDate(),
                             dateRangeDto.getEndDate()
                     )
             );
-            LOGGER.info("Successfully created reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
-        } catch (InvalidUserException iue){
-            LOGGER.error(iue.getMessage());
-            session.invalidate();
-            return "redirect:/login";
+            LOGGER.info("Successfully prepared reservation: " + reservation.getId() + " reserved room: " + reservation.getRoom().getId() + " user: " + reservation.getUser().getUsername());
+            session.setAttribute("reservation", reservation);
         } catch (InvalidTimePeriodException itp) {
             LOGGER.error("Invalid time period selected.");
             return "redirect:/hotelbooking/reservation?errorDate";
@@ -67,7 +64,7 @@ public class ReservationController {
             return "redirect:/hotelbooking/reservation?errorNoRooms";
         }
 
-        return "redirect:/hotelbooking/myreservations";
+        return "redirect:/hotelbooking/confirmreservation";
     }
 
     // This will be useful for experimenting with admin user privileges
@@ -95,7 +92,6 @@ public class ReservationController {
         DateRangeDto dateRange = new DateRangeDto();
         model.addAttribute("dateRange", dateRange);
         model.addAttribute("roomType", session.getAttribute("roomType"));
-
 
         return "reservation";
     }
