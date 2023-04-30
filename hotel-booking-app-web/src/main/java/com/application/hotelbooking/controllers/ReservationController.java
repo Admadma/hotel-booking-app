@@ -41,7 +41,7 @@ public class ReservationController {
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;
 
-    @RequestMapping(value = "/select-date", headers = "Referer=")
+    @RequestMapping(value = "/select-date")
     public String selectDate(@ModelAttribute("dateRange") DateRangeDto dateRangeDto, Authentication auth, HttpSession session){
         String roomType = session.getAttribute("roomType").toString();
 
@@ -86,7 +86,7 @@ public class ReservationController {
         return "redirect:/hotelbooking/rooms";
     }
 
-    @RequestMapping("/reservation")
+    @GetMapping("/reservation")
     public String getRooms(Model model, HttpSession session){
         LOGGER.info("Navigating to reservation page");
 

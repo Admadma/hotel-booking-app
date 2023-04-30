@@ -37,7 +37,7 @@ public class ConfirmReservationController {
         }
         LOGGER.info("Successfully reserved the room!");
 
-        return "redirect:/hotelbooking/home";
+        return "redirect:/hotelbooking/myreservations?reservationSuccess";
     }
 
 
