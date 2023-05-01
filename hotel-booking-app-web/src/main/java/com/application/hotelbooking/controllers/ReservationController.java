@@ -1,7 +1,7 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.ReservationView;
+import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.DateRangeDto;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -87,12 +88,12 @@ public class ReservationController {
     }
 
     @GetMapping("/reservation")
-    public String getRooms(Model model, HttpSession session){
+    public String getRooms(@SessionAttribute("roomType") RoomType roomType, Model model, HttpSession session){
         LOGGER.info("Navigating to reservation page");
 
         DateRangeDto dateRange = new DateRangeDto();
         model.addAttribute("dateRange", dateRange);
-        model.addAttribute("roomType", session.getAttribute("roomType"));
+        model.addAttribute("roomType", roomType);
 
         return "reservation";
     }

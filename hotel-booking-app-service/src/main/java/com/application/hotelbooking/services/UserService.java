@@ -19,6 +19,7 @@ import java.util.List;
 @Service
 public class UserService {
 
+    public static final long DEFAULT_STARTING_VERSION = 1l;
     @Autowired
     private UserRepository userRepository;
 
@@ -51,11 +52,12 @@ public class UserService {
     @Transactional
     public void addNewUser(String username, String password, Collection<RoleModel> roles) throws UserAlreadyExistsException{
         if (!userExists(username)){
-            UserModel userModel = new UserModel();
-            userModel.setUsername(username);
-            userModel.setVersion(1l);
-            userModel.setPassword(passwordEncoder.encode(password));
-            userModel.setRoles(roles);
+            UserModel userModel = UserModel.builder()
+                    .username(username)
+                    .version(DEFAULT_STARTING_VERSION)
+                    .password(passwordEncoder.encode(password))
+                    .roles(roles)
+                    .build();
             save(userModel);
         } else {
             throw new UserAlreadyExistsException("That username is taken.");
@@ -70,21 +72,21 @@ public class UserService {
     }
 
     public void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException{
-        UserModel user = getUsersByName(username).get(0);
-        if (!userVersionMatches(version, user)){
+        UserModel userModel = getUsersByName(username).get(0);
+        if (!userVersionMatches(version, userModel)){
             throw new OptimisticLockException();
         }
-        if (!oldPasswordMatches(user, oldPassword)){
+        if (!oldPasswordMatches(userModel, oldPassword)){
             throw new CredentialMismatchException("The provided old password does mot match.");
         }
 
-        user.setPassword(passwordEncoder.encode(newPassword));
-        user.setVersion(++version);
-        save(user);
+        userModel.setPassword(passwordEncoder.encode(newPassword));
+        userModel.setVersion(++version);
+        save(userModel);
     }
 
-    private boolean userVersionMatches(Long version, UserModel user) {
-        return user.getVersion().equals(version);
+    private boolean userVersionMatches(Long version, UserModel userModel) {
+        return userModel.getVersion().equals(version);
     }
 
     private boolean oldPasswordMatches(UserModel userModel, String oldPassword){

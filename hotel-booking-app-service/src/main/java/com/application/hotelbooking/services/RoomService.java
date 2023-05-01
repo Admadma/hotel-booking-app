@@ -16,6 +16,7 @@ import java.util.List;
 public class RoomService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomService.class);
+    public static final long DEFAULT_STARTING_VERSION = 1l;
 
     @Autowired
     private RoomRepository roomRepository;
@@ -39,16 +40,13 @@ public class RoomService {
         return findAllRoomsOfGivenType(roomType).isEmpty();
     }
 
-    public boolean roomNumberAlreadyExists(int roomNumber){
-        if (roomRepository.findRoomByRoomNumber(roomNumber) == null){
-            return false;
-        }
-        return true;
+    public boolean isRoomNumberFree(int roomNumber){
+        return roomRepository.findRoomByRoomNumber(roomNumber).size() == 0;
     }
 
     public void createRoom(RoomModel roomModel) throws InvalidRoomException{
-        if (!roomNumberAlreadyExists(roomModel.getRoomNumber())) {
-            roomModel.setVersion(1l);
+        if (isRoomNumberFree(roomModel.getRoomNumber())) {
+            roomModel.setVersion(DEFAULT_STARTING_VERSION);
             roomRepository.save(roomTransformer.transformToRoom(roomModel));
         } else {
             throw new InvalidRoomException("That roomNumber is already taken.");

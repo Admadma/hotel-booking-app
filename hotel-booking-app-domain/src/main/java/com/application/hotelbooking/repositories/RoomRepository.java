@@ -12,7 +12,7 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Room findRoomById(Long id);
 
-    Room findRoomByRoomNumber(int roomNumber);
+    List<Room> findRoomByRoomNumber(int roomNumber);
 
 //    @Query(
 //            value = "SELECT * FROM rooms r WHERE r.room_type = ?1",

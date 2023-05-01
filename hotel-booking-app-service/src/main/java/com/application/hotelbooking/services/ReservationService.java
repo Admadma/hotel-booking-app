@@ -39,9 +39,15 @@ public class ReservationService {
     @Autowired
     private Clock clock;
 
+    /**
+     * It is possible that after entering time period and finding a room, the user doesn't immediately reserve it.
+     * In the meantime someone else might take it, so I need to check if the room had any new reservations since then.
+     * If a reservation was made on a room, the room's version will increase.
+     *
+     * @param reservationModel The reservation that needs to be validated and saved
+     * @return The reserved room
+     */
     public ReservationModel reserve(ReservationModel reservationModel){
-        // It is possible that after entering time period and finding a room, the user doesn't immediately reserve it.
-        // In the meantime someone else might take it, so I need to check if the room had any new reservations since then (new reservations => the version of the room increased).
         if (!roomService.roomVersionMatches(reservationModel.getRoom())){
             throw new OptimisticLockException();
         }
