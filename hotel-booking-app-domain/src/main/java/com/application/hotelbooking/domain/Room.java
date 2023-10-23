@@ -37,4 +37,7 @@ public class Room {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")
     private List<Reservation> reservations;
+
+    @ManyToOne
+    private Hotel hotel;
 }
