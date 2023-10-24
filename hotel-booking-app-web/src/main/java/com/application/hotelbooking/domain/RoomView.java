@@ -1,9 +1,6 @@
 package com.application.hotelbooking.domain;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,11 +16,13 @@ public class RoomView {
     private Long id;
     @Null
     private Long version;
-
     @Positive
     private int roomNumber;
+    @PositiveOrZero
     private int singleBeds;
+    @PositiveOrZero
     private int doubleBeds;
+    @PositiveOrZero
     private int pricePerNight;
     @NotNull
     private RoomType roomType;

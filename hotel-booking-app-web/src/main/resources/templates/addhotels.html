@@ -6,16 +6,15 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <title th:text="#{title.admin}" />
+    <title th:text="#{title.addrooms}" />
 </head>
-<body style="background-color: #73D89F">
+<body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
     <a class="navbar-brand" th:href="@{/hotelbooking/home}">HotelBooking</a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
                 <div class="dropdown">
-                    <span th:text="#{lang.change}" style="color:white"></span>:
                     <a class="btn btn-secondary dropdown-toggle" href="#" th:text="#{lang.current}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <a class="dropdown-item" th:text="#{lang.hun}" th:href="@{?lang=hu}"></a>
@@ -24,34 +23,42 @@
                 </div>
             </li>
             <li class="nav-item">
-                <h1 th:text="#{greeting}" style="color:white"></h1>
+                <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/rooms}" th:text="#{navbar.rooms}" />
             </li>
             <li class="nav-item">
-                <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/login}" th:text="Login" />
+                <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/login}" th:text="#{navbar.login}" />
             </li>
             <li class="nav-item">
                 <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="btn btn-light my-2 my-sm-0" th:text="Logout"/>
+                    <button type="submit" class="btn btn-light my-2 my-sm-0" th:text="#{navbar.logout}"/>
                 </form>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/register}" th:text="#{navbar.register}" />
             </li>
         </ul>
     </div>
 </nav>
 
-<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
-<div class="container" style="width: 28rem; padding-top: 3em;">
-<!--    <ul class="list-group">-->
-<!--        <li class="list-group-item active">Login</li>-->
-<!--        <li class="nav-item">-->
-<!--            <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="Add Rooms" />-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--    <a class="list-group-item list-group-item-action" role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="Add Rooms" />-->
 
-    <div>
-        test...
+
+<form th:action="@{create-new-hotel}" th:object="${hotelView}" method="post">
+    <div th:if="${#fields.hasErrors()}">
+        <p  th:text="#{admin.hotel.validation.global.error}" class="alert"/>
     </div>
-</div>
-
+    <div>
+        <label for="hotelName"></label>
+        <input type="text" th:field="*{hotelName}" id="hotelName">
+        <p  th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}"></p>
+    </div>
+    <div>
+        <label for="city"></label>
+        <input type="text" th:field="*{city}" id="city">
+        <p  th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:errors="*{city}"></p>
+    </div>
+    <div>
+        <button type="submit">Create hotel</button>
+    </div>
+</form>
 </body>
 </html>

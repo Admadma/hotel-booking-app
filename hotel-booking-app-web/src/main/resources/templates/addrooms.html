@@ -42,61 +42,36 @@
 
 
 
-<!--<form th:action="@{create-new-room}" th:object="${roomView}" method="post">-->
-<!--&lt;!&ndash;<form action="#" th:action="@{test}" method="post" class="form">&ndash;&gt;-->
+<form th:action="@{create-new-room}" th:object="${roomView}" method="post">
+    <div th:if="${#fields.hasErrors()}">
+        <p  th:text="#{admin.room.validation.global.error}" class="alert"/>
+    </div>
+    <div class="input-group mb-3">
+        <label for="roomNumber"></label>
+        <input type="number" th:field="*{roomNumber}" id="roomNumber">
+        <p  th:if="${#fields.hasErrors('roomNumber')}" th:class="${#fields.hasErrors('roomNumber')}? error" th:errors="*{roomNumber}"></p>
+    </div>
+    <div class="input-group mb-3">
+        <label for="singleBeds"></label>
+        <input type="number" th:field="*{singleBeds}" id="singleBeds">
+        <p  th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:text="#{admin.room.validation.invalid.value}"></p>
+    </div>
 
-<!--&lt;!&ndash;    <div th:if="${#fields.hasErrors('global')}">&ndash;&gt;-->
-<!--&lt;!&ndash;        <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-<!--    <div class="input-group mb-3">-->
-<!--        <label for="roomNumber"></label>-->
-<!--        <input type="number" th:field="*{roomNumber}" id="roomNumber">-->
-<!--        <p  th:if="${#fields.hasErrors('roomNumber')}" th:class="${#fields.hasErrors('roomNumber')}? error">Invalid value or that room number is already taken.</p>-->
-<!--    </div>-->
-<!--    <div class="input-group mb-3">-->
-<!--        <label for="singleBeds"></label>-->
-<!--        <input type="number" th:field="*{singleBeds}" id="singleBeds">-->
-<!--        <p  th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error">Invalid value.</p>-->
-<!--    </div>-->
+    <div class="input-group mb-3">
+        <label for="doubleBeds"></label>
+        <input type="number" th:field="*{doubleBeds}" id="doubleBeds">
+        <p  th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:text="#{admin.room.validation.invalid.value}"></p>
+    </div>
 
-<!--    <div class="input-group mb-3">-->
-<!--        <label for="doubleBeds"></label>-->
-<!--        <input type="number" th:field="*{doubleBeds}" id="doubleBeds">-->
-<!--        <p  th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error">Invalid value.</p>-->
-<!--    </div>-->
-
-<!--    <div class="input-group mb-3">-->
-<!--        <label for="roomType"></label>-->
-<!--        <input type="text" th:field="*{roomType}" id="roomType">-->
-<!--        <p  th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error">Invalid room type.</p>-->
-<!--&lt;!&ndash;        <p  th:if="${#fields.hasErrors('roomType')}" th:errorClass="error" th:errors="*{roomType}">Invalid room type.</p>&ndash;&gt;-->
-<!--    </div>-->
-<!--    <div >-->
-<!--        <button type="submit">Create room</button>-->
-<!--    </div>-->
-<!--</form>-->
-
-
-<form th:action="@{create-new-hotel}" th:object="${hotelView}" method="post">
-
-<!--    <div th:if="${#fields.hasErrors('global')}">-->
-<!--        <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error"/>-->
-<!--    </div>-->
-    <div>
-        <label for="hotelName"></label>
-        <input type="text" th:field="*{hotelName}" id="hotelName">
-        <p  th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}"></p>
+    <div class="input-group mb-3">
+        <label for="roomType"></label>
+        <input type="text" th:field="*{roomType}" id="roomType">
+        <p  th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}"></p>
     </div>
     <div>
-        <label for="city"></label>
-        <input type="text" th:field="*{city}" id="city">
-        <p  th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error">Invalid city</p>
-    </div>
-    <div>
-        <button type="submit">Create hotel</button>
+        <button type="submit">Create room</button>
     </div>
 </form>
-
 
 </body>
 </html>

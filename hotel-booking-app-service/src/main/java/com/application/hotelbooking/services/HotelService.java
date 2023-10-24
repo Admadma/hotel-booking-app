@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.HotelModel;
+import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.repositories.HotelRepository;
 import com.application.hotelbooking.transformers.HotelTransformer;
 import org.slf4j.Logger;
@@ -20,7 +21,14 @@ public class HotelService {
 
 
     public void createHotel(HotelModel hotelModel){
-        hotelRepository.save(hotelTransformer.transformToHotel(hotelModel));
+        if (isHotelNameFree(hotelModel)){
+            hotelRepository.save(hotelTransformer.transformToHotel(hotelModel));
+        } else {
+            throw new InvalidHotelException("That hotelName is already taken");
+        }
+    }
 
+    private boolean isHotelNameFree(HotelModel hotelModel) {
+        return hotelRepository.findHotelByHotelName(hotelModel.getHotelName()).size() == 0;
     }
 }
