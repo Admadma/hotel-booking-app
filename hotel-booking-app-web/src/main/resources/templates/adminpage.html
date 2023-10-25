@@ -11,17 +11,61 @@
 <body style="background-color: #73D89F">
 <div th:insert="fragments/navbaradmin ::navbar"/>
 
-<div class="container" style="width: 28rem; padding-top: 3em;">
-    <ul class="list-unstyled">
-        <li>
-            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />
-        </li>
-        <li>
-            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />
-        </li>
-    </ul>
+<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
+<!--    <ul class="list-unstyled">-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
+<!--    <ul class="list-unstyled list-group">-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+<div class="container" style="justify-content:center; width: 28rem; margin-top: 3em; padding: 1em; background-color: #fff8c7; border-radius:10px;">
+    <div class="container" style="width: 26rem;">
+        <ul class="list-group list-unstyled">
+            <li style="padding: 1em;">
+                <a class="btn btn-light my-2 my-sm-0 list-group-item" role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />
+            </li>
+            <li style="padding: 1em;">
+                <a class="btn btn-light my-2 my-sm-0 list-group-item" role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />
+            </li>
+        </ul>
+    </div>
 </div>
 
+<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
+<!--    <form class="list-group-item" th:action="@{create-new-hotel}" th:object="${hotelView}" method="post">-->
+<!--        <p th:if="${#fields.hasErrors()}" th:text="#{admin.hotel.validation.global.error}" class="alert alert-danger"/>-->
+<!--        <p th:if="${successMessage}" th:text="#{admin.hotel.validation.global.success}" class="alert alert-success"/>-->
+
+<!--        <div class="input-group mb-3">-->
+<!--            <label for="hotelName"></label>-->
+<!--            <input class="form-control" type="text" th:field="*{hotelName}" id="hotelName" th:placeholder="#{admin.hotel.form.hotelname}">-->
+<!--        </div>-->
+<!--        <p  th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}"></p>-->
+<!--        <div class="input-group mb-3">-->
+<!--            <label for="city"></label>-->
+<!--            <input class="form-control" type="text" th:field="*{city}" id="city" th:placeholder="#{admin.hotel.form.city}">-->
+<!--        </div>-->
+<!--        <p  th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:errors="*{city}"></p>-->
+<!--        <div class="row justify-content-center" style="padding: 1.5em;">-->
+<!--            <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createhotel" th:text="#{admin.button.submit.create.hotel}"/>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
 
 </body>
 </html>
