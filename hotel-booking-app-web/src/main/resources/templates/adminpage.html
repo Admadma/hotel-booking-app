@@ -38,20 +38,17 @@
     </div>
 </nav>
 
-<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
 <div class="container" style="width: 28rem; padding-top: 3em;">
-<!--    <ul class="list-group">-->
-<!--        <li class="list-group-item active">Login</li>-->
-<!--        <li class="nav-item">-->
-<!--            <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="Add Rooms" />-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--    <a class="list-group-item list-group-item-action" role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="Add Rooms" />-->
-
-    <div>
-        test...
-    </div>
+    <ul class="list-unstyled">
+        <li>
+            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />
+        </li>
+        <li>
+            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />
+        </li>
+    </ul>
 </div>
+
 
 </body>
 </html>
