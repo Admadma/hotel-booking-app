@@ -1,0 +1,32 @@
+<div th:fragment="navbar">
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+        <a class="navbar-brand" style="font-size: 2.5rem" th:href="@{/hotelbooking/home}">HotelBooking</a>
+        <div class="collapse navbar-collapse row justify-content-between" id="navbarNav">
+            <div class="col-7">
+            <ul class="navbar-nav" style="font-size: 2rem">
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle" style="font-size: 2rem" href="#" th:text="#{lang.current}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="font-size: 2rem">
+                            <a class="dropdown-item" th:text="#{lang.hun}" th:href="@{?lang=hu}"></a>
+                            <a class="dropdown-item" th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            </div>
+            <div class="col-5 row justify-content-end" style="font-size: 2rem;">
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" type="submit" th:text="#{navbar.logout}"/>
+                </form>
+<!--            <ul class="navbar-nav" style="font-size: 2rem;">-->
+<!--                <li class="nav-item">-->
+<!--                    <form th:action="@{/logout}" method="post">-->
+<!--                        <button class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" type="submit" th:text="#{navbar.logout}"/>-->
+<!--                    </form>-->
+<!--                </li>-->
+<!--            </ul>-->
+            </div>
+        </div>
+    </nav>
+</div>
