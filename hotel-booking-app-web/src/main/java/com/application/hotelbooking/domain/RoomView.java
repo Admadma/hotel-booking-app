@@ -16,13 +16,13 @@ public class RoomView {
     private Long id;
     @Null
     private Long version;
-    @Positive
+    @Positive(message = "{admin.room.validation.roomnumber.positive}")
     private int roomNumber;
-    @PositiveOrZero
+    @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
     private int singleBeds;
-    @PositiveOrZero
+    @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
     private int doubleBeds;
-    @PositiveOrZero
+    @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
     private int pricePerNight;
     @NotNull
     private RoomType roomType;

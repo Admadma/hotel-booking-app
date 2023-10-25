@@ -29,7 +29,7 @@ public class AddRoomsController {
     private RoomViewTransformer roomViewTransformer;
 
     @PostMapping(value = "/create-new-room")
-    public String saveNewRoom(@Valid @ModelAttribute("roomView") RoomView roomView, BindingResult result){
+    public String saveNewRoom(@Valid @ModelAttribute("roomView") RoomView roomView, BindingResult result, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "addrooms";
@@ -37,6 +37,7 @@ public class AddRoomsController {
 
         try {
             roomService.createRoom(roomViewTransformer.transformToRoomModel(roomView));
+            model.addAttribute("successMessage", "Success");
         } catch (InvalidRoomException ire) {
             LOGGER.error("Failed to save room: " + ire.getMessage());
             result.rejectValue("roomNumber", "admin.room.validation.roomnumber.taken");

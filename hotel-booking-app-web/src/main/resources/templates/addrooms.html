@@ -11,36 +11,32 @@
 <body style="background-color: #73D89F">
 <div th:insert="fragments/navbaradmin ::navbar"/>
 
-<form th:action="@{create-new-room}" th:object="${roomView}" method="post">
-    <div th:if="${#fields.hasErrors()}">
-        <p  th:text="#{admin.room.validation.global.error}" class="alert"/>
-    </div>
-    <div class="input-group mb-3">
-        <label for="roomNumber"></label>
-        <input type="number" th:field="*{roomNumber}" id="roomNumber">
-        <p  th:if="${#fields.hasErrors('roomNumber')}" th:class="${#fields.hasErrors('roomNumber')}? error" th:errors="*{roomNumber}"></p>
-    </div>
-    <div class="input-group mb-3">
-        <label for="singleBeds"></label>
-        <input type="number" th:field="*{singleBeds}" id="singleBeds">
-        <p  th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:text="#{admin.room.validation.invalid.value}"></p>
-    </div>
+<div class="container" style="width: 28rem; padding-top: 3em; justify-content: center;">
+    <form th:class="list-group-item" th:action="@{create-new-room}" th:object="${roomView}" method="post">
+        <p th:if="${#fields.hasErrors()}" th:text="#{admin.room.validation.global.error}" class="alert alert-danger"/>
+        <p th:if="${successMessage}" th:text="#{admin.room.validation.global.success}" class="alert alert-success"/>
 
-    <div class="input-group mb-3">
-        <label for="doubleBeds"></label>
-        <input type="number" th:field="*{doubleBeds}" id="doubleBeds">
-        <p  th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:text="#{admin.room.validation.invalid.value}"></p>
-    </div>
+        <label for="roomNumber" th:text="#{admin.room.form.roomnumber}"></label>
+        <input class="form-control" type="number" th:field="*{roomNumber}" id="roomNumber">
+        <p th:if="${#fields.hasErrors('roomNumber')}" th:class="${#fields.hasErrors('roomNumber')}? error" th:errors="*{roomNumber}" style="color: red;"></p>
 
-    <div class="input-group mb-3">
-        <label for="roomType"></label>
-        <input type="text" th:field="*{roomType}" id="roomType">
-        <p  th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}"></p>
-    </div>
-    <div>
-        <button type="submit">Create room</button>
-    </div>
-</form>
+        <label for="singleBeds" th:text="#{admin.room.form.singlebeds}"/>
+        <input class="form-control" type="number" th:field="*{singleBeds}" id="singleBeds"/>
+        <p th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:errors="*{singleBeds}" style="color: red;"></p>
+
+        <label for="doubleBeds" th:text="#{admin.room.form.doublebeds}"/>
+        <input class="form-control" type="number" th:field="*{doubleBeds}" id="doubleBeds" >
+        <p th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:errors="*{doubleBeds}" style="color: red;"></p>
+
+        <label for="roomType" th:text="#{admin.room.form.roomtype}"/>
+        <input class="form-control" type="text" th:field="*{roomType}" id="roomType" >
+        <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
+
+        <div class="row justify-content-center" style="padding: 1.5em;">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createroom" th:text="#{admin.button.submit.create.room}"/>
+        </div>
+    </form>
+</div>
 
 </body>
 </html>
