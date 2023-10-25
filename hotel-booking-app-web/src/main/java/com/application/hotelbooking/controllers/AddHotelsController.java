@@ -30,7 +30,7 @@ public class AddHotelsController {
     private HotelViewTransformer hotelViewTransformer;
 
     @PostMapping(value = "/create-new-hotel")
-    public String saveNewHotel(@Valid @ModelAttribute("hotelView") HotelView hotelView, BindingResult result){
+    public String saveNewHotel(@Valid @ModelAttribute("hotelView") HotelView hotelView, BindingResult result, Model model){
 //        LOGGER.info("called create-new-hotel");
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
@@ -40,15 +40,18 @@ public class AddHotelsController {
 
         try {
             hotelService.createHotel(hotelViewTransformer.transformToRoomModel(hotelView));
+            model.addAttribute("successMessage", "Success");
 //            LOGGER.info("Created hotel " + hotelView.getId() + " " + hotelView.getHotelName() + " " + hotelView.getCity());
         } catch (InvalidHotelException ihe){
 //            LOGGER.info("Failed to create hotel: " + ihe.getMessage());
 //            result.addError(new ObjectError("globalError", "Failed to save hotel"));
             result.rejectValue("hotelName", "admin.hotel.validation.hotelname.taken");
+            return "addhotels";
         } catch (Exception e){
             result.addError(new ObjectError("globalError", "Failed to save hotel"));
             return "addhotels";
         }
+
         return "addHotels";
     }
 
