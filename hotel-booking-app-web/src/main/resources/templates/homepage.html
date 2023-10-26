@@ -12,5 +12,10 @@
 <div th:insert="fragments/navbar ::navbar"/>
 This is the home page.
 
+<ul th:each="hotel : ${hotels}">
+    <li th:text="${hotel}" />
+
+</ul>
+
 </body>
 </html>

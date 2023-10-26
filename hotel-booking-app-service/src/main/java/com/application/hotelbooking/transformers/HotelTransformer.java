@@ -22,7 +22,7 @@ public class HotelTransformer {
         return modelMapper.map(hotelModel, Hotel.class);
     }
 
-    public List<HotelModel> transformToRoomModels(List<Hotel> hotels){
+    public List<HotelModel> transformToHotelModels(List<Hotel> hotels){
         return hotels.stream()
                 .map(hotel -> modelMapper.map(hotel, HotelModel.class))
                 .collect(Collectors.toList());
