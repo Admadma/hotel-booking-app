@@ -24,7 +24,7 @@ public class RoomService {
     @Autowired
     private RoomTransformer roomTransformer;
 
-    public List<RoomModel> getRooms(){
+    public List<RoomModel> getAllRooms(){
         return roomTransformer.transformToRoomModels(roomRepository.findAll());
     }
 

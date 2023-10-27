@@ -16,10 +16,6 @@ import java.util.List;
 @Table(name = "rooms")
 public class Room {
 
-    public int asd(){
-        return 1;
-    }
-
     @Id
     @GeneratedValue
     private Long id;

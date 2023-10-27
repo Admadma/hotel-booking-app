@@ -28,4 +28,11 @@ public class RoomView {
     private RoomType roomType;
     @Null
     private List<ReservationView> reservations;
+
+    @Override
+    public String toString() {
+        return "RoomView{" +
+                "id=" + id +
+                '}';
+    }
 }
