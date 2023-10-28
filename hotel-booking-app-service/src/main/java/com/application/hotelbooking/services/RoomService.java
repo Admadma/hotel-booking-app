@@ -2,8 +2,10 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.repositories.RoomRepository;
+import com.application.hotelbooking.transformers.RoomCreationServiceDTOTransformer;
 import com.application.hotelbooking.transformers.RoomTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,9 @@ public class RoomService {
 
     @Autowired
     private RoomTransformer roomTransformer;
+
+    @Autowired
+    private RoomCreationServiceDTOTransformer roomCreationServiceDTOTransformer;
 
     public List<RoomModel> getAllRooms(){
         return roomTransformer.transformToRoomModels(roomRepository.findAll());
@@ -44,10 +49,10 @@ public class RoomService {
         return roomRepository.findRoomByRoomNumber(roomNumber).size() == 0;
     }
 
-    public void createRoom(RoomModel roomModel) throws InvalidRoomException{
-        if (isRoomNumberFree(roomModel.getRoomNumber())) {
-            roomModel.setVersion(DEFAULT_STARTING_VERSION);
-            roomRepository.save(roomTransformer.transformToRoom(roomModel));
+    public void createRoomFromDTO(RoomCreationServiceDTO roomCreationServiceDTO){
+        if (isRoomNumberFree(roomCreationServiceDTO.getRoomNumber())) {
+            roomCreationServiceDTO.setVersion(DEFAULT_STARTING_VERSION);
+            roomRepository.save(roomCreationServiceDTOTransformer.transformToRoom(roomCreationServiceDTO));
         } else {
             throw new InvalidRoomException("That roomNumber is already taken.");
         }

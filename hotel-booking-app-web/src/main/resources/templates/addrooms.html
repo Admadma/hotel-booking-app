@@ -12,7 +12,7 @@
 <div th:insert="fragments/navbaradmin ::navbar"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em; justify-content: center;">
-    <form th:class="list-group-item" th:action="@{create-new-room}" th:object="${roomView}" method="post">
+    <form th:class="list-group-item" th:action="@{create-new-room}" th:object="${roomCreationDTO}" method="post">
         <p th:if="${#fields.hasErrors()}" th:text="#{admin.room.validation.global.error}" class="alert alert-danger"/>
         <p th:if="${successMessage}" th:text="#{admin.room.validation.global.success}" class="alert alert-success"/>
 
@@ -31,6 +31,11 @@
         <label for="roomType" th:text="#{admin.room.form.roomtype}"/>
         <input class="form-control" type="text" th:field="*{roomType}" id="roomType" >
         <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
+
+        <select th:field="*{hotelId}" class="form-control">
+            <option value="" th:text="#{admin.dropdown.select.hotel}"/>
+            <option th:each="hotel : ${session.hotels}" th:value="${hotel.id}" th:text="${hotel.hotelName}" />
+        </select>
 
         <div class="row justify-content-center" style="padding: 1.5em;">
             <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createroom" th:text="#{admin.button.submit.create.room}"/>

@@ -1,24 +1,20 @@
-package com.application.hotelbooking.domain;
+package com.application.hotelbooking.dto;
 
+import com.application.hotelbooking.domain.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomModel {
+public class RoomCreationServiceDTO {
 
-    private Long id;
     private Long version;
-
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
     private int pricePerNight;
     private RoomType roomType;
-    private List<ReservationModel> reservations;
-    private HotelModel hotel;
+    private String hotelId;
 }

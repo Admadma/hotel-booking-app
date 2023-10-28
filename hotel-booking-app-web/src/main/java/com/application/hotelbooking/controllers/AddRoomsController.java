@@ -1,9 +1,13 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.RoomView;
+import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
+import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.transformers.HotelViewTransformer;
+import com.application.hotelbooking.transformers.RoomCreationDTOTransformer;
 import com.application.hotelbooking.transformers.RoomViewTransformer;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +29,27 @@ public class AddRoomsController {
 
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private HotelService hotelService;
     @Autowired
     private RoomViewTransformer roomViewTransformer;
 
+    @Autowired
+    private RoomCreationDTOTransformer roomCreationDTOTransformer;
+
+    @Autowired
+    private HotelViewTransformer hotelViewTransformer;
+
     @PostMapping(value = "/create-new-room")
-    public String saveNewRoom(@Valid @ModelAttribute("roomView") RoomView roomView, BindingResult result, Model model){
+    public String saveNewRoom(@Valid @ModelAttribute("roomCreationDTO") RoomCreationDTO roomCreationDTO, BindingResult result, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "addrooms";
         }
 
         try {
-            roomService.createRoom(roomViewTransformer.transformToRoomModel(roomView));
+            roomService.createRoomFromDTO(roomCreationDTOTransformer.transformToRoomCreationServiceDTO(roomCreationDTO));
             model.addAttribute("successMessage", "Success");
         } catch (InvalidRoomException ire) {
             LOGGER.error("Failed to save room: " + ire.getMessage());
@@ -49,9 +62,10 @@ public class AddRoomsController {
     }
 
     @GetMapping("/addRooms")
-    public String addRooms(Model model){
+    public String addRooms(Model model, HttpServletRequest request){
         LOGGER.info("Navigating to addRooms page");
-        model.addAttribute("roomView", new RoomView());
+        model.addAttribute("roomCreationDTO", new RoomCreationDTO());
+        request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelService.getAllHotels()));
 
         return "addrooms";
     }
