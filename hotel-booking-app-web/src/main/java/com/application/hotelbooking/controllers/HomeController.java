@@ -1,7 +1,8 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.dto.RoomSearchFormDTO;
+import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.transformers.RoomSearchFormDTOTransformer;
 import com.application.hotelbooking.transformers.RoomViewTransformer;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -25,14 +26,21 @@ public class HomeController {
     @Autowired
     private RoomViewTransformer roomViewTransformer;
 
+    @Autowired
+    private RoomSearchFormDTOTransformer roomSearchFormDTOTransformer;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
     @PostMapping(value = "/search-rooms")
-    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result){
+    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormServiceDTO roomSearchFormServiceDTO, BindingResult result){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "homepage";
         }
+        roomService.searchRooms(roomSearchFormDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormServiceDTO));
+
+//        RoomService.listRooms(roomSearchFormDTO)
+
         LOGGER.info("No Error");
         return "homepage";
     }
@@ -42,7 +50,7 @@ public class HomeController {
     public String home(Model model){
         LOGGER.info("Navigating to home page");
         model.addAttribute("hotels", roomViewTransformer.transformToRoomViews(roomService.getAllRooms()));
-        model.addAttribute("roomSearchFormDTO", new RoomSearchFormDTO());
+        model.addAttribute("roomSearchFormDTO", new RoomSearchFormServiceDTO());
 
         return "homepage";
     }

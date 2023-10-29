@@ -3,6 +3,8 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
+import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
+import com.application.hotelbooking.dto.RoomSearchResultDTO;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.transformers.RoomCreationServiceDTOTransformer;
@@ -39,6 +41,13 @@ public class RoomService {
 
     public List<RoomModel> findAllRoomsOfGivenType(String roomType){
         return roomTransformer.transformToRoomModels(roomRepository.findAllByRoomType(RoomType.valueOf(roomType)));
+    }
+
+    public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
+
+        System.out.println("printing");
+        roomRepository.findRoomsLike(roomSearchFormServiceDTO.getCity()).stream().forEach(room -> System.out.println("Room number: " + room.getRoomNumber() + " City: " +  room.getHotel().getCity()));
+        return null;
     }
 
     public boolean isRoomTypeNotAvailable(String roomType){
