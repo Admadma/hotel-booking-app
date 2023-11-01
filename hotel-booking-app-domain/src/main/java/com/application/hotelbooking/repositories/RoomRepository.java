@@ -17,12 +17,12 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findAllByRoomType(RoomType roomType);
 
-    @Query("SELECT r FROM Room r JOIN r.hotel h WHERE" +
+    @Query("SELECT r.id FROM Room r JOIN r.hotel h WHERE" +
             "(:singleBeds IS NULL OR r.singleBeds = :singleBeds)" +
             "AND (:doubleBeds IS NULL OR r.doubleBeds = :doubleBeds)" +
             "AND (:roomType IS NULL OR r.roomType = :roomType)" +
             "AND (:hotelName IS NULL OR h.hotelName = :hotelName)" +
             "AND (:city IS NULL OR h.city = :city)"
     )
-    List<Room> findRoomsWithConditions(@Param("singleBeds") Integer singleBeds, @Param("doubleBeds") Integer doubleBeds, @Param("roomType") RoomType roomType, @Param("hotelName") String hotelName, @Param("city") String city);
+    List<Long> findRoomsWithConditions(@Param("singleBeds") Integer singleBeds, @Param("doubleBeds") Integer doubleBeds, @Param("roomType") RoomType roomType, @Param("hotelName") String hotelName, @Param("city") String city);
 }

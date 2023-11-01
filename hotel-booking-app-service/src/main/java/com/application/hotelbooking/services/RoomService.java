@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +27,9 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private NewReservationService reservationService;
 
     @Autowired
     private RoomTransformer roomTransformer;
@@ -45,23 +49,42 @@ public class RoomService {
         return roomTransformer.transformToRoomModels(roomRepository.findAllByRoomType(RoomType.valueOf(roomType)));
     }
 
+//    private List<RoomSearchResultDTO> createRoomSearchResultDTOs(List<Long> roomIds){
+//        List<RoomSearchResultDTO> roomSearchResultDTOs = new LinkedList<>();
+//        for (Long roomId : roomIds) {
+//            roomRepository.findRoomById(roomId).g
+//            roomSearchResultDTOs.add(RoomSearchResultDTO.)
+//        }
+//    }
+
     public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
+//        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
+//                roomSearchFormServiceDTO.getDoubleBeds(),
+//                roomSearchFormServiceDTO.getRoomType(),
+//                roomSearchFormServiceDTO.getHotelName(),
+//                roomSearchFormServiceDTO.getCity())
+//                .stream()
+//                .forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() +
+//                    " singleBeds: " + room.getSingleBeds()  +
+//                    " doubleBeds: " + room.getDoubleBeds() +
+//                    " roomType: " + room.getRoomType() +
+//                    " city: " + room.getHotel().getCity() +
+//                    " hotel: " + room.getHotel().getHotelName()
+//                ));
+
+        List<Long> roomIds = roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
                 roomSearchFormServiceDTO.getRoomType(),
                 roomSearchFormServiceDTO.getHotelName(),
-                roomSearchFormServiceDTO.getCity())
-                .stream()
-                .forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() +
-                    " singleBeds: " + room.getSingleBeds()  +
-                    " doubleBeds: " + room.getDoubleBeds() +
-                    " roomType: " + room.getRoomType() +
-                    " city: " + room.getHotel().getCity() +
-                    " hotel: " + room.getHotel().getHotelName()
-                ));
-        LOGGER.info("---------");
+                roomSearchFormServiceDTO.getCity());
 
-        // Now filter for which room can be reserved in given time period
+        LOGGER.info(String.valueOf(roomIds.size()));
+        roomIds.stream().forEach(roomId -> LOGGER.info(roomId.toString()));
+        LOGGER.info("-----");
+
+        reservationService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate()).stream().forEach(roomId -> LOGGER.info(roomId.toString()));
+
+        // Now transform the filtered list to a list of DTOs
         return null;
     }
 
