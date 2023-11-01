@@ -21,8 +21,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             "(:singleBeds IS NULL OR r.singleBeds = :singleBeds)" +
             "AND (:doubleBeds IS NULL OR r.doubleBeds = :doubleBeds)" +
             "AND (:roomType IS NULL OR r.roomType = :roomType)" +
-//            "AND (r.roomType = SINGLE_ROOM)" +
+            "AND (:hotelName IS NULL OR h.hotelName = :hotelName)" +
             "AND (:city IS NULL OR h.city = :city)"
     )
-    List<Room> findRoomsWithConditions(@Param("singleBeds") Integer singleBeds, @Param("doubleBeds") Integer doubleBeds, @Param("roomType") RoomType roomType, @Param("city") String city);
+    List<Room> findRoomsWithConditions(@Param("singleBeds") Integer singleBeds, @Param("doubleBeds") Integer doubleBeds, @Param("roomType") RoomType roomType, @Param("hotelName") String hotelName, @Param("city") String city);
 }

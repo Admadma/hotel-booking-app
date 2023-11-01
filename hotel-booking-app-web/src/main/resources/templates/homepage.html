@@ -15,37 +15,43 @@
     <form th:action="@{search-rooms}" th:object="${roomSearchFormDTO}" method="post">
         <div class="form-row">
             <div class="form-group col-md-3">
-                <label for="singleBeds" th:text="#{admin.room.form.singlebeds}"/>
-                <input type="number" value="null" th:field="*{singleBeds}" id="singleBeds"/>
+                <label for="singleBeds" th:text="#{home.room.form.singlebeds}"/>
+                <input type="number" th:field="*{singleBeds}" id="singleBeds"/>
                 <p th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:errors="*{singleBeds}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
-                <label for="doubleBeds" th:text="#{admin.room.form.doublebeds}"/>
-                <input type="number" value="null" th:field="*{doubleBeds}" id="doubleBeds" >
+                <label for="doubleBeds" th:text="#{home.room.form.doublebeds}"/>
+                <input type="number" th:field="*{doubleBeds}" id="doubleBeds" >
                 <p th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:errors="*{doubleBeds}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
-                <label for="city" th:text="#{admin.room.form.doublebeds}"/>
+                <label for="roomType" th:text="#{home.room.form.roomtype}"/>
+                <!--                Instead of text make this a dropdown with the list of room types available-->
+                <input type="text" th:field="*{roomType}" id="roomType" >
+                <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="city" th:text="#{home.room.form.city}"/>
 <!--                Instead of text make this a dropdown with the list of cities associated with hotels-->
                 <input type="text" th:field="*{city}" id="city" >
                 <p th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:errors="*{city}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
-                <label for="roomType" th:text="#{admin.room.form.roomtype}"/>
-<!--                Instead of text make this a dropdown with the list of room types available-->
-                <input type="text" value="null" th:field="*{roomType}" id="roomType" >
-                <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
+                <label for="city" th:text="#{home.room.form.hotelname}"/>
+                <!--                Instead of text make this a dropdown with the list of cities associated with hotels-->
+                <input type="text" th:field="*{hotelName}" id="hotelName" >
+                <p th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}" style="color: red;"></p>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-3" >
-                <label for="startDate" th:text="#{admin.room.form.doublebeds}"/>
+                <label for="startDate" th:text="#{home.room.form.startdate}"/>
                 <input class="form-control" id="startDate" type="date" th:field="*{startDate}"/>
                 <p th:if="${#fields.hasErrors('startDate')}" th:class="${#fields.hasErrors('startDate')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
 
             </div>
             <div class="form-group col-md-3" >
-                <label for="endDate" th:text="#{admin.room.form.doublebeds}"/>
+                <label for="endDate" th:text="#{home.room.form.enddate}"/>
                 <input class="form-control" id="endDate" type="date" th:field="*{endDate}"/>
                 <p th:if="${#fields.hasErrors('endDate')}" th:class="${#fields.hasErrors('endDate')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
 

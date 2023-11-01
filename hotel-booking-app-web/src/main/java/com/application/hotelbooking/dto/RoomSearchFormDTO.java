@@ -18,6 +18,7 @@ public class RoomSearchFormDTO {
     @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
     private Integer doubleBeds;
     private RoomType roomType;
+    private String hotelName;
     private String city;
 
     //TODO: uncomment this after done debugging the other fields

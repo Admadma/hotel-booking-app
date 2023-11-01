@@ -46,20 +46,22 @@ public class RoomService {
     }
 
     public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-        LOGGER.info("city: " + "".equals(roomSearchFormServiceDTO.getCity()));
-        LOGGER.info(roomSearchFormServiceDTO.getRoomType().toString());
         roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
                 roomSearchFormServiceDTO.getRoomType(),
+                roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity())
                 .stream()
                 .forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() +
                     " singleBeds: " + room.getSingleBeds()  +
                     " doubleBeds: " + room.getDoubleBeds() +
-                    " roomType" + room.getRoomType() +
-                    " city: " + room.getHotel().getCity()
+                    " roomType: " + room.getRoomType() +
+                    " city: " + room.getHotel().getCity() +
+                    " hotel: " + room.getHotel().getHotelName()
                 ));
         LOGGER.info("---------");
+
+        // Now filter for which room can be reserved in given time period
         return null;
     }
 

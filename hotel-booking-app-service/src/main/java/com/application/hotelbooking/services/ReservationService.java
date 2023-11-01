@@ -95,6 +95,7 @@ public class ReservationService {
     private boolean isRoomAvailableInTimePeriod(List<ReservationModel> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
         for (ReservationModel reservation : reservations) {
             if (!(reservation.getStartDate().isAfter(selectedEndDate) || reservation.getEndDate().minusDays(1).isBefore(selectedStartDate))) {
+                // I check each reservation of this room. If it has a single conflict then I can't reserve this in the selected time period.
                 return false;
             }
         }

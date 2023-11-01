@@ -38,14 +38,13 @@ public class HomeController {
         if ("".equals(roomSearchFormDTO.getCity())){
             roomSearchFormDTO.setCity(null);
         }
-        if ("".equals(roomSearchFormDTO.getRoomType())){
-            roomSearchFormDTO.setRoomType(null);
+        if ("".equals(roomSearchFormDTO.getHotelName())){
+            roomSearchFormDTO.setHotelName(null);
         }
     }
 
     @PostMapping(value = "/search-rooms")
     public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result){
-        LOGGER.info(roomSearchFormDTO.getRoomType().toString());
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "homepage";
