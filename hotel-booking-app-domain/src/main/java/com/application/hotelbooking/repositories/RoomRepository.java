@@ -15,14 +15,14 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findRoomByRoomNumber(int roomNumber);
 
-//    @Query(
-//            value = "SELECT * FROM rooms r WHERE r.room_type = ?1",
-//            nativeQuery = true)
-//    List<Room> findAllRoomsOfGivenType(String roomType);
-
     List<Room> findAllByRoomType(RoomType roomType);
 
     @Query("SELECT r FROM Room r JOIN r.hotel h WHERE h.city = :city")
     List<Room> findRoomsLike(@Param("city") String city);
+
+    @Query("SELECT r FROM Room r WHERE" +
+            "(:singleBeds IS NULL OR r.singleBeds = :singleBeds)" +
+            "AND (:doubleBeds IS NULL OR r.doubleBeds = :doubleBeds)")
+    List<Room> findRoomsWithConditions(@Param("singleBeds") int singleBeds, @Param("doubleBeds") int doubleBeds);
 
 }

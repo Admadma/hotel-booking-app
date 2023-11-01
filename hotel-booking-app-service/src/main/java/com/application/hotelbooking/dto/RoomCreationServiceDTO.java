@@ -17,4 +17,17 @@ public class RoomCreationServiceDTO {
     private int pricePerNight;
     private RoomType roomType;
     private String hotelId;
+
+    @Override
+    public String toString() {
+        return "RoomCreationServiceDTO{" +
+                "version=" + version +
+                ", roomNumber=" + roomNumber +
+                ", singleBeds=" + singleBeds +
+                ", doubleBeds=" + doubleBeds +
+                ", pricePerNight=" + pricePerNight +
+                ", roomType=" + roomType +
+                ", hotelId='" + hotelId + '\'' +
+                '}';
+    }
 }

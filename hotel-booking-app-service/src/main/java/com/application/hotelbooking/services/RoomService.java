@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services;
 
+import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
@@ -45,8 +46,8 @@ public class RoomService {
 
     public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
 
-        System.out.println("printing");
-        roomRepository.findRoomsLike(roomSearchFormServiceDTO.getCity()).stream().forEach(room -> System.out.println("Room number: " + room.getRoomNumber() + " City: " +  room.getHotel().getCity()));
+        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(), roomSearchFormServiceDTO.getDoubleBeds()).stream().forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() + " singleBeds: " + room.getSingleBeds()  + " doubleBeds: " + room.getDoubleBeds()));
+        LOGGER.info("---------");
         return null;
     }
 

@@ -36,4 +36,18 @@ public class Room {
 
     @ManyToOne
     private Hotel hotel;
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", version=" + version +
+                ", roomNumber=" + roomNumber +
+                ", singleBeds=" + singleBeds +
+                ", doubleBeds=" + doubleBeds +
+                ", pricePerNight=" + pricePerNight +
+                ", roomType=" + roomType +
+                ", hotelId=" + hotel.getId() +
+                '}';
+    }
 }
