@@ -1,5 +1,6 @@
 package com.application.hotelbooking.controllers;
 
+import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.transformers.RoomSearchFormDTOTransformer;
@@ -44,6 +45,7 @@ public class HomeController {
 
     @PostMapping(value = "/search-rooms")
     public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result){
+        LOGGER.info(roomSearchFormDTO.getRoomType().toString());
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "homepage";

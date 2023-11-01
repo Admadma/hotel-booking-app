@@ -20,7 +20,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r JOIN r.hotel h WHERE" +
             "(:singleBeds IS NULL OR r.singleBeds = :singleBeds)" +
             "AND (:doubleBeds IS NULL OR r.doubleBeds = :doubleBeds)" +
+            "AND (:roomType IS NULL OR r.roomType = :roomType)" +
+//            "AND (r.roomType = SINGLE_ROOM)" +
             "AND (:city IS NULL OR h.city = :city)"
     )
-    List<Room> findRoomsWithConditions(@Param("singleBeds") Integer singleBeds, @Param("doubleBeds") Integer doubleBeds, @Param("city") String city);
+    List<Room> findRoomsWithConditions(@Param("singleBeds") Integer singleBeds, @Param("doubleBeds") Integer doubleBeds, @Param("roomType") RoomType roomType, @Param("city") String city);
 }

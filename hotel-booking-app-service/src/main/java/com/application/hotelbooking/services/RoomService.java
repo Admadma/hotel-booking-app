@@ -47,7 +47,18 @@ public class RoomService {
 
     public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         LOGGER.info("city: " + "".equals(roomSearchFormServiceDTO.getCity()));
-        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(), roomSearchFormServiceDTO.getDoubleBeds(), roomSearchFormServiceDTO.getCity()).stream().forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() + " singleBeds: " + room.getSingleBeds()  + " doubleBeds: " + room.getDoubleBeds() + " city: " + room.getHotel().getCity()));
+        LOGGER.info(roomSearchFormServiceDTO.getRoomType().toString());
+        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
+                roomSearchFormServiceDTO.getDoubleBeds(),
+                roomSearchFormServiceDTO.getRoomType(),
+                roomSearchFormServiceDTO.getCity())
+                .stream()
+                .forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() +
+                    " singleBeds: " + room.getSingleBeds()  +
+                    " doubleBeds: " + room.getDoubleBeds() +
+                    " roomType" + room.getRoomType() +
+                    " city: " + room.getHotel().getCity()
+                ));
         LOGGER.info("---------");
         return null;
     }
