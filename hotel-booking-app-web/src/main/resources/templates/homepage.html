@@ -16,12 +16,12 @@
         <div class="form-row">
             <div class="form-group col-md-3">
                 <label for="singleBeds" th:text="#{admin.room.form.singlebeds}"/>
-                <input type="number" th:field="*{singleBeds}" id="singleBeds"/>
+                <input type="number" value="null" th:field="*{singleBeds}" id="singleBeds"/>
                 <p th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:errors="*{singleBeds}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
                 <label for="doubleBeds" th:text="#{admin.room.form.doublebeds}"/>
-                <input type="number" th:field="*{doubleBeds}" id="doubleBeds" >
+                <input type="number" value="null" th:field="*{doubleBeds}" id="doubleBeds" >
                 <p th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:errors="*{doubleBeds}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
@@ -33,7 +33,7 @@
             <div class="form-group col-md-3">
                 <label for="roomType" th:text="#{admin.room.form.roomtype}"/>
 <!--                Instead of text make this a dropdown with the list of room types available-->
-                <input type="text" th:field="*{roomType}" id="roomType" >
+                <input type="text" value="null" th:field="*{roomType}" id="roomType" >
                 <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
             </div>
         </div>

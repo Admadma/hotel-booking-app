@@ -1,5 +1,6 @@
 package com.application.hotelbooking.transformers;
 
+import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ public class RoomSearchFormDTOTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public RoomSearchFormServiceDTO transformToRoomSearchFormServiceDTO(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-        return modelMapper.map(roomSearchFormServiceDTO, RoomSearchFormServiceDTO.class);
+    public RoomSearchFormServiceDTO transformToRoomSearchFormServiceDTO(RoomSearchFormDTO roomSearchFormDTO){
+        return modelMapper.map(roomSearchFormDTO, RoomSearchFormServiceDTO.class);
     }
 }

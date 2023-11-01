@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class RoomService {
@@ -45,8 +46,8 @@ public class RoomService {
     }
 
     public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-
-        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(), roomSearchFormServiceDTO.getDoubleBeds()).stream().forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() + " singleBeds: " + room.getSingleBeds()  + " doubleBeds: " + room.getDoubleBeds()));
+        LOGGER.info("city: " + "".equals(roomSearchFormServiceDTO.getCity()));
+        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(), roomSearchFormServiceDTO.getDoubleBeds(), roomSearchFormServiceDTO.getCity()).stream().forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() + " singleBeds: " + room.getSingleBeds()  + " doubleBeds: " + room.getDoubleBeds() + " city: " + room.getHotel().getCity()));
         LOGGER.info("---------");
         return null;
     }

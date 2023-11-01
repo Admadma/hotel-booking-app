@@ -12,8 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomSearchFormServiceDTO {
-    private int singleBeds;
-    private int doubleBeds;
+    private Integer singleBeds;
+    private Integer doubleBeds;
     private RoomType roomType;
     private String city;
 

@@ -14,20 +14,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class RoomSearchFormDTO {
     @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
-    private int singleBeds;
+    private Integer singleBeds;
     @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
-    private int doubleBeds;
-    @NotNull
+    private Integer doubleBeds;
     private RoomType roomType;
     private String city;
 
-    @NotNull
-    @FutureOrPresent
+    //TODO: uncomment this after done debugging the other fields
+//    @NotNull
+//    @FutureOrPresent
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotNull
-    @Future
+//    @NotNull
+//    @Future
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 }

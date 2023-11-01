@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
+import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.transformers.RoomSearchFormDTOTransformer;
 import com.application.hotelbooking.transformers.RoomViewTransformer;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Objects;
 
 @Controller
 @RequestMapping(path = "hotelbooking")
@@ -31,13 +33,23 @@ public class HomeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
+    private void transformFieldsToNulls(RoomSearchFormDTO roomSearchFormDTO){
+        if ("".equals(roomSearchFormDTO.getCity())){
+            roomSearchFormDTO.setCity(null);
+        }
+        if ("".equals(roomSearchFormDTO.getRoomType())){
+            roomSearchFormDTO.setRoomType(null);
+        }
+    }
+
     @PostMapping(value = "/search-rooms")
-    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormServiceDTO roomSearchFormServiceDTO, BindingResult result){
+    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "homepage";
         }
-        roomService.searchRooms(roomSearchFormDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormServiceDTO));
+        transformFieldsToNulls(roomSearchFormDTO);
+        roomService.searchRooms(roomSearchFormDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO));
 
 //        RoomService.listRooms(roomSearchFormDTO)
 
@@ -50,7 +62,7 @@ public class HomeController {
     public String home(Model model){
         LOGGER.info("Navigating to home page");
         model.addAttribute("hotels", roomViewTransformer.transformToRoomViews(roomService.getAllRooms()));
-        model.addAttribute("roomSearchFormDTO", new RoomSearchFormServiceDTO());
+        model.addAttribute("roomSearchFormDTO", new RoomSearchFormDTO());
 
         return "homepage";
     }
