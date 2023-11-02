@@ -27,7 +27,7 @@ public class ConfirmReservationController {
     private ReservationViewTransformer reservationViewTransformer;
 
     @RequestMapping(value = "/confirm-reservation")
-    public String reserveRoom(@SessionAttribute("reservation") ReservationView reservationView, Authentication auth, HttpSession session){
+    public String reserve(@SessionAttribute("reservation") ReservationView reservationView, Authentication auth, HttpSession session){
 
         try {
             reservationService.reserve(reservationViewTransformer.transformToReservationModel(reservationView));

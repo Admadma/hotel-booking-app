@@ -16,43 +16,43 @@
         <div class="form-row">
             <div class="form-group col-md-3">
                 <label for="singleBeds" th:text="#{home.room.form.singlebeds}"/>
-                <input type="number" th:field="*{singleBeds}" id="singleBeds"/>
+                <input type="number" th:field="*{singleBeds}" id="singleBeds" name="singleBeds"/>
                 <p th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:errors="*{singleBeds}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
                 <label for="doubleBeds" th:text="#{home.room.form.doublebeds}"/>
-                <input type="number" th:field="*{doubleBeds}" id="doubleBeds" >
+                <input type="number" th:field="*{doubleBeds}" id="doubleBeds" name="doubleBeds">
                 <p th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:errors="*{doubleBeds}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
                 <label for="roomType" th:text="#{home.room.form.roomtype}"/>
                 <!--                Instead of text make this a dropdown with the list of room types available-->
-                <input type="text" th:field="*{roomType}" id="roomType" >
+                <input type="text" th:field="*{roomType}" id="roomType" name="roomType">
                 <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
                 <label for="city" th:text="#{home.room.form.city}"/>
 <!--                Instead of text make this a dropdown with the list of cities associated with hotels-->
-                <input type="text" th:field="*{city}" id="city" >
+                <input type="text" th:field="*{city}" id="city" name="city">
                 <p th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:errors="*{city}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
                 <label for="city" th:text="#{home.room.form.hotelname}"/>
                 <!--                Instead of text make this a dropdown with the list of cities associated with hotels-->
-                <input type="text" th:field="*{hotelName}" id="hotelName" >
+                <input type="text" th:field="*{hotelName}" id="hotelName" name="hotelName">
                 <p th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}" style="color: red;"></p>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-3" >
                 <label for="startDate" th:text="#{home.room.form.startdate}"/>
-                <input class="form-control" id="startDate" type="date" th:field="*{startDate}"/>
+                <input class="form-control" id="startDate" type="date" th:field="*{startDate}" name="startDate"/>
                 <p th:if="${#fields.hasErrors('startDate')}" th:class="${#fields.hasErrors('startDate')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
 
             </div>
             <div class="form-group col-md-3" >
                 <label for="endDate" th:text="#{home.room.form.enddate}"/>
-                <input class="form-control" id="endDate" type="date" th:field="*{endDate}"/>
+                <input class="form-control" id="endDate" type="date" th:field="*{endDate}" name="endDate"/>
                 <p th:if="${#fields.hasErrors('endDate')}" th:class="${#fields.hasErrors('endDate')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
 
             </div>
@@ -65,23 +65,15 @@
 
 <!-- List the rooms inside a form, clicking on one will select (submit) it for reservation -->
 
-<div>
-    <form th:action="@{select-room}" method="post">
-        <ul th:each="resultDTO : ${session.resultDTOS}">
-            <li th:text="${resultDTO}" />
-        </ul>
-    </form>
+<div class="container " style="justify-content: center; border-style: solid; border-color: dimgray;">
+    <ul th:each="resultDTO : ${session.resultDTOS}" class="row justify-content-center" style="list-style-type: none; padding-left: 0px;">
+        <a th:href="@{/reserveroom}">
+            <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: lightgray;">
+                <li th:text="${resultDTO}" style="color: black;"/>
+            </div>
+        </a>
+    </ul>
 </div>
-
-<ul th:each="resultDTO : ${session.resultDTOS}">
-    <li th:text="${resultDTO}" />
-</ul>
-
-<tr th:each="resultDTO : ${session.resultDTOS}">
-    <td th:text="${resultDTO.roomNumber}"></td>
-    <td th:text="${resultDTO.singleBeds}"></td>
-    <!-- Add other entity attributes as needed -->
-</tr>
 
 </body>
 </html>
