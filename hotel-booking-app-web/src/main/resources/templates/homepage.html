@@ -63,11 +63,17 @@
 </div>
 
 
+<!-- List the rooms inside a form, clicking on one will select (submit) it for reservation -->
 
-<ul th:each="hotel : ${hotels}">
-    <li th:text="${hotel}" />
-
+<ul th:each="resultDTO : ${session.resultDTOS}">
+    <li th:text="${resultDTO}" />
 </ul>
+
+<tr th:each="resultDTO : ${session.resultDTOS}">
+    <td th:text="${resultDTO.roomNumber}"></td>
+    <td th:text="${resultDTO.singleBeds}"></td>
+    <!-- Add other entity attributes as needed -->
+</tr>
 
 </body>
 </html>
