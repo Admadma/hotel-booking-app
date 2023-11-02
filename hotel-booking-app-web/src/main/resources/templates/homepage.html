@@ -65,6 +65,14 @@
 
 <!-- List the rooms inside a form, clicking on one will select (submit) it for reservation -->
 
+<div>
+    <form th:action="@{select-room}" method="post">
+        <ul th:each="resultDTO : ${session.resultDTOS}">
+            <li th:text="${resultDTO}" />
+        </ul>
+    </form>
+</div>
+
 <ul th:each="resultDTO : ${session.resultDTOS}">
     <li th:text="${resultDTO}" />
 </ul>

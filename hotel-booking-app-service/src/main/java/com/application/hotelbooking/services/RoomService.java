@@ -1,6 +1,5 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.*;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class RoomService {
@@ -87,6 +85,9 @@ public class RoomService {
     }
 
     private List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+//        System.out.println(roomRepository.findRoomByRoomNumberAndHotelHotelName(77, "asd Hotel").getRoomNumber());
+        LOGGER.info(String.valueOf(roomRepository.findRoomBySingleBedsAndHotelHotelName(0, "asd Hotel").getRoomNumber()));
+
         return roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
                 roomSearchFormServiceDTO.getRoomType(),
