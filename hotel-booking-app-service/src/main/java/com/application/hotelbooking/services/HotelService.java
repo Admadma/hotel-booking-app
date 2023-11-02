@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.HotelModel;
+import com.application.hotelbooking.dto.HotelDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.repositories.HotelRepository;
 import com.application.hotelbooking.transformers.HotelTransformer;
@@ -20,6 +21,10 @@ public class HotelService {
 
     @Autowired
     private HotelTransformer hotelTransformer;
+
+    public HotelDTO getHotelDTO(Long hotelId){
+        return hotelTransformer.transformToHotelDTO(hotelRepository.findById(hotelId).get());
+    }
 
     public List<HotelModel> getAllHotels(){
         return hotelTransformer.transformToHotelModels(hotelRepository.findAll());

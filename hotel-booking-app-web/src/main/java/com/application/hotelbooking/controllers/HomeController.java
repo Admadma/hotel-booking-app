@@ -2,6 +2,7 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
+import com.application.hotelbooking.dto.RoomSearchResultDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.transformers.RoomSearchFormDTOTransformer;
 import com.application.hotelbooking.transformers.RoomViewTransformer;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -50,8 +52,11 @@ public class HomeController {
             return "homepage";
         }
         transformFieldsToNulls(roomSearchFormDTO);
-        roomService.searchRooms(roomSearchFormDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO));
+//        roomService.searchRooms(roomSearchFormDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)).stream().forEach(roomSearchResultDTO -> LOGGER.info(roomSearchResultDTO.toString()));
 
+        List<RoomSearchResultDTO> resultDTOS = roomService.searchRooms(roomSearchFormDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO));
+        LOGGER.info(String.valueOf(resultDTOS.size()));
+        LOGGER.info(resultDTOS.toString());
 //        RoomService.listRooms(roomSearchFormDTO)
 
         LOGGER.info("No Error");

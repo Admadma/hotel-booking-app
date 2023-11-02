@@ -3,9 +3,7 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.RoomType;
-import com.application.hotelbooking.dto.RoomCreationServiceDTO;
-import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
-import com.application.hotelbooking.dto.RoomSearchResultDTO;
+import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.transformers.RoomCreationServiceDTOTransformer;
@@ -32,6 +30,9 @@ public class RoomService {
     private NewReservationService reservationService;
 
     @Autowired
+    private HotelService hotelService;
+
+    @Autowired
     private RoomTransformer roomTransformer;
 
     @Autowired
@@ -39,6 +40,10 @@ public class RoomService {
 
     public List<RoomModel> getAllRooms(){
         return roomTransformer.transformToRoomModels(roomRepository.findAll());
+    }
+
+    public RoomDTO getRoomDTO(Long roomId){
+        return roomTransformer.transformToRoomDTO(roomRepository.findById(roomId).get());
     }
 
     public RoomModel getRoom(Long roomId){
@@ -49,43 +54,42 @@ public class RoomService {
         return roomTransformer.transformToRoomModels(roomRepository.findAllByRoomType(RoomType.valueOf(roomType)));
     }
 
-//    private List<RoomSearchResultDTO> createRoomSearchResultDTOs(List<Long> roomIds){
-//        List<RoomSearchResultDTO> roomSearchResultDTOs = new LinkedList<>();
-//        for (Long roomId : roomIds) {
-//            roomRepository.findRoomById(roomId).g
-//            roomSearchResultDTOs.add(RoomSearchResultDTO.)
-//        }
-//    }
+    private List<RoomSearchResultDTO> createRoomSearchResultDTOs(List<Long> roomIds){
+        List<RoomSearchResultDTO> roomSearchResultDTOs = new LinkedList<>();
+        for (Long roomId : roomIds) {
+            RoomDTO room = getRoomDTO(roomId);
+            roomSearchResultDTOs.add(createRoomSearchResultDTO(room));
+        }
+        return roomSearchResultDTOs;
+    }
+
+    private static RoomSearchResultDTO createRoomSearchResultDTO(RoomDTO room) {
+        return new RoomSearchResultDTO(room.getRoomNumber(),
+                room.getSingleBeds(),
+                room.getDoubleBeds(),
+                room.getPricePerNight(),
+                room.getRoomType(),
+                room.getHotel().getHotelName(),
+                room.getHotel().getCity());
+    }
 
     public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-//        roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
-//                roomSearchFormServiceDTO.getDoubleBeds(),
-//                roomSearchFormServiceDTO.getRoomType(),
-//                roomSearchFormServiceDTO.getHotelName(),
-//                roomSearchFormServiceDTO.getCity())
-//                .stream()
-//                .forEach(room -> LOGGER.info("Room number: " + room.getRoomNumber() +
-//                    " singleBeds: " + room.getSingleBeds()  +
-//                    " doubleBeds: " + room.getDoubleBeds() +
-//                    " roomType: " + room.getRoomType() +
-//                    " city: " + room.getHotel().getCity() +
-//                    " hotel: " + room.getHotel().getHotelName()
-//                ));
+        List<Long> roomIds = getRoomsWithConditions(roomSearchFormServiceDTO);
+        List<Long> availableRooms = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 
-        List<Long> roomIds = roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
+        return createRoomSearchResultDTOs(availableRooms);
+    }
+
+    private List<Long> filterAvailableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO, List<Long> roomIds) {
+        return reservationService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate());
+    }
+
+    private List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        return roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
                 roomSearchFormServiceDTO.getRoomType(),
                 roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity());
-
-        LOGGER.info(String.valueOf(roomIds.size()));
-        roomIds.stream().forEach(roomId -> LOGGER.info(roomId.toString()));
-        LOGGER.info("-----");
-
-        reservationService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate()).stream().forEach(roomId -> LOGGER.info(roomId.toString()));
-
-        // Now transform the filtered list to a list of DTOs
-        return null;
     }
 
     public boolean isRoomTypeNotAvailable(String roomType){
