@@ -5,6 +5,7 @@ import com.application.hotelbooking.dto.RoomSearchResultViewDTO;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.services.NewReservationService;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,9 @@ public class ReserveRoomController {
 
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private RoomRepositoryService roomRepositoryService;
 
     @Autowired
     private RoomSearchDTOTransformer roomSearchDTOTransformer;
@@ -51,7 +55,7 @@ public class ReserveRoomController {
             reservationService.reserveRoom(
                     startDate,
                     endDate,
-                    roomService.findRoomByNumberAndHotelName(roomNumber, hotelName), "test_user");
+                    roomRepositoryService.findRoomByNumberAndHotelName(roomNumber, hotelName), "test_user");
             LOGGER.info("Reserved room");
         } catch (InvalidTimePeriodException itpe){
             LOGGER.info("Time period taken or invalid");

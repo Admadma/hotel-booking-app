@@ -63,6 +63,7 @@ public class NewReservationService {
     }
 
     //TODO: rename the RoomSearchResultDTO class if I want to use it for other purpose (like here) than returning the search result
+    //TODO: In the old version I checked the version on the confirmation page. Now there is no reason for it, since I basically check the entire input data here and reserve that exact room, so I can handle version change due to availability errors here
     public boolean reserveRoom(LocalDate startDate, LocalDate endDate, RoomDTO roomDTO, String user){
         if (0 == isRoomAvailableInTimePeriodInt(roomDTO.getReservations(),  startDate, endDate)){
             throw new InvalidTimePeriodException();

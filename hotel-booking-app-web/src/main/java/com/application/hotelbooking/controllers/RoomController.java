@@ -24,11 +24,6 @@ public class RoomController {
 
     @RequestMapping(value = "/select-room-type")
     public String selectRoomType(@ModelAttribute("roomType") String roomType, BindingResult result, HttpSession session){
-        if (roomService.isRoomTypeNotAvailable(roomType)){
-            LOGGER.error("User attempted to select a room of invalid type: " + roomType);
-            result.addError(new ObjectError("globalError", "There are currently no rooms of that type."));
-            return "rooms";
-        }
         session.setAttribute("roomType", RoomType.valueOf(roomType));
 //        session.setAttribute("selectedRoom", roomService.find(roomType));
 

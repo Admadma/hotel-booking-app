@@ -48,26 +48,12 @@ public class ReservationService {
      * @return The reserved room
      */
     public ReservationModel reserve(ReservationModel reservationModel){
-        if (!roomService.roomVersionMatches(reservationModel.getRoom())){
-            throw new OptimisticLockException();
-        }
         ReservationModel reservation = reservationTransformer.transformToReservationModel(reservationRepository.save(reservationTransformer.transformToReservation(reservationModel)));
-        roomService.updateRoomVersion(reservationModel.getRoom());
         return reservation;
     }
 
     public ReservationModel prepareReservation(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
-        isTimePeriodValid(selectedStartDate, selectedEndDate);
-
-        RoomModel room = findFreeRoom(roomService.findAllRoomsOfGivenType(roomType), selectedStartDate, selectedEndDate);
-
-        return ReservationModel.builder()
-                .room(room)
-                .user(userService.getUsersByName(username).get(0))
-                .startDate(selectedStartDate)
-                .endDate(selectedEndDate)
-                .totalPrice(getTotalPrice(room, selectedStartDate, selectedEndDate))
-                .build();
+        return null;
     }
 
     private void isTimePeriodValid(LocalDate selectedStartDate, LocalDate selectedEndDate) {
