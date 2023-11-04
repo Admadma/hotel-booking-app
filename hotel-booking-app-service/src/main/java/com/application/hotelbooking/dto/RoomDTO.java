@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomDTO {
 
+    private Long id;
     private Long version;
     private int roomNumber;
     private int singleBeds;

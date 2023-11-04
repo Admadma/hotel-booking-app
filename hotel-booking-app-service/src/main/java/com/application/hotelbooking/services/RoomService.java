@@ -48,6 +48,10 @@ public class RoomService {
         return roomTransformer.transformToRoomModel(roomRepository.findRoomById(roomId));
     }
 
+    public RoomDTO findRoomByNumberAndHotelName(int roomNumber, String hotelName){
+        return roomTransformer.transformToRoomDTO(roomRepository.findRoomByRoomNumberAndHotelHotelName(roomNumber, hotelName));
+    }
+
     public List<RoomModel> findAllRoomsOfGivenType(String roomType){
         return roomTransformer.transformToRoomModels(roomRepository.findAllByRoomType(RoomType.valueOf(roomType)));
     }
@@ -86,7 +90,6 @@ public class RoomService {
 
     private List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
 //        System.out.println(roomRepository.findRoomByRoomNumberAndHotelHotelName(77, "asd Hotel").getRoomNumber());
-        LOGGER.info(String.valueOf(roomRepository.findRoomBySingleBedsAndHotelHotelName(0, "asd Hotel").getRoomNumber()));
 
         return roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),

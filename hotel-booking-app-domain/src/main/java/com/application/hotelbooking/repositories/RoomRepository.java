@@ -17,9 +17,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findAllByRoomType(RoomType roomType);
 
-    //TODO: this is just for debugging. Later roomNumber wont be unique across all rooms since multiple hotels can have the same roomNumber. Instead The combination of roomNumber and hotelName have to be unique
-    Room findRoomBySingleBedsAndHotelHotelName(@Param("singleBeds") Integer singleBeds, @Param("hotelName") String hotelName);
-//    Room findRoomByRoomNumberAndHotelHotelName(@Param("roomNumber") int roomNumber, @Param("hotelName") String hotelName);
+    //TODO: Later roomNumber wont be unique across all rooms since multiple hotels can have the same roomNumber. Instead The combination of roomNumber and hotelName have to be unique
+    Room findRoomByRoomNumberAndHotelHotelName(@Param("roomNumber") int roomNumber, @Param("hotelName") String hotelName);
 
     @Query("SELECT r.id FROM Room r JOIN r.hotel h WHERE" +
             "(:singleBeds IS NULL OR r.singleBeds = :singleBeds)" +

@@ -23,8 +23,12 @@ public class RoomSearchDTOTransformer {
         return modelMapper.map(roomSearchFormDTO, RoomSearchFormServiceDTO.class);
     }
 
-    public RoomSearchResultViewDTO transformToRoomSearchResultDTO(RoomSearchResultDTO roomSearchResultDTO){
+    public RoomSearchResultViewDTO transformToRoomSearchResultViewDTO(RoomSearchResultDTO roomSearchResultDTO){
         return modelMapper.map(roomSearchResultDTO, RoomSearchResultViewDTO.class);
+    }
+
+    public RoomSearchResultDTO transformToRoomSearchResultDTO(RoomSearchResultViewDTO roomSearchResultViewDTO){
+        return modelMapper.map(roomSearchResultViewDTO, RoomSearchResultDTO.class);
     }
 
     public List<RoomSearchResultViewDTO> transformToRoomSearchResultViewDTOs(List<RoomSearchResultDTO> RoomSearchResultDTOs){
