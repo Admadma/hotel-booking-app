@@ -39,7 +39,7 @@ public class AddHotelsController {
         }
 
         try {
-            hotelService.createHotel(hotelViewTransformer.transformToHotelModel(hotelView));
+            hotelService.createHotel(hotelViewTransformer.transformToHotelDTO(hotelView));
             model.addAttribute("successMessage", "Success");
 //            LOGGER.info("Created hotel " + hotelView.getId() + " " + hotelView.getHotelName() + " " + hotelView.getCity());
         } catch (InvalidHotelException ihe){

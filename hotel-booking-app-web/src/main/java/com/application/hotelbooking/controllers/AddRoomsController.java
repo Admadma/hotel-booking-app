@@ -4,6 +4,7 @@ import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomCreationDTOTransformer;
 import com.application.hotelbooking.transformers.RoomViewTransformer;
@@ -31,7 +32,7 @@ public class AddRoomsController {
     private RoomService roomService;
 
     @Autowired
-    private HotelService hotelService;
+    private HotelRepositoryService hotelRepositoryService;
     @Autowired
     private RoomViewTransformer roomViewTransformer;
 
@@ -65,7 +66,7 @@ public class AddRoomsController {
     public String addRooms(Model model, HttpServletRequest request){
         LOGGER.info("Navigating to addRooms page");
         model.addAttribute("roomCreationDTO", new RoomCreationDTO());
-        request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelService.getAllHotels()));
+        request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelRepositoryService.getAllHotels()));
 
         return "addrooms";
     }
