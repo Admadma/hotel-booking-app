@@ -1,9 +1,9 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
-import com.application.hotelbooking.dto.RoomSearchResultDTO;
+import com.application.hotelbooking.dto.RoomSearchResultViewDTO;
 import com.application.hotelbooking.services.RoomService;
-import com.application.hotelbooking.transformers.RoomSearchFormDTOTransformer;
+import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class HomeController {
     private RoomService roomService;
 
     @Autowired
-    private RoomSearchFormDTOTransformer roomSearchFormDTOTransformer;
+    private RoomSearchDTOTransformer roomSearchDTOTransformer;
 
     private void transformFieldsToNulls(RoomSearchFormDTO roomSearchFormDTO){
         if ("".equals(roomSearchFormDTO.getCity())){
@@ -50,7 +50,7 @@ public class HomeController {
         }
         transformFieldsToNulls(roomSearchFormDTO);
 
-        List<RoomSearchResultDTO> resultDTOS = roomService.searchRooms(roomSearchFormDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO));
+        List<RoomSearchResultViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
         request.getSession().setAttribute("resultDTOS", resultDTOS);
         LOGGER.info(resultDTOS.toString());
 
