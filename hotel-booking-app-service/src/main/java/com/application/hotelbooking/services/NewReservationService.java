@@ -45,4 +45,9 @@ public class NewReservationService {
 
         return freeRooms;
     }
+
+    public boolean reserveRoom(){
+
+        return false;
+    }
 }

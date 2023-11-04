@@ -55,13 +55,13 @@ public class HomeController {
         LOGGER.info(resultDTOS.toString());
 
         LOGGER.info("No Error");
-        redirectAttributes.addFlashAttribute("errorRoomSearchFormDTO", roomSearchFormDTO);
+        redirectAttributes.addFlashAttribute("successRoomSearchFormDTO", roomSearchFormDTO);
         return "redirect:/hotelbooking/home";
     }
 
 
     @GetMapping(value = "/home")
-    public String homeWithParams(Model model, @ModelAttribute("errorRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO){
+    public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO){
         LOGGER.info("Navigating to home page");
 
         if (Objects.isNull(roomSearchFormDTO)) {

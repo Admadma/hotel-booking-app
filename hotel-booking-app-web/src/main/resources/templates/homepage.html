@@ -64,16 +64,17 @@
 
 
 <!-- List the rooms inside a form, clicking on one will select (submit) it for reservation -->
-
 <div class="container " style="justify-content: center; border-style: solid; border-color: dimgray;">
-    <ul th:each="resultDTO : ${session.resultDTOS}" class="row justify-content-center" style="list-style-type: none; padding-left: 0px;">
-        <a th:href="@{/reserveroom}">
+    <ul style="list-style-type: none; padding-left: 0px;">
+        <li th:each="resultDTO : ${session.resultDTOS}" class="row justify-content-center" style="margin: 1.5em;">
             <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: lightgray;">
-                <li th:text="${resultDTO}" style="color: black;"/>
+                <a th:href="@{/reserveroom(roomNumber=${resultDTO.roomNumber}, hotelName=${resultDTO.hotelName}, arrivalDate=${resultDTO.startDate}, departureDate=${resultDTO.endDate})}" th:text="${resultDTO}" style="color: black;"/>
             </div>
-        </a>
+        </li>
     </ul>
 </div>
+
+
 
 </body>
 </html>
