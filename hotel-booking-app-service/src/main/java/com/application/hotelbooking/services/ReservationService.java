@@ -1,85 +1,32 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.ReservationModel;
-import com.application.hotelbooking.domain.RoomModel;
-import com.application.hotelbooking.exceptions.*;
+import com.application.hotelbooking.dto.ReservationDTO;
+import com.application.hotelbooking.dto.RoomDTO;
+import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.repositories.ReservationRepository;
-import com.application.hotelbooking.transformers.ReservationTransformer;
-import com.application.hotelbooking.transformers.RoomTransformer;
-import com.application.hotelbooking.transformers.UserTransformer;
-import jakarta.persistence.OptimisticLockException;
+import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ReservationService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
     @Autowired
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private RoomService roomService;
+    private ReservationRepositoryService reservationRepositoryService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserTransformer userTransformer;
-
-    @Autowired
-    private ReservationTransformer reservationTransformer;
-
-    @Autowired
-    private RoomTransformer roomTransformer;
-
-    @Autowired
-    private Clock clock;
-
-    /**
-     * It is possible that after entering time period and finding a room, the user doesn't immediately reserve it.
-     * In the meantime someone else might take it, so I need to check if the room had any new reservations since then.
-     * If a reservation was made on a room, the room's version will increase.
-     *
-     * @param reservationModel The reservation that needs to be validated and saved
-     * @return The reserved room
-     */
-    public ReservationModel reserve(ReservationModel reservationModel){
-        ReservationModel reservation = reservationTransformer.transformToReservationModel(reservationRepository.save(reservationTransformer.transformToReservation(reservationModel)));
-        return reservation;
-    }
-
-    public ReservationModel prepareReservation(String roomType, String username, LocalDate selectedStartDate, LocalDate selectedEndDate){
-        return null;
-    }
-
-    private void isTimePeriodValid(LocalDate selectedStartDate, LocalDate selectedEndDate) {
-        if (selectedStartDate.isBefore(LocalDate.now(clock)) || selectedStartDate.isAfter(selectedEndDate)) {
-            throw new InvalidTimePeriodException();
-        }
-    }
-
-    private RoomModel findFreeRoom(List<RoomModel> rooms, LocalDate selectedStartDate, LocalDate selectedEndDate) {
-        List<ReservationModel> reservations;
-        for (RoomModel room: rooms) {
-            reservations = reservationTransformer.transformToReservationModels(reservationRepository.findAllByRoom(roomTransformer.transformToRoom(room)));
-            if (reservations.isEmpty()){
-                // if the room has no reservations associated with it, that means we can simply reserve it
-                return room;
-            }
-            if (isRoomAvailableInTimePeriod(reservations, selectedStartDate, selectedEndDate)){
-                // if there are reservations associated with the room then we need to check if any of them conflicts with the selected time period
-                return room;
-            }
-        }
-        throw new NoRoomsAvailableException();
-    }
-
-    private boolean isRoomAvailableInTimePeriod(List<ReservationModel> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
-        for (ReservationModel reservation : reservations) {
+    private boolean isRoomAvailableInTimePeriod(List<ReservationDTO> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
+        for (ReservationDTO reservation : reservations) {
             if (!(reservation.getStartDate().isAfter(selectedEndDate) || reservation.getEndDate().minusDays(1).isBefore(selectedStartDate))) {
                 // I check each reservation of this room. If it has a single conflict then I can't reserve this in the selected time period.
                 return false;
@@ -88,33 +35,42 @@ public class ReservationService {
         return true;
     }
 
-    private int getTotalPrice(RoomModel roomModel, LocalDate startDate, LocalDate endDate){
-        return roomModel.getPricePerNight() * endDate.compareTo(startDate);
-    }
+    public List<Long> filterFreeRooms(List<Long> roomIds, LocalDate startDate, LocalDate endDate){
+        List<Long> freeRooms = new LinkedList<>();
+        List<ReservationDTO> reservations;
 
-    public ReservationModel getReservationById(Long id){
-        return reservationTransformer.transformToReservationModel(reservationRepository.findById(id).get());
-    }
-    public void deleteReservationOfUser(String username, Long reservationId){
-        if (reservationNotExists(reservationId)){
-            throw new CancellationErrorException("Could nto find reservation with id:" + reservationId);
+        for (Long roomId : roomIds) {
+            reservations = reservationRepositoryService.getReservationsByRoomId(roomId);
+            if (reservations.isEmpty() || isRoomAvailableInTimePeriod(reservations, startDate, endDate)){
+                freeRooms.add(roomId);
+            }
         }
-        ReservationModel reservation = getReservationById(reservationId);
-        if (!reservation.getUser().getUsername().equals(username)){
-            throw new CancellationErrorException("The selected reservation doesn't belong to the current user");
+
+        return freeRooms;
+    }
+
+    //TODO: rename the RoomSearchResultDTO class if I want to use it for other purpose (like here) than returning the search result
+    //TODO: In the old version I checked the version on the confirmation page. Now there is no reason for it, since I basically check the entire input data here and reserve that exact room, so I can handle version change due to availability errors here
+    public boolean reserveRoom(LocalDate startDate, LocalDate endDate, RoomDTO roomDTO, String user){
+        if (!isRoomAvailableInTimePeriod(roomDTO.getReservations(),  startDate, endDate)){
+            throw new InvalidTimePeriodException();
         }
-        reservationRepository.delete(reservationTransformer.transformToReservation(reservation));
-    }
+        ReservationDTO reservationDTO = ReservationDTO
+                .builder()
+                .room(roomDTO)
+                .user(null)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
 
-    private boolean reservationNotExists(Long reservationId){
-        return reservationRepository.findById(reservationId).isEmpty();
-    }
 
-    public List<ReservationModel> getReservationsOfUser(String username){
-        return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUser(userTransformer.transformToUser(userService.getUsersByName(username).get(0))));
-    }
+        ReservationDTO reservation = reservationRepositoryService.save(reservationDTO);
 
-    public void clearReservations(){
-        reservationRepository.deleteAll();
+        if (Objects.isNull(reservation)){
+            return false;
+        }
+        LOGGER.info(reservation.getStartDate().toString());
+        LOGGER.info(String.valueOf(reservation.getRoom().getRoomNumber()));
+        return true;
     }
 }

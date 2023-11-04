@@ -1,9 +1,7 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.dto.RoomSearchFormDTO;
-import com.application.hotelbooking.dto.RoomSearchResultViewDTO;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
-import com.application.hotelbooking.services.NewReservationService;
+import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
@@ -23,7 +21,7 @@ public class ReserveRoomController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReserveRoomController.class);
 
     @Autowired
-    private NewReservationService reservationService;
+    private ReservationService reservationService;
 
     @Autowired
     private RoomService roomService;

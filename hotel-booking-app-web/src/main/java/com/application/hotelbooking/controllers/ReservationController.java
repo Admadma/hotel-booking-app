@@ -4,12 +4,10 @@ import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.DateRangeDto;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
-import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.NoRoomsAvailableException;
-import com.application.hotelbooking.services.ReservationService;
+import com.application.hotelbooking.services.OldReservationService;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
-
 @Controller
 @RequestMapping(path = "hotelbooking")
 public class ReservationController {
@@ -33,7 +27,7 @@ public class ReservationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationController.class);
 
     @Autowired
-    private ReservationService reservationService;
+    private OldReservationService reservationService;
 
     // TODO: remove this later. Controllers should not use more than one service
     @Autowired

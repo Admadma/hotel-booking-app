@@ -2,7 +2,7 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.exceptions.CancellationErrorException;
-import com.application.hotelbooking.services.ReservationService;
+import com.application.hotelbooking.services.OldReservationService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class MyReservationsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MyReservationsController.class);
 
     @Autowired
-    private ReservationService reservationService;
+    private OldReservationService reservationService;
 
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;

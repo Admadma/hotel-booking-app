@@ -1,7 +1,7 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
-import com.application.hotelbooking.services.ReservationService;
+import com.application.hotelbooking.services.OldReservationService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +21,7 @@ public class ConfirmReservationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmReservationController.class);
 
     @Autowired
-    private ReservationService reservationService;
+    private OldReservationService reservationService;
 
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;

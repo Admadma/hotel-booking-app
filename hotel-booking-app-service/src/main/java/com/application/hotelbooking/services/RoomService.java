@@ -21,7 +21,7 @@ public class RoomService {
     private RoomRepositoryService roomRepositoryService;
 
     @Autowired
-    private NewReservationService reservationService;
+    private ReservationService reservationService;
 
 
     private List<RoomSearchResultDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
