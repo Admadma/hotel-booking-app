@@ -47,7 +47,7 @@ public class AddHotelsController {
             return "addhotels";
         }
 
-        return "addHotels";
+        return "addhotels";
     }
 
     @GetMapping("/addHotels")
