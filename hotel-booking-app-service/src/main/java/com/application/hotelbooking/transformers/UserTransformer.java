@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.domain.User;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,13 @@ public class UserTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public UserModel transformToModel(User user){
-        return modelMapper.map(user, UserModel.class);
+    public User transformToUser(UserDTO userDTO){
+        return modelMapper.map(userDTO, User.class);
     }
 
-    public User transformToUser(UserModel userModel){
-        return modelMapper.map(userModel, User.class);
-    }
-
-    public Collection<UserModel> transformToUserModels(Collection<User> users){
+    public Collection<UserDTO> transformToUserDTOs(Collection<User> users){
         return users.stream()
-                .map(user -> modelMapper.map(user, UserModel.class))
+                .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
 }

@@ -1,13 +1,9 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
-import com.application.hotelbooking.services.OldReservationService;
-import com.application.hotelbooking.transformers.ReservationViewTransformer;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,24 +16,10 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 public class ConfirmReservationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmReservationController.class);
 
-    @Autowired
-    private OldReservationService reservationService;
-
-    @Autowired
-    private ReservationViewTransformer reservationViewTransformer;
-
     @RequestMapping(value = "/confirm-reservation")
     public String reserve(@SessionAttribute("reservation") ReservationView reservationView, Authentication auth, HttpSession session){
 
-        try {
-            reservationService.reserve(reservationViewTransformer.transformToReservationModel(reservationView));
-        } catch (OptimisticLockException ole){
-            LOGGER.error("Failed to reserve room, because someone else already made a reservation with that same room.");
-            return "redirect:/hotelbooking/confirmreservation?errorRoomTaken";
-        }
-        LOGGER.info("Successfully reserved the room!");
-
-        return "redirect:/hotelbooking/myreservations?reservationSuccess";
+        return "null";
     }
 
 

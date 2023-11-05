@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.domain.Role;
-import com.application.hotelbooking.domain.RoleModel;
+import com.application.hotelbooking.dto.RoleDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,17 @@ public class RoleTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public RoleModel transformToRoleModel(Role role){
-        return modelMapper.map(role, RoleModel.class);
+    public RoleDTO transformToRoleDTO(Role role){
+        return modelMapper.map(role, RoleDTO.class);
     }
 
-    public Role transformToRole(RoleModel roleModel){
-        return modelMapper.map(roleModel, Role.class);
+    public Role transformToRole(RoleDTO roleDTO){
+        return modelMapper.map(roleDTO, Role.class);
     }
 
-    public Collection<RoleModel> transformToRoleModels(Collection<Role> roles){
+    public Collection<RoleDTO> transformToRoleDTOs(Collection<Role> roles){
         return roles.stream()
-                .map(role -> modelMapper.map(role, RoleModel.class))
+                .map(role -> modelMapper.map(role, RoleDTO.class))
                 .collect(Collectors.toList());
     }
 }

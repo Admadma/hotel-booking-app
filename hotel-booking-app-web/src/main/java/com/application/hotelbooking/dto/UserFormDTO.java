@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class UserFormDTO {
     @NotEmpty(message = "Please enter a username")
     private String username;
     @NotEmpty(message = "Please enter a password")

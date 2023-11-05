@@ -4,9 +4,11 @@ import com.application.hotelbooking.dto.HotelDTO;
 import com.application.hotelbooking.repositories.HotelRepository;
 import com.application.hotelbooking.transformers.HotelTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class HotelRepositoryService {
 
     @Autowired

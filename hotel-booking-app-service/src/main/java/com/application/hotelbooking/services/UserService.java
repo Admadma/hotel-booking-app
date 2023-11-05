@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.RoleModel;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.dto.RoleDTO;
+import com.application.hotelbooking.dto.UserDTO;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.UserRepository;
@@ -31,8 +31,8 @@ public class UserService {
     @Autowired
     private RoleTransformer roleTransformer;
 
-    public List<UserModel> getUsersByName(String username){
-        return userTransformer.transformToUserModels(userRepository.findUserByUsername(username)).stream().toList();
+    public List<UserDTO> getUsersByName(String username){
+        return userTransformer.transformToUserDTOs(userRepository.findUserByUsername(username)).stream().toList();
     }
 
     public boolean userExists(String username){
@@ -45,51 +45,51 @@ public class UserService {
         }
     }
 
-    private void save(UserModel userModel){
-        userRepository.save(userTransformer.transformToUser(userModel));
+    private void save(UserDTO userDTO){
+        userRepository.save(userTransformer.transformToUser(userDTO));
     }
 
     @Transactional
-    public void addNewUser(String username, String password, Collection<RoleModel> roles) throws UserAlreadyExistsException{
+    public void addNewUser(String username, String password, Collection<RoleDTO> roles) throws UserAlreadyExistsException{
         if (!userExists(username)){
-            UserModel userModel = UserModel.builder()
+            UserDTO userDTO = UserDTO.builder()
                     .username(username)
                     .version(DEFAULT_STARTING_VERSION)
                     .password(passwordEncoder.encode(password))
                     .roles(roles)
                     .build();
-            save(userModel);
+            save(userDTO);
         } else {
             throw new UserAlreadyExistsException("That username is taken.");
         }
     }
 
     @Transactional
-    public void createAdminUserIfNotFound(String username, String password, Collection<RoleModel> roles){
+    public void createAdminUserIfNotFound(String username, String password, Collection<RoleDTO> roles){
         if (userRepository.findUserByUsername(username).isEmpty()){
             addNewUser(username, password, roles);
         }
     }
 
     public void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException{
-        UserModel userModel = getUsersByName(username).get(0);
-        if (!userVersionMatches(version, userModel)){
+        UserDTO userDTO = getUsersByName(username).get(0);
+        if (!userVersionMatches(version, userDTO)){
             throw new OptimisticLockException();
         }
-        if (!oldPasswordMatches(userModel, oldPassword)){
+        if (!oldPasswordMatches(userDTO, oldPassword)){
             throw new CredentialMismatchException("The provided old password does mot match.");
         }
 
-        userModel.setPassword(passwordEncoder.encode(newPassword));
-        userModel.setVersion(++version);
-        save(userModel);
+        userDTO.setPassword(passwordEncoder.encode(newPassword));
+        userDTO.setVersion(++version);
+        save(userDTO);
     }
 
-    private boolean userVersionMatches(Long version, UserModel userModel) {
-        return userModel.getVersion().equals(version);
+    private boolean userVersionMatches(Long version, UserDTO userDTO) {
+        return userDTO.getVersion().equals(version);
     }
 
-    private boolean oldPasswordMatches(UserModel userModel, String oldPassword){
-        return passwordEncoder.matches(oldPassword, userModel.getPassword());
+    private boolean oldPasswordMatches(UserDTO userDTO, String oldPassword){
+        return passwordEncoder.matches(oldPassword, userDTO.getPassword());
     }
 }
