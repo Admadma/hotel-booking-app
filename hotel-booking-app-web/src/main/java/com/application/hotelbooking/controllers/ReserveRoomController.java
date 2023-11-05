@@ -73,7 +73,7 @@ public class ReserveRoomController {
 
     @GetMapping("/reserveroom")
     public String reserveRoom(@RequestParam("index") int index,
-                              @SessionAttribute("reservation") List<RoomSearchResultViewDTO> roomSearchResultViewDTOS,
+                              @SessionAttribute("resultDTOS") List<RoomSearchResultViewDTO> roomSearchResultViewDTOS,
                               Model model,
                               HttpServletRequest request){
         LOGGER.info("Navigating to reserveroom page");
