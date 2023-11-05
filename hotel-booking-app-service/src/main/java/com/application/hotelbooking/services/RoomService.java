@@ -25,17 +25,17 @@ public class RoomService {
     private ReservationService reservationService;
 
 
-    private List<RoomSearchResultDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-        List<RoomSearchResultDTO> roomSearchResultDTOs = new LinkedList<>();
+    private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
+        List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
         for (Long roomId : roomIds) {
             RoomModel room = roomRepositoryService.getRoomDTO(roomId);
-            roomSearchResultDTOs.add(createRoomSearchResultDTO(room, roomSearchFormServiceDTO));
+            reservableRoomDTOS.add(createRoomSearchResultDTO(room, roomSearchFormServiceDTO));
         }
-        return roomSearchResultDTOs;
+        return reservableRoomDTOS;
     }
 
-    private static RoomSearchResultDTO createRoomSearchResultDTO(RoomModel room, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
-        return new RoomSearchResultDTO(room.getRoomNumber(),
+    private static ReservableRoomDTO createRoomSearchResultDTO(RoomModel room, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        return new ReservableRoomDTO(room.getRoomNumber(),
                 room.getSingleBeds(),
                 room.getDoubleBeds(),
                 room.getPricePerNight(),
@@ -46,7 +46,7 @@ public class RoomService {
                 roomSearchFormServiceDTO.getEndDate());
     }
 
-    public List<RoomSearchResultDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
+    public List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
         List<Long> availableRooms = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 

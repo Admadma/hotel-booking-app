@@ -1,7 +1,7 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
-import com.application.hotelbooking.dto.RoomSearchResultViewDTO;
+import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,7 +50,7 @@ public class HomeController {
         }
         transformFieldsToNulls(roomSearchFormDTO);
 
-        List<RoomSearchResultViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
+        List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
         request.getSession().setAttribute("resultDTOS", resultDTOS);
         LOGGER.info(resultDTOS.toString());
 

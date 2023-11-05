@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomView {
 
+    private Long id;
     private Long version;
     private int roomNumber;
     private int singleBeds;
@@ -18,4 +19,5 @@ public class RoomView {
     private int pricePerNight;
     private RoomType roomType;
     private List<ReservationView> reservations;
+    private HotelView hotel;
 }

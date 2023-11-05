@@ -2,8 +2,8 @@ package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
-import com.application.hotelbooking.dto.RoomSearchResultDTO;
-import com.application.hotelbooking.dto.RoomSearchResultViewDTO;
+import com.application.hotelbooking.dto.ReservableRoomDTO;
+import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +21,17 @@ public class RoomSearchDTOTransformer {
         return modelMapper.map(roomSearchFormDTO, RoomSearchFormServiceDTO.class);
     }
 
-    public RoomSearchResultViewDTO transformToRoomSearchResultViewDTO(RoomSearchResultDTO roomSearchResultDTO){
-        return modelMapper.map(roomSearchResultDTO, RoomSearchResultViewDTO.class);
+    public ReservableRoomViewDTO transformToRoomSearchResultViewDTO(ReservableRoomDTO reservableRoomDTO){
+        return modelMapper.map(reservableRoomDTO, ReservableRoomViewDTO.class);
     }
 
-    public RoomSearchResultDTO transformToRoomSearchResultDTO(RoomSearchResultViewDTO roomSearchResultViewDTO){
-        return modelMapper.map(roomSearchResultViewDTO, RoomSearchResultDTO.class);
+    public ReservableRoomDTO transformToRoomSearchResultDTO(ReservableRoomViewDTO reservableRoomViewDTO){
+        return modelMapper.map(reservableRoomViewDTO, ReservableRoomDTO.class);
     }
 
-    public List<RoomSearchResultViewDTO> transformToRoomSearchResultViewDTOs(List<RoomSearchResultDTO> RoomSearchResultDTOs){
-        return RoomSearchResultDTOs.stream()
-                .map(roomSearchResultDTO -> modelMapper.map(roomSearchResultDTO, RoomSearchResultViewDTO.class))
+    public List<ReservableRoomViewDTO> transformToRoomSearchResultViewDTOs(List<ReservableRoomDTO> reservableRoomDTOS){
+        return reservableRoomDTOS.stream()
+                .map(reservableRoomDTO -> modelMapper.map(reservableRoomDTO, ReservableRoomViewDTO.class))
                 .collect(Collectors.toList());
     }
 }

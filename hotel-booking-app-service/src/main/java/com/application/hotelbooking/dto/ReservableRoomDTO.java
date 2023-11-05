@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomSearchResultViewDTO {
+public class ReservableRoomDTO {
 
     private int roomNumber;
     private int singleBeds;

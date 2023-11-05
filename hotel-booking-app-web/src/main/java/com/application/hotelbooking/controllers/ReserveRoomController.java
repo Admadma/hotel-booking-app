@@ -1,10 +1,12 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.dto.RoomSearchResultViewDTO;
+import com.application.hotelbooking.domain.ReservationView;
+import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
+import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -12,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -36,52 +36,38 @@ public class ReserveRoomController {
     @Autowired
     private RoomSearchDTOTransformer roomSearchDTOTransformer;
 
-    @PostMapping("/reserve")
-    public String reserve(@SessionAttribute("selectedRoom") RoomSearchResultViewDTO roomSearchResultViewDTO, Model model, Authentication auth){
-        LOGGER.info("----------");
+    @Autowired
+    private ReservationViewTransformer reservationViewTransformer;
 
-        LOGGER.info(String.valueOf(roomSearchResultViewDTO.getRoomNumber()));
-        LOGGER.info(roomSearchResultViewDTO.getHotelName());
-        LOGGER.info(String.valueOf(roomSearchResultViewDTO.getStartDate()));
-        LOGGER.info("----------");
-
-        LocalDate startDate = LocalDate.parse("2023-11-10");
-        LOGGER.info(String.valueOf(startDate));
-        LocalDate endDate = LocalDate.parse("2023-11-15");
-        LOGGER.info(String.valueOf(endDate));
-        int roomNumber = 323;
-        LOGGER.info(String.valueOf(roomNumber));
-        String hotelName = "asd Hotel";
-        LOGGER.info(hotelName);
-
-
+    @GetMapping("/reserve")
+    public String reserve(@SessionAttribute("reservationPlan") ReservationView reservationView){
         try {
-            reservationService.reserveRoom(
-                    startDate,
-                    endDate,
-                    roomRepositoryService.findRoomByNumberAndHotelName(roomNumber, hotelName),
-                    auth.getName());
+            reservationService.reserveRoom(reservationViewTransformer.transformToReservationModel(reservationView));
             LOGGER.info("Reserved room");
         } catch (InvalidTimePeriodException itpe){
+            //TODO: handle errors related to changed version or room availability
             LOGGER.info("Time period taken or invalid");
         }catch (Exception e){
             LOGGER.info("Failed to reserve room");
             LOGGER.info(String.valueOf(e.getClass()));
+            LOGGER.info(e.getMessage());
         }
-        return "home";
+        return "redirect:/hotelbooking/home";
     }
 
     @GetMapping("/reserveroom")
     public String reserveRoom(@RequestParam("index") int index,
-                              @SessionAttribute("resultDTOS") List<RoomSearchResultViewDTO> roomSearchResultViewDTOS,
-                              Model model,
-                              HttpServletRequest request){
+                              @SessionAttribute("resultDTOS") List<ReservableRoomViewDTO> reservableRoomViewDTOS,
+                              HttpServletRequest request,
+                              Authentication auth){
         LOGGER.info("Navigating to reserveroom page");
-        LOGGER.info(String.valueOf(index));
-        LOGGER.info("---------------------");
 
-        roomSearchDTOTransformer.transformToRoomSearchResultDTO(roomSearchResultViewDTOS.get(index));
-//        request.getSession().setAttribute("selectedRoom", roomSearchDTOTransformer.transformToRoomSearchResultViewDTO(reservationService.prepareReservation(roomSearchDTOTransformer.transformToRoomSearchResultDTO(roomSearchResultViewDTOS.get(index)))));
+        request.getSession().setAttribute("reservationPlan", reservationViewTransformer.transformToReservationView(
+                reservationService.prepareReservation(
+                        roomSearchDTOTransformer.transformToRoomSearchResultDTO(
+                                reservableRoomViewDTOS.get(index)),
+                        auth.getName())));
+        //TODO: If I want non logged in users to be able to browse rooms, I should only add auth.getName() during reservation
 
         return "reserveroom";
     }
