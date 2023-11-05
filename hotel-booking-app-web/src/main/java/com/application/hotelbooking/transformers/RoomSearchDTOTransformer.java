@@ -1,7 +1,5 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.RoomModel;
-import com.application.hotelbooking.domain.RoomView;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import com.application.hotelbooking.dto.RoomSearchResultDTO;

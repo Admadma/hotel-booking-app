@@ -16,20 +16,6 @@ public class RoomTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public RoomModel transformToRoomModel(Room room){
-        return modelMapper.map(room, RoomModel.class);
-    }
-
-    public Room transformToRoom(RoomModel roomModel){
-        return modelMapper.map(roomModel, Room.class);
-    }
-
-    public List<RoomModel> transformToRoomModels(List<Room> rooms){
-        return rooms.stream()
-                .map(room -> modelMapper.map(room, RoomModel.class))
-                .collect(Collectors.toList());
-    }
-
     public RoomDTO transformToRoomDTO(Room room){
         return modelMapper.map(room, RoomDTO.class);
     }

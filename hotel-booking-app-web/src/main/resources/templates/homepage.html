@@ -68,7 +68,7 @@
     <ul style="list-style-type: none; padding-left: 0px;">
         <li th:each="resultDTO : ${session.resultDTOS}" class="row justify-content-center" style="margin: 1.5em;">
             <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: lightgray;">
-                <a th:href="@{/reserveroom(roomNumber=${resultDTO.roomNumber}, hotelName=${resultDTO.hotelName}, arrivalDate=${resultDTO.startDate}, departureDate=${resultDTO.endDate})}" th:text="${resultDTO}" style="color: black;"/>
+                <a th:href="@{reserveroom(roomNumber=${resultDTO.roomNumber}, hotelName=${resultDTO.hotelName}, arrivalDate=${resultDTO.startDate}, departureDate=${resultDTO.endDate})}" th:text="${resultDTO}" style="color: black;"/>
             </div>
         </li>
     </ul>

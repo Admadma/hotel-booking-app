@@ -2,7 +2,6 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.exceptions.CancellationErrorException;
-import com.application.hotelbooking.services.OldReservationService;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import org.slf4j.Logger;
