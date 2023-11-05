@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services;
 
+import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -27,13 +28,13 @@ public class RoomService {
     private List<RoomSearchResultDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<RoomSearchResultDTO> roomSearchResultDTOs = new LinkedList<>();
         for (Long roomId : roomIds) {
-            RoomDTO room = roomRepositoryService.getRoomDTO(roomId);
+            RoomModel room = roomRepositoryService.getRoomDTO(roomId);
             roomSearchResultDTOs.add(createRoomSearchResultDTO(room, roomSearchFormServiceDTO));
         }
         return roomSearchResultDTOs;
     }
 
-    private static RoomSearchResultDTO createRoomSearchResultDTO(RoomDTO room, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+    private static RoomSearchResultDTO createRoomSearchResultDTO(RoomModel room, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
         return new RoomSearchResultDTO(room.getRoomNumber(),
                 room.getSingleBeds(),
                 room.getDoubleBeds(),

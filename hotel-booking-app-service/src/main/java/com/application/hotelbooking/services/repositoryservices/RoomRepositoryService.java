@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
-import com.application.hotelbooking.dto.RoomDTO;
+import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.transformers.RoomTransformer;
@@ -23,16 +23,16 @@ public class RoomRepositoryService {
     @Autowired
     private RoomTransformer roomTransformer;
 
-    public RoomDTO getRoomDTO(Long roomId){
-        return roomTransformer.transformToRoomDTO(roomRepository.findById(roomId).get());
+    public RoomModel getRoomDTO(Long roomId){
+        return roomTransformer.transformToRoomModel(roomRepository.findById(roomId).get());
     }
 
-    public RoomDTO findRoomByNumberAndHotelName(int roomNumber, String hotelName){
-        return roomTransformer.transformToRoomDTO(roomRepository.findRoomByRoomNumberAndHotelHotelName(roomNumber, hotelName));
+    public RoomModel findRoomByNumberAndHotelName(int roomNumber, String hotelName){
+        return roomTransformer.transformToRoomModel(roomRepository.findRoomByRoomNumberAndHotelHotelName(roomNumber, hotelName));
     }
 
-    public RoomDTO saveRoom(RoomCreationServiceDTO roomCreationServiceDTO){
-        return roomTransformer.transformToRoomDTO(roomRepository.save(roomTransformer.transformToRoom(roomCreationServiceDTO)));
+    public RoomModel saveRoom(RoomCreationServiceDTO roomCreationServiceDTO){
+        return roomTransformer.transformToRoomModel(roomRepository.save(roomTransformer.transformToRoom(roomCreationServiceDTO)));
     }
 
     public boolean isRoomNumberFree(int roomNumber){

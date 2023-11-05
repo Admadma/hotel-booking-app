@@ -1,4 +1,4 @@
-package com.application.hotelbooking.dto;
+package com.application.hotelbooking.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +12,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserModel {
 
     private Long id;
     private Long version;
     private String username;
     private String password;
-    private List<ReservationDTO> reservations;
-    private Collection<RoleDTO> roles;
+    private List<ReservationModel> reservations;
+    private Collection<RoleModel> roles;
 }

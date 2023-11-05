@@ -1,4 +1,4 @@
-package com.application.hotelbooking.dto;
+package com.application.hotelbooking.domain;
 
 
 import lombok.AllArgsConstructor;
@@ -10,9 +10,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelDTO {
+public class HotelModel {
 
     private String hotelName;
     private String city;
-    private List<RoomDTO> rooms;
+    private List<RoomModel> rooms;
 }

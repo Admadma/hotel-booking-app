@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.dto.RoleDTO;
+import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.repositories.RoleRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,21 +21,21 @@ public class RoleService {
     private RoleTransformer roleTransformer;
 
     @Transactional
-    public RoleDTO createRoleIfNotFound(String roleName){
+    public RoleModel createRoleIfNotFound(String roleName){
         if (roleRepository.findRoleByName(roleName) == null){
-            RoleDTO roleDTO = new RoleDTO();
-            roleDTO.setName(roleName);
-            roleRepository.save(roleTransformer.transformToRole(roleDTO));
+            RoleModel roleModel = new RoleModel();
+            roleModel.setName(roleName);
+            roleRepository.save(roleTransformer.transformToRole(roleModel));
         }
-        return roleTransformer.transformToRoleDTO(roleRepository.findRoleByName(roleName));
+        return roleTransformer.transformToRoleModel(roleRepository.findRoleByName(roleName));
     }
 
     private boolean roleExists(String roleName) {
         return roleRepository.findRoleByName(roleName) == null;
     }
 
-    public Collection<RoleDTO> getRoles(List<String> roleNames){
-        return roleTransformer.transformToRoleDTOs(
+    public Collection<RoleModel> getRoles(List<String> roleNames){
+        return roleTransformer.transformToRoleModels(
                 roleRepository.findAll().stream()
                         .filter(role -> roleNames.contains(role.getName()))
                         .collect(Collectors.toList())

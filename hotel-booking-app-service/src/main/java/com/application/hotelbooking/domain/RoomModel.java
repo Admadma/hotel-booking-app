@@ -1,6 +1,5 @@
-package com.application.hotelbooking.dto;
+package com.application.hotelbooking.domain;
 
-import com.application.hotelbooking.domain.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomDTO {
+public class RoomModel {
 
     private Long id;
     private Long version;
@@ -19,6 +18,6 @@ public class RoomDTO {
     private int doubleBeds;
     private int pricePerNight;
     private RoomType roomType;
-    private List<ReservationDTO> reservations;
-    private HotelDTO hotel;
+    private List<ReservationModel> reservations;
+    private HotelModel hotel;
 }

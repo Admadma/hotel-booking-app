@@ -1,4 +1,4 @@
-package com.application.hotelbooking.dto;
+package com.application.hotelbooking.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +11,11 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationDTO {
+public class ReservationModel {
 
     private Long id;
-    private RoomDTO room;
-    private UserDTO user;
+    private RoomModel room;
+    private UserModel user;
     private LocalDate startDate;
     private LocalDate endDate;
 }

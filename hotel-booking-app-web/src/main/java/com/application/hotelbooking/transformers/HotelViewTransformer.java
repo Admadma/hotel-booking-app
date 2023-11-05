@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.domain.HotelView;
-import com.application.hotelbooking.dto.HotelDTO;
+import com.application.hotelbooking.domain.HotelModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ public class HotelViewTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public HotelDTO transformToHotelDTO(HotelView hotelView){
-        return modelMapper.map(hotelView, HotelDTO.class);
+    public HotelModel transformToHotelDTO(HotelView hotelView){
+        return modelMapper.map(hotelView, HotelModel.class);
     }
 
-    public List<HotelView> transformToHotelViews(List<HotelDTO> hotelModels){
+    public List<HotelView> transformToHotelViews(List<HotelModel> hotelModels){
         return hotelModels.stream()
                 .map(hotelModel -> modelMapper.map(hotelModel, HotelView.class))
                 .collect(Collectors.toList());
