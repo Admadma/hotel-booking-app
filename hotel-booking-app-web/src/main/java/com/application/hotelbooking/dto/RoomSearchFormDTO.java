@@ -21,6 +21,8 @@ public class RoomSearchFormDTO {
     private String hotelName;
     private String city;
 
+    //TODO: add min-max prices
+
     //TODO: uncomment this after done debugging the other fields
 //    @NotNull
 //    @FutureOrPresent

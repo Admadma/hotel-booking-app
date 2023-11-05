@@ -15,7 +15,7 @@ public class ReservableRoomViewDTO {
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
-    private int pricePerNight;
+    private int totalPrice;
     private RoomType roomType;
     private String hotelName;
     private String city;

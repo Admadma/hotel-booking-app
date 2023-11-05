@@ -29,16 +29,19 @@ public class RoomService {
         List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
         for (Long roomId : roomIds) {
             RoomModel room = roomRepositoryService.getRoomDTO(roomId);
-            reservableRoomDTOS.add(createRoomSearchResultDTO(room, roomSearchFormServiceDTO));
+            reservableRoomDTOS.add(createReservableRoomDTO(room, roomSearchFormServiceDTO));
         }
         return reservableRoomDTOS;
     }
 
-    private static ReservableRoomDTO createRoomSearchResultDTO(RoomModel room, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+    private ReservableRoomDTO createReservableRoomDTO(RoomModel room, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
         return new ReservableRoomDTO(room.getRoomNumber(),
                 room.getSingleBeds(),
                 room.getDoubleBeds(),
-                room.getPricePerNight(),
+                reservationService.calculateTotalPrice(
+                        roomSearchFormServiceDTO.getStartDate(),
+                        roomSearchFormServiceDTO.getEndDate(),
+                        room.getPricePerNight()),
                 room.getRoomType(),
                 room.getHotel().getHotelName(),
                 room.getHotel().getCity(),

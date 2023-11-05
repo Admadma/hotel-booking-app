@@ -55,10 +55,15 @@ public class ReservationService {
         return freeRooms;
     }
 
+    public int calculateTotalPrice(LocalDate startDate, LocalDate endDate, int pricePerNight){
+        return pricePerNight * endDate.compareTo(startDate);
+    }
+
     public ReservationModel prepareReservation(ReservableRoomDTO reservableRoomDTO, String userName){
         return ReservationModel.builder()
                 .room(roomRepositoryService.findRoomByNumberAndHotelName(reservableRoomDTO.getRoomNumber(), reservableRoomDTO.getHotelName()))
                 .user(userService.getUsersByName(userName).get(0))
+                .totalPrice(reservableRoomDTO.getTotalPrice())
                 .startDate(reservableRoomDTO.getStartDate())
                 .endDate(reservableRoomDTO.getEndDate())
                 .build();

@@ -32,6 +32,10 @@
         <input class="form-control" type="text" th:field="*{roomType}" id="roomType" >
         <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
 
+        <label for="roomType" th:text="#{admin.room.form.pricepernight}"/>
+        <input class="form-control" type="text" th:field="*{pricePerNight}" id="pricePerNight" >
+        <p th:if="${#fields.hasErrors('pricePerNight')}" th:class="${#fields.hasErrors('pricePerNight')}? error" th:text="#{admin.room.validation.invalid.pricePerNight}" style="color: red;"></p>
+
         <select th:field="*{hotelId}" class="form-control">
             <option value="" th:text="#{admin.dropdown.select.hotel}"/>
             <option th:each="hotel : ${session.hotels}" th:value="${hotel.id}" th:text="${hotel.hotelName}" />

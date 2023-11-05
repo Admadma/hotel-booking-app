@@ -16,6 +16,7 @@ public class ReservationModel {
     private Long id;
     private RoomModel room;
     private UserModel user;
+    private int totalPrice;
     private LocalDate startDate;
     private LocalDate endDate;
 }

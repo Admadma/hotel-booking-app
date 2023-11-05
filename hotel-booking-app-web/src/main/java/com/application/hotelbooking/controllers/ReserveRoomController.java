@@ -2,7 +2,6 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
-import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.RoomService;
