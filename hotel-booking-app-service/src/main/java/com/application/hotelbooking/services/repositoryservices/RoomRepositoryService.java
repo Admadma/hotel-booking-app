@@ -35,6 +35,10 @@ public class RoomRepositoryService {
         return roomTransformer.transformToRoomModel(roomRepository.save(roomTransformer.transformToRoom(roomCreationServiceDTO)));
     }
 
+    public RoomModel updateRoom(RoomModel roomModel){
+        return roomTransformer.transformToRoomModel(roomRepository.save(roomTransformer.transformToRoom(roomModel)));
+    }
+
     public boolean isRoomNumberFree(int roomNumber){
         return roomRepository.findRoomByRoomNumber(roomNumber).size() == 0;
     }

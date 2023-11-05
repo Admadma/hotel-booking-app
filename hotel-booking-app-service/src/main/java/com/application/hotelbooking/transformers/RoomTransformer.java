@@ -21,4 +21,7 @@ public class RoomTransformer {
         modelMapper.typeMap(RoomCreationServiceDTO.class, Room.class).addMappings(modelMapper -> modelMapper.skip(Room::setId));
         return modelMapper.map(roomCreationServiceDTO, Room.class);
     }
+    public Room transformToRoom(RoomModel roomModel){
+        return modelMapper.map(roomModel, Room.class);
+    }
 }

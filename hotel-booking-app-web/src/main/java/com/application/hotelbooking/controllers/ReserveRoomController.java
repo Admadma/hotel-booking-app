@@ -3,6 +3,7 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
+import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -40,18 +41,20 @@ public class ReserveRoomController {
     private ReservationViewTransformer reservationViewTransformer;
 
     @GetMapping("/reserve")
-    public String reserve(@SessionAttribute("reservationPlan") ReservationView reservationView){
+    public String reserve(@SessionAttribute("reservationPlan") ReservationView reservationView, HttpServletRequest request){
         try {
             reservationService.reserveRoom(reservationViewTransformer.transformToReservationModel(reservationView));
             LOGGER.info("Reserved room");
-        } catch (InvalidTimePeriodException itpe){
-            //TODO: handle errors related to changed version or room availability
-            LOGGER.info("Time period taken or invalid");
-        }catch (Exception e){
+        } catch (OutdatedReservationException ore){
+            LOGGER.info(ore.getMessage());
+        } catch (Exception e){
+            //TODO: display error messages in user friendly way
             LOGGER.info("Failed to reserve room");
             LOGGER.info(String.valueOf(e.getClass()));
             LOGGER.info(e.getMessage());
         }
+
+        request.getSession().removeAttribute("reservationPlan");
         return "redirect:/hotelbooking/home";
     }
 

@@ -3,6 +3,7 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
+import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -62,33 +64,20 @@ public class ReservationService {
                 .build();
     }
 
+    @Transactional
     public ReservationModel reserveRoom(ReservationModel reservationModel){
-        //TODO: validatie version or availability
-        return reservationRepositoryService.save(reservationModel);
+        if (isRoomStillAvailable(reservationModel)){
+            // If a room has multiple reservations (10000+) this is a more efficient way of checking since it only checks if the version had changed.
+            ReservationModel reservation = reservationRepositoryService.save(reservationModel);
+            reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
+            roomRepositoryService.updateRoom(reservation.getRoom());
+            return reservation;
+        } else {
+            throw new OutdatedReservationException("This reservation is no longer valid");
+        }
     }
 
-    //TODO: rename the RoomSearchResultDTO class if I want to use it for other purpose (like here) than returning the search result
-    //TODO: In the old version I checked the version on the confirmation page. Now there is no reason for it, since I basically check the entire input data here and reserve that exact room, so I can handle version change due to availability errors here
-    public boolean reserveRoom(LocalDate startDate, LocalDate endDate, RoomModel roomModel, String username){
-        if (!isRoomAvailableInTimePeriod(roomModel.getReservations(),  startDate, endDate)){
-            throw new InvalidTimePeriodException();
-        }
-        ReservationModel reservationModel = ReservationModel
-                .builder()
-                .room(roomModel)
-                .user(userService.getUsersByName(username).get(0))
-                .startDate(startDate)
-                .endDate(endDate)
-                .build();
-
-
-        ReservationModel reservation = reservationRepositoryService.save(reservationModel);
-
-        if (Objects.isNull(reservation)){
-            return false;
-        }
-        LOGGER.info(reservation.getStartDate().toString());
-        LOGGER.info(String.valueOf(reservation.getRoom().getRoomNumber()));
-        return true;
+    private boolean isRoomStillAvailable(ReservationModel reservationModel) {
+        return reservationModel.getRoom().getVersion() == roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getVersion();
     }
 }
