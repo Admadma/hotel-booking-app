@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.HotelView;
+import com.application.hotelbooking.dto.HotelCreationDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
@@ -30,21 +30,16 @@ public class AddHotelsController {
     private HotelViewTransformer hotelViewTransformer;
 
     @PostMapping(value = "/create-new-hotel")
-    public String saveNewHotel(@Valid @ModelAttribute("hotelView") HotelView hotelView, BindingResult result, Model model){
-//        LOGGER.info("called create-new-hotel");
+    public String saveNewHotel(@Valid @ModelAttribute("hotelCreationDTO") HotelCreationDTO hotelCreationDTO, BindingResult result, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
-//            result.addError(new ObjectError("globalError", "Failed to save hotel"));
             return "addhotels";
         }
 
         try {
-            hotelService.createHotel(hotelViewTransformer.transformToHotelDTO(hotelView));
+            hotelService.createHotel(hotelViewTransformer.HotelCreationServiceDTO(hotelCreationDTO));
             model.addAttribute("successMessage", "Success");
-//            LOGGER.info("Created hotel " + hotelView.getId() + " " + hotelView.getHotelName() + " " + hotelView.getCity());
         } catch (InvalidHotelException ihe){
-//            LOGGER.info("Failed to create hotel: " + ihe.getMessage());
-//            result.addError(new ObjectError("globalError", "Failed to save hotel"));
             result.rejectValue("hotelName", "admin.hotel.validation.hotelname.taken");
             return "addhotels";
         } catch (Exception e){
@@ -58,7 +53,7 @@ public class AddHotelsController {
     @GetMapping("/addHotels")
     public String addRooms(Model model){
         LOGGER.info("Navigating to addRooms page");
-        model.addAttribute("hotelView", new HotelView());
+        model.addAttribute("hotelCreationDTO", new HotelCreationDTO());
         return "addhotels";
     }
 }

@@ -16,7 +16,7 @@ public class RoomCreationServiceDTO {
     private int doubleBeds;
     private int pricePerNight;
     private RoomType roomType;
-    private String hotelId;
+    private Long hotelId;
 
     @Override
     public String toString() {

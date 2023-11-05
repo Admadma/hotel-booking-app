@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.domain.HotelModel;
+import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import com.application.hotelbooking.repositories.HotelRepository;
 import com.application.hotelbooking.transformers.HotelTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class HotelRepositoryService {
         return hotelTransformer.transformToHotelModels(hotelRepository.findHotelByHotelName(hotelName));
     }
 
-    public HotelModel save(HotelModel hotelModel){
-        return hotelTransformer.transformToHotelModel(hotelRepository.save(hotelTransformer.transformToHotel(hotelModel)));
+    public HotelModel save(HotelCreationServiceDTO hotelCreationServiceDTO){
+        return hotelTransformer.transformToHotelModel(hotelRepository.save(hotelTransformer.transformToHotel(hotelCreationServiceDTO)));
     }
 
 }

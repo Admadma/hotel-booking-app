@@ -2,7 +2,6 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
-import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
