@@ -2,6 +2,8 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.dto.ReservationDTO;
 import com.application.hotelbooking.dto.RoomDTO;
+import com.application.hotelbooking.dto.RoomSearchResultDTO;
+import com.application.hotelbooking.dto.UserDTO;
 import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
@@ -20,7 +22,7 @@ public class ReservationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
     @Autowired
-    private ReservationRepository reservationRepository;
+    private UserService userService;
 
     @Autowired
     private ReservationRepositoryService reservationRepositoryService;
@@ -49,16 +51,20 @@ public class ReservationService {
         return freeRooms;
     }
 
+    public ReservationDTO prepareReservation(RoomSearchResultDTO roomSearchResultDTO){
+        return null;
+    }
+
     //TODO: rename the RoomSearchResultDTO class if I want to use it for other purpose (like here) than returning the search result
     //TODO: In the old version I checked the version on the confirmation page. Now there is no reason for it, since I basically check the entire input data here and reserve that exact room, so I can handle version change due to availability errors here
-    public boolean reserveRoom(LocalDate startDate, LocalDate endDate, RoomDTO roomDTO, String user){
+    public boolean reserveRoom(LocalDate startDate, LocalDate endDate, RoomDTO roomDTO, String username){
         if (!isRoomAvailableInTimePeriod(roomDTO.getReservations(),  startDate, endDate)){
             throw new InvalidTimePeriodException();
         }
         ReservationDTO reservationDTO = ReservationDTO
                 .builder()
                 .room(roomDTO)
-                .user(null)
+                .user(userService.getUsersByName(username).get(0))
                 .startDate(startDate)
                 .endDate(endDate)
                 .build();
