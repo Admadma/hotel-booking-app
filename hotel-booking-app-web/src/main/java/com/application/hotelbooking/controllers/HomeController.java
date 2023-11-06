@@ -48,6 +48,11 @@ public class HomeController {
             LOGGER.info("Error while validating");
             return "homepage";
         }
+        if (roomSearchFormDTO.getEndDate().isBefore(roomSearchFormDTO.getStartDate()) || roomSearchFormDTO.getStartDate().equals(roomSearchFormDTO.getEndDate())){
+            result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
+            result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
+            return "homepage";
+        }
         transformFieldsToNulls(roomSearchFormDTO);
 
         List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));

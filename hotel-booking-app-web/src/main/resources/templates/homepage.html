@@ -47,14 +47,12 @@
             <div class="form-group col-md-3" >
                 <label for="startDate" th:text="#{home.room.form.startdate}"/>
                 <input class="form-control" id="startDate" type="date" th:field="*{startDate}" name="startDate"/>
-                <p th:if="${#fields.hasErrors('startDate')}" th:class="${#fields.hasErrors('startDate')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
-
+                <p th:if="${#fields.hasErrors('startDate')}" th:class="${#fields.hasErrors('startDate')}? error" th:errors="*{startDate}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3" >
                 <label for="endDate" th:text="#{home.room.form.enddate}"/>
                 <input class="form-control" id="endDate" type="date" th:field="*{endDate}" name="endDate"/>
-                <p th:if="${#fields.hasErrors('endDate')}" th:class="${#fields.hasErrors('endDate')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
-
+                <p th:if="${#fields.hasErrors('endDate')}" th:class="${#fields.hasErrors('endDate')}? error" th:errors="*{endDate}" style="color: red;"></p>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Search rooms</button>

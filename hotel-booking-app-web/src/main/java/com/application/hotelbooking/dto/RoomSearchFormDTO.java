@@ -23,14 +23,13 @@ public class RoomSearchFormDTO {
 
     //TODO: add min-max prices
 
-    //TODO: uncomment this after done debugging the other fields
-//    @NotNull
-//    @FutureOrPresent
+    @NotNull
+    @FutureOrPresent
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-//    @NotNull
-//    @Future
+    @NotNull
+    @Future
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 }
