@@ -1,7 +1,5 @@
 package com.application.hotelbooking.domain;
 
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationModel {
@@ -18,7 +16,7 @@ public class ReservationModel {
     private Long id;
     private RoomModel room;
     private UserModel user;
+    private int totalPrice;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int totalPrice;
 }

@@ -16,10 +16,6 @@ import java.util.List;
 @Table(name = "rooms")
 public class Room {
 
-    public int asd(){
-        return 1;
-    }
-
     @Id
     @GeneratedValue
     private Long id;
@@ -37,4 +33,21 @@ public class Room {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")
     private List<Reservation> reservations;
+
+    @ManyToOne
+    private Hotel hotel;
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", version=" + version +
+                ", roomNumber=" + roomNumber +
+                ", singleBeds=" + singleBeds +
+                ", doubleBeds=" + doubleBeds +
+                ", pricePerNight=" + pricePerNight +
+                ", roomType=" + roomType +
+                ", hotelId=" + hotel.getId() +
+                '}';
+    }
 }

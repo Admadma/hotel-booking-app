@@ -14,27 +14,21 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/hotelbooking/myreservations}" th:text="#{navbar.myreservations}" />
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/hotelbooking/account}" th:text="#{navbar.account}" />
+                    <a class="nav-link" th:href="@{/hotelbooking/admin}" th:text="#{navbar.admin}" />
                 </li>
             </ul>
             </div>
-            <div class="col-5 row justify-content-end">
-            <ul class="navbar-nav" style="font-size: 2rem;">
-                <li class="nav-item">
-                    <a class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" th:href="@{/hotelbooking/register}" th:text="#{navbar.register}" />
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" th:href="@{/hotelbooking/login}" th:text="#{navbar.login}" />
-                </li>
-                <li class="nav-item">
-                    <form th:action="@{/logout}" method="post">
-                        <button class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" type="submit" th:text="#{navbar.logout}"/>
-                    </form>
-                </li>
-            </ul>
+            <div class="col-5 row justify-content-end" style="font-size: 2rem;">
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" type="submit" th:text="#{navbar.logout}"/>
+                </form>
+<!--            <ul class="navbar-nav" style="font-size: 2rem;">-->
+<!--                <li class="nav-item">-->
+<!--                    <form th:action="@{/logout}" method="post">-->
+<!--                        <button class="btn btn-secondary" style="margin-left: 1rem; font-size: 2rem;" type="submit" th:text="#{navbar.logout}"/>-->
+<!--                    </form>-->
+<!--                </li>-->
+<!--            </ul>-->
             </div>
         </div>
     </nav>

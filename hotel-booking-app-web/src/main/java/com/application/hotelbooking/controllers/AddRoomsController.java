@@ -1,22 +1,24 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.RoomType;
-import com.application.hotelbooking.domain.RoomView;
+import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.exceptions.InvalidRoomException;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
+import com.application.hotelbooking.transformers.HotelViewTransformer;
+import com.application.hotelbooking.transformers.RoomCreationDTOTransformer;
 import com.application.hotelbooking.transformers.RoomViewTransformer;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -29,43 +31,41 @@ public class AddRoomsController {
     private RoomService roomService;
 
     @Autowired
+    private HotelRepositoryService hotelRepositoryService;
+    @Autowired
     private RoomViewTransformer roomViewTransformer;
 
+    @Autowired
+    private RoomCreationDTOTransformer roomCreationDTOTransformer;
 
-    @RequestMapping(value = "/create-new-room")
-    public String saveNewFamilyRoom(@Valid @ModelAttribute("roomView") RoomView roomView, BindingResult result){
+    @Autowired
+    private HotelViewTransformer hotelViewTransformer;
+
+    @PostMapping(value = "/create-new-room")
+    public String saveNewRoom(@Valid @ModelAttribute("roomCreationDTO") RoomCreationDTO roomCreationDTO, BindingResult result, Model model){
         if (result.hasErrors()){
-            result.addError(new ObjectError("globalError", "Failed to save room."));
-//            System.out.println("RoomType: " + roomView.getRoomType());
-//            result.getAllErrors().stream().forEach(System.out::println);
-//            LOGGER.info("Error while validating");
-//            LOGGER.info("Room number: " + roomView.getRoomNumber());
-//            LOGGER.info("Room id: " + roomView.getId());
-            return "addRooms";
+            LOGGER.info("Error while validating");
+            return "addrooms";
         }
-
-        LOGGER.info("Room number: " + roomView.getRoomNumber());
-        LOGGER.info("Room type: " + roomView.getRoomType());
-        LOGGER.info("Room id: " + roomView.getId());
 
         try {
-            roomService.createRoom(roomViewTransformer.transformToRoomModel(roomView));
+            roomService.createRoomFromDTO(roomCreationDTOTransformer.transformToRoomCreationServiceDTO(roomCreationDTO));
+            model.addAttribute("successMessage", "Success");
         } catch (InvalidRoomException ire) {
             LOGGER.error("Failed to save room: " + ire.getMessage());
-            result.rejectValue("roomNumber", null, ire.getMessage());
+            result.rejectValue("roomNumber", "admin.room.validation.roomnumber.taken");
         } catch (Exception e){
-            result.addError(new ObjectError("globalError", "Failed to save room."));
-            return "addRooms";
+            result.addError(new ObjectError("globalError", "Failed to save room"));
+            return "addrooms";
         }
-        return  "addRooms";
+        return "addRooms";
     }
 
-
     @GetMapping("/addRooms")
-    public String addRooms(Model model){
+    public String addRooms(Model model, HttpServletRequest request){
         LOGGER.info("Navigating to addRooms page");
-        RoomView roomView = new RoomView();
-        model.addAttribute("roomView", roomView);
+        model.addAttribute("roomCreationDTO", new RoomCreationDTO());
+        request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelRepositoryService.getAllHotels()));
 
         return "addrooms";
     }

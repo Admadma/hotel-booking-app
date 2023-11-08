@@ -1,28 +1,26 @@
 package com.application.hotelbooking.dto;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotEmpty;
+import com.application.hotelbooking.domain.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class DateRangeDto {
+@AllArgsConstructor
+public class RoomSearchFormServiceDTO {
+    private Integer singleBeds;
+    private Integer doubleBeds;
+    private RoomType roomType;
+    private String hotelName;
+    private String city;
 
-    @NotEmpty
-//    @FutureOrPresent
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotEmpty
-//    @Future
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 }

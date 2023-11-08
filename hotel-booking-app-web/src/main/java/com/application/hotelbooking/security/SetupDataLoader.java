@@ -38,7 +38,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         userService.createAdminUserIfNotFound(
                 "admin",
                 "adminadmin",
-                roleViewTransformer.transformToRoleModels(List.of(adminRole)));
+                roleViewTransformer.transformToRoleDTOs(List.of(adminRole)));
 
 
         alreadySetup = true;

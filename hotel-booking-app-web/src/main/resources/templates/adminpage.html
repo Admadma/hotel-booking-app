@@ -8,37 +8,64 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <title th:text="#{title.admin}" />
 </head>
-<body>
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
-    <a class="navbar-brand" th:href="@{/hotelbooking/home}">HotelBooking</a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <div class="dropdown">
-                    <span th:text="#{lang.change}" style="color:white"></span>:
-                    <a class="btn btn-secondary dropdown-toggle" href="#" th:text="#{lang.current}" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" th:text="#{lang.hun}" th:href="@{?lang=hu}"></a>
-                        <a class="dropdown-item" th:href="@{?lang=en}" th:text="#{lang.eng}"></a>
-                    </div>
-                </div>
+<body style="background-color: #73D89F">
+<div th:insert="fragments/navbaradmin ::navbar"/>
+
+<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
+<!--    <ul class="list-unstyled">-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
+<!--    <ul class="list-unstyled list-group">-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a class="btn btn-light my-2 my-sm-0 list-group-item " role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+<div class="container" style="justify-content:center; width: 28rem; margin-top: 3em; padding: 1em; background-color: #fff8c7; border-radius:10px;">
+    <div class="container" style="width: 26rem;">
+        <ul class="list-group list-unstyled">
+            <li style="padding: 1em;">
+                <a class="btn btn-light my-2 my-sm-0 list-group-item" role="button" th:href="@{/hotelbooking/admin/addRooms}" th:text="#{admin.button.addrooms}" />
             </li>
-            <li class="nav-item">
-                <h1 th:text="#{greeting}" style="color:white"></h1>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-light my-2 my-sm-0" role="button" th:href="@{/hotelbooking/login}" th:text="Login" />
-            </li>
-            <li class="nav-item">
-                <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="btn btn-light my-2 my-sm-0" th:text="Logout"/>
-                </form>
+            <li style="padding: 1em;">
+                <a class="btn btn-light my-2 my-sm-0 list-group-item" role="button" th:href="@{/hotelbooking/admin/addHotels}" th:text="#{admin.button.addhotels}" />
             </li>
         </ul>
     </div>
-</nav>
+</div>
 
-This is the admin page
+<!--<div class="container" style="width: 28rem; padding-top: 3em;">-->
+<!--    <form class="list-group-item" th:action="@{create-new-hotel}" th:object="${hotelView}" method="post">-->
+<!--        <p th:if="${#fields.hasErrors()}" th:text="#{admin.hotel.validation.global.error}" class="alert alert-danger"/>-->
+<!--        <p th:if="${successMessage}" th:text="#{admin.hotel.validation.global.success}" class="alert alert-success"/>-->
+
+<!--        <div class="input-group mb-3">-->
+<!--            <label for="hotelName"></label>-->
+<!--            <input class="form-control" type="text" th:field="*{hotelName}" id="hotelName" th:placeholder="#{admin.hotel.form.hotelname}">-->
+<!--        </div>-->
+<!--        <p  th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}"></p>-->
+<!--        <div class="input-group mb-3">-->
+<!--            <label for="city"></label>-->
+<!--            <input class="form-control" type="text" th:field="*{city}" id="city" th:placeholder="#{admin.hotel.form.city}">-->
+<!--        </div>-->
+<!--        <p  th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:errors="*{city}"></p>-->
+<!--        <div class="row justify-content-center" style="padding: 1.5em;">-->
+<!--            <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createhotel" th:text="#{admin.button.submit.create.hotel}"/>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
 
 </body>
 </html>

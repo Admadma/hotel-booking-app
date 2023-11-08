@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.dto.UserDto;
+import com.application.hotelbooking.dto.UserFormDTO;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
@@ -38,7 +38,7 @@ public class RegisterController {
     private RoleViewTransformer roleViewTransformer;
 
     @RequestMapping(value = "/register/add-new-user")
-    public String addNewUser(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result){
+    public String addNewUser(@Valid @ModelAttribute("user") UserFormDTO userFormDTO, BindingResult result){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "register";
@@ -46,12 +46,12 @@ public class RegisterController {
 
         try {
             userService.addNewUser(
-                    userDto.getUsername(),
-                    userDto.getPassword(),
+                    userFormDTO.getUsername(),
+                    userFormDTO.getPassword(),
                     roleService.getRoles(List.of("USER"))
             );
             LOGGER.info("back to controller");
-            LOGGER.info("Added user: " + userViewTransformer.transformToUserView(userService.getUsersByName(userDto.getUsername()).get(0)).getUsername());
+            LOGGER.info("Added user: " + userViewTransformer.transformToUserView(userService.getUsersByName(userFormDTO.getUsername()).get(0)).getUsername());
         } catch (UserAlreadyExistsException uae) {
             result.rejectValue("username", null, "That name is already taken");
             LOGGER.info("That username is taken");
@@ -68,7 +68,7 @@ public class RegisterController {
     @GetMapping("/register")
     public String registration(Model model){
         LOGGER.info("Navigating to registration page");
-        UserDto user = new UserDto();
+        UserFormDTO user = new UserFormDTO();
         model.addAttribute("user", user);
 
         return "register";

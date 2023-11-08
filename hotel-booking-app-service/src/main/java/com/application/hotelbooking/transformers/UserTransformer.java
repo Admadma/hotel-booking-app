@@ -15,10 +15,6 @@ public class UserTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public UserModel transformToModel(User user){
-        return modelMapper.map(user, UserModel.class);
-    }
-
     public User transformToUser(UserModel userModel){
         return modelMapper.map(userModel, User.class);
     }

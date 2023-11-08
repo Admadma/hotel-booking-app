@@ -1,20 +1,25 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.dto.UserDto;
-import com.application.hotelbooking.repositories.RoleRepository;
-import com.application.hotelbooking.repositories.UserRepository;
+import com.application.hotelbooking.dto.RoomSearchFormDTO;
+import com.application.hotelbooking.dto.ReservableRoomViewDTO;
+import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(path = "hotelbooking")
@@ -22,9 +27,53 @@ public class HomeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
-    @GetMapping("/home")
-    public String home(){
+    @Autowired
+    private RoomService roomService;
+
+    @Autowired
+    private RoomSearchDTOTransformer roomSearchDTOTransformer;
+
+    private void transformFieldsToNulls(RoomSearchFormDTO roomSearchFormDTO){
+        if ("".equals(roomSearchFormDTO.getCity())){
+            roomSearchFormDTO.setCity(null);
+        }
+        if ("".equals(roomSearchFormDTO.getHotelName())){
+            roomSearchFormDTO.setHotelName(null);
+        }
+    }
+
+    @PostMapping(value = "/search-rooms")
+    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model){
+        if (result.hasErrors()){
+            LOGGER.info("Error while validating");
+            return "homepage";
+        }
+        if (roomSearchFormDTO.getEndDate().isBefore(roomSearchFormDTO.getStartDate()) || roomSearchFormDTO.getStartDate().equals(roomSearchFormDTO.getEndDate())){
+            result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
+            result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
+            return "homepage";
+        }
+        transformFieldsToNulls(roomSearchFormDTO);
+
+        List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
+        request.getSession().setAttribute("resultDTOS", resultDTOS);
+        LOGGER.info(resultDTOS.toString());
+
+        LOGGER.info("No Error");
+        redirectAttributes.addFlashAttribute("successRoomSearchFormDTO", roomSearchFormDTO);
+        return "redirect:/hotelbooking/home";
+    }
+
+
+    @GetMapping(value = "/home")
+    public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO){
         LOGGER.info("Navigating to home page");
+
+        if (Objects.isNull(roomSearchFormDTO)) {
+            model.addAttribute("roomSearchFormDTO", new RoomSearchFormDTO());
+        } else {
+            model.addAttribute("roomSearchFormDTO", roomSearchFormDTO);
+        }
 
         return "homepage";
     }

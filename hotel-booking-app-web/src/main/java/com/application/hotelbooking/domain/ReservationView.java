@@ -13,7 +13,7 @@ public class ReservationView {
 
     private Long id;
     private RoomView room;
-    private UserModel user;
+    private UserView user;
     private LocalDate startDate;
     private LocalDate endDate;
     private int totalPrice;
