@@ -29,6 +29,9 @@ public class RoomService {
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
+
 
     private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
@@ -61,6 +64,9 @@ public class RoomService {
         LOGGER.info(messageSource.getMessage("test.message", null, locale));
         LOGGER.info(messageSource.getMessage("home.room.form.validation.startdate.must.before", null, locale));
         LOGGER.info("-------");
+
+        emailSenderService.sendEmail("aranyiadam@gmail.com", "First test", "Test message");
+
         List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
         List<Long> availableRooms = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 
