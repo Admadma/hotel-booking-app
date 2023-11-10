@@ -22,7 +22,6 @@ public class MyUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (userService.getUsersByName(username).size() == 1){
             UserDetails user = new MyUserDetails(userViewTransformer.transformToUserView(userService.getUsersByName(username).get(0)));
-            user.getAuthorities().stream().forEach(grantedAuthority -> System.out.println(grantedAuthority.getAuthority()));
             return user;
         } else {
             throw new UsernameNotFoundException("Could not find user with name: " + username);
