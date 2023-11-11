@@ -1,5 +1,6 @@
 package com.application.hotelbooking.controllers;
 
+import com.application.hotelbooking.dto.NewUserFormDTO;
 import com.application.hotelbooking.dto.UserFormDTO;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.RoleService;
@@ -17,6 +18,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -48,7 +50,7 @@ public class RegisterController {
             userService.addNewUser(
                     userFormDTO.getUsername(),
                     userFormDTO.getPassword(),
-                    roleService.getRoles(List.of("USER"))
+                    roleService.getRoles(List.of("USER")) //TODO: this should be added in the service, not provided in the controller
             );
             LOGGER.info("back to controller");
             LOGGER.info("Added user: " + userViewTransformer.transformToUserView(userService.getUsersByName(userFormDTO.getUsername()).get(0)).getUsername());
@@ -65,11 +67,24 @@ public class RegisterController {
         return "redirect:/hotelbooking/home";
     }
 
+    @RequestMapping(value = "register/create-user")
+    public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result){
+        if (result.hasErrors()){
+            LOGGER.info("error while validating newUserFormDTO");
+            return "registration";
+        }
+        String userResult = userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
+        LOGGER.info("Result: " + userResult);
+        //TODO: home page will be accessable for unauthenticated user as well, so it's okay to redirect there. But login will be needed once a room is selected
+        return "redirect:/hotelbooking/home";
+    }
+
     @GetMapping("/register")
     public String registration(Model model){
         LOGGER.info("Navigating to registration page");
         UserFormDTO user = new UserFormDTO();
         model.addAttribute("user", user);
+        model.addAttribute("newUserFormDTO", new NewUserFormDTO());
 
         return "register";
     }

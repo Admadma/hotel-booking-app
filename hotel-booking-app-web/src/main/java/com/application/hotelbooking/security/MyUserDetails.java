@@ -35,13 +35,12 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        // TODO: look into these
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !userView.getLocked();
     }
 
     @Override
@@ -51,7 +50,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return userView.getEnabled();
     }
 
     private Collection<GrantedAuthority> getGrantedAuthorities(Collection<RoleView> roles){

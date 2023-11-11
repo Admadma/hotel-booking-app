@@ -25,6 +25,12 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false, unique = true)
+    private String email;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean locked;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean enabled;
 
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;

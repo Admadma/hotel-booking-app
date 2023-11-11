@@ -16,6 +16,9 @@ public class UserView {
     private Long version;
     private String username;
     private String password;
+    private String email;
+    private Boolean locked = false;
+    private Boolean enabled = false;
     private List<ReservationView> reservations;
     private Collection<RoleView> roles;
 }

@@ -30,10 +30,6 @@ public class RoleService {
         return roleTransformer.transformToRoleModel(roleRepository.findRoleByName(roleName));
     }
 
-    private boolean roleExists(String roleName) {
-        return roleRepository.findRoleByName(roleName) == null;
-    }
-
     public Collection<RoleModel> getRoles(List<String> roleNames){
         return roleTransformer.transformToRoleModels(
                 roleRepository.findAll().stream()
