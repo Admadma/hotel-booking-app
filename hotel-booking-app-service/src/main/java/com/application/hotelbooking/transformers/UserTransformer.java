@@ -20,6 +20,10 @@ public class UserTransformer {
     public User transformToUser(UserModel userModel){
         return modelMapper.map(userModel, User.class);
     }
+
+    public UserModel transformToUserModel(User user){
+        return modelMapper.map(user, UserModel.class);
+    }
     public List<UserModel> transformToUserModels(Collection<User> users){
         return users.stream()
                 .map(user -> modelMapper.map(user, UserModel.class))

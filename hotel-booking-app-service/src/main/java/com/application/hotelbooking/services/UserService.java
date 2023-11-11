@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services;
 
+import com.application.hotelbooking.domain.ConfirmationTokenModel;
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
@@ -16,9 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -40,6 +43,9 @@ public class UserService {
     private RoleService roleService;
 
     @Autowired
+    private ConfirmationTokenService confirmationTokenService;
+
+    @Autowired
     private UserTransformer userTransformer;
     @Autowired
     private RoleTransformer roleTransformer;
@@ -56,8 +62,8 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    private void save(UserModel userModel){
-        userRepository.save(userTransformer.transformToUser(userModel));
+    private UserModel save(UserModel userModel){
+        return userTransformer.transformToUserModel(userRepository.save(userTransformer.transformToUser(userModel)));
     }
 
     @Transactional
@@ -103,16 +109,32 @@ public class UserService {
         if (emailExists(email)){
             throw new EmailAlreadyExistsException("That email is already taken");
         }
+
+        boolean isAdmin = rolesAsStrings.contains("ADMIN");
         UserModel userModel = UserModel.builder()
                 .username(username)
                 .version(DEFAULT_STARTING_VERSION)
                 .password(passwordEncoder.encode(password))
                 .email(email)
-                .enabled(rolesAsStrings.contains("ADMIN")) //We want to skip the email validation process and enable admin users by default
+                .enabled(isAdmin) //We want to skip the email validation process and enable admin users by default
                 .roles(roleService.getRoles(rolesAsStrings))
                 .build();
         save(userModel);
         LOGGER.info("Saved");
+
+        if (!isAdmin) {
+            String token = UUID.randomUUID().toString();
+            ConfirmationTokenModel confirmationTokenModel = ConfirmationTokenModel.builder()
+                    .token(token)
+                    .user(getUsersByName(username).get(0))
+                    .createdAt(LocalDateTime.now())
+                    .expiresAt(LocalDateTime.now().plusMinutes(30))
+                    .build();
+
+            confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
+
+        }
+
         return "Success";
     }
 
