@@ -24,7 +24,7 @@ public class UserTransformer {
     public UserModel transformToUserModel(User user){
         return modelMapper.map(user, UserModel.class);
     }
-    public List<UserModel> transformToUserModels(Collection<User> users){
+    public Collection<UserModel> transformToUserModels(Collection<User> users){
         return users.stream()
                 .map(user -> modelMapper.map(user, UserModel.class))
                 .collect(Collectors.toList());

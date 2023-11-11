@@ -123,6 +123,7 @@ public class UserService {
         LOGGER.info("Saved");
 
         if (!isAdmin) {
+            LOGGER.info("creating ConfirmationTokenModel");
             String token = UUID.randomUUID().toString();
             ConfirmationTokenModel confirmationTokenModel = ConfirmationTokenModel.builder()
                     .token(token)
@@ -130,17 +131,35 @@ public class UserService {
                     .createdAt(LocalDateTime.now())
                     .expiresAt(LocalDateTime.now().plusMinutes(30))
                     .build();
+            LOGGER.info("saving ConfirmationTokenModel");
 
             confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
-
         }
+        LOGGER.info("done");
 
         return "Success";
     }
 
     //Simple logic for enabling user. Not used anywhere yet
     @Transactional
-    public void confirmToken(String username){
+    public void confirmToken(String token){
+        ConfirmationTokenModel confirmationTokenModel = confirmationTokenService
+                .findToken(token)
+                .orElseThrow(() -> new IllegalStateException("Confirmation token not found."));
+
+        if (confirmationTokenModel.getConfirmedAt() != null){
+            throw new IllegalStateException("Email already confirmed.");
+        }
+
+//        if (confirmationTokenModel.getExpiresAt().isAfter(LocalDateTime.now())){
+//            throw new IllegalStateException("Token already expired");
+//        }
+
+        confirmationTokenModel.setConfirmedAt(LocalDateTime.now());
+        enableUser(confirmationTokenModel.getUser().getUsername());
+    }
+
+    private void enableUser(String username) {
         UserModel userModel = getUsersByName(username).get(0);
         userModel.setEnabled(true);
         save(userModel);

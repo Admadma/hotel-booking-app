@@ -48,8 +48,10 @@ public class RegisterController {
         }
 
         try {
-            String userResult = userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
-            LOGGER.info("Result: " + userResult);
+            LOGGER.info("creating...");
+            userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
+            LOGGER.info("...created");
+//            LOGGER.info("Result: " + userResult);
         } catch (UserAlreadyExistsException uae) {
             //TODO: localize error message (see addroomscontroller.saveNewRoom) and display error message in user friendly way
             result.rejectValue("username", null, "That name is already taken");

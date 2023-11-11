@@ -6,6 +6,8 @@ import com.application.hotelbooking.transformers.ConfirmationTokenTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ConfirmationTokenService {
 
@@ -17,5 +19,9 @@ public class ConfirmationTokenService {
 
     public void saveConfirmationToken(ConfirmationTokenModel confirmationTokenModel){
         confirmationTokenRepository.save(confirmationTokenTransformer.transformToConfirmationToken(confirmationTokenModel));
+    }
+
+    public Optional<ConfirmationTokenModel> findToken(String token){
+        return confirmationTokenTransformer.transformToConfirmationTokenModel(confirmationTokenRepository.findByToken(token));
     }
 }
