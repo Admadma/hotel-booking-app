@@ -1,9 +1,9 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.RoleModel;
-import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
+import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -53,31 +52,12 @@ public class UserService {
         return getUsersByName(username).size() == 1;
     }
 
-    private void save(UserModel userModel){
-        userRepository.save(userTransformer.transformToUser(userModel));
+    private boolean emailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 
-    @Transactional
-    public void addNewUser(String username, String password, Collection<RoleModel> roles) throws UserAlreadyExistsException{
-        //TODO: this will break now that I added mandatory email field
-        try {
-            if (!userExists(username)){
-                UserModel userModel = UserModel.builder()
-                        .username(username)
-                        .version(DEFAULT_STARTING_VERSION)
-                        .password(passwordEncoder.encode(password))
-                        .roles(roles)
-                        .email("demo@email.com")
-                        .build();
-                LOGGER.info("fresh model :" + Objects.isNull(userModel.getLocked()));
-                save(userModel);
-                LOGGER.info("saved new user");
-            } else {
-                throw new UserAlreadyExistsException("That username is taken.");
-            }
-        } catch (Exception e){
-            throw e;
-        }
+    private void save(UserModel userModel){
+        userRepository.save(userTransformer.transformToUser(userModel));
     }
 
     @Transactional
@@ -117,8 +97,11 @@ public class UserService {
     @Transactional
     public String createUser(String username, String password, String email, List<String> rolesAsStrings){
         //TODO: validate the email format
-        if (userRepository.findByEmail(email).isPresent()){
-            throw new UserAlreadyExistsException("That email is already taken");
+        if (userExists(username)){
+            throw new UserAlreadyExistsException("That username is already taken");
+        }
+        if (emailExists(email)){
+            throw new EmailAlreadyExistsException("That email is already taken");
         }
         UserModel userModel = UserModel.builder()
                 .username(username)

@@ -10,36 +10,6 @@
 </head>
 <body style="background-color: #73D89F">
 <div th:insert="fragments/navbar ::navbar"/>
-<div class = "container" style="height: 20rem; position: relative;">
-    <div style="margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-transform: translateY(-50%);
-transform: translateX(-50%);">
-    <div class = "row" >
-        <div class ="container justify-content-center card">
-            <h1 class = "text-center" th:text="#{register.register}"> Create New Student </h1>
-            <div class = "card-body">
-                <form th:action="@{/hotelbooking/register/add-new-user}" th:object="${user}" method="POST">
-                    <div class ="form-group">
-                        <label> username: </label>
-                        <input type = "text" name = "username" th:field = "*{username}" class = "form-control" placeholder="Enter username"/>
-                    </div>
-
-                    <div class ="form-group">
-                        <label> password: </label>
-                        <input type = "password" name = "password" th:field = "*{password}" class = "form-control" placeholder="Enter password"/>
-                    </div>
-                    <div class = "box-footer">
-                        <button type="submit" class = "btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
 
 <div class = "container" style="height: 20rem; position: relative;">
     <div style="margin: 0;
@@ -52,7 +22,7 @@ transform: translateX(-50%);">
             <div class ="container justify-content-center card">
                 <h1 class = "text-center" th:text="#{register.register}"> Create New Student </h1>
                 <div class = "card-body">
-                    <form th:action="@{/hotelbooking/register/create-user}" th:object="${newUserFormDTO}" method="POST">
+                    <form th:action="@{/hotelbooking/register/create-new-user}" th:object="${newUserFormDTO}" method="POST">
                         <div class ="form-group">
                             <label> username: </label>
                             <input type = "text" name = "username" th:field = "*{username}" class = "form-control" placeholder="Enter username"/>

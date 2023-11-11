@@ -2,6 +2,7 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.NewUserFormDTO;
 import com.application.hotelbooking.dto.UserFormDTO;
+import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
@@ -39,42 +40,30 @@ public class RegisterController {
     @Autowired
     private RoleViewTransformer roleViewTransformer;
 
-    @RequestMapping(value = "/register/add-new-user")
-    public String addNewUser(@Valid @ModelAttribute("user") UserFormDTO userFormDTO, BindingResult result){
+    @RequestMapping(value = "register/create-new-user")
+    public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result){
         if (result.hasErrors()){
-            LOGGER.info("Error while validating");
-            return "register";
+            LOGGER.info("Error while validating newUserFormDTO");
+            return "registration";
         }
 
         try {
-            userService.addNewUser(
-                    userFormDTO.getUsername(),
-                    userFormDTO.getPassword(),
-                    roleService.getRoles(List.of("USER")) //TODO: this should be added in the service, not provided in the controller
-            );
-            LOGGER.info("back to controller");
-            LOGGER.info("Added user: " + userViewTransformer.transformToUserView(userService.getUsersByName(userFormDTO.getUsername()).get(0)).getUsername());
+            String userResult = userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
+            LOGGER.info("Result: " + userResult);
         } catch (UserAlreadyExistsException uae) {
+            //TODO: localize error message (see addroomscontroller.saveNewRoom) and display error message in user friendly way
             result.rejectValue("username", null, "That name is already taken");
             LOGGER.info("That username is taken");
+            return "register";
+        } catch (EmailAlreadyExistsException eae){
+            result.rejectValue("email", null, "That email is already taken");
+            LOGGER.info("That email is already taken");
             return "register";
         } catch (Exception e){
             LOGGER.error("Failed to add user. Error message: " + e.getMessage());
             result.addError(new ObjectError("globalError", "Registration failed. Please use different credentials or try again later."));
             return "register";
         }
-
-        return "redirect:/hotelbooking/home";
-    }
-
-    @RequestMapping(value = "register/create-user")
-    public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result){
-        if (result.hasErrors()){
-            LOGGER.info("error while validating newUserFormDTO");
-            return "registration";
-        }
-        String userResult = userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
-        LOGGER.info("Result: " + userResult);
         //TODO: home page will be accessable for unauthenticated user as well, so it's okay to redirect there. But login will be needed once a room is selected
         return "redirect:/hotelbooking/home";
     }
