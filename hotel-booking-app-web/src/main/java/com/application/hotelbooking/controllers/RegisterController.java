@@ -1,6 +1,7 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.NewUserFormDTO;
+import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.dto.UserFormDTO;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
@@ -21,7 +22,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class RegisterController {
     public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result){
         if (result.hasErrors()){
             LOGGER.info("Error while validating newUserFormDTO");
-            return "registration";
+            return "register";
         }
 
         try {
@@ -57,16 +57,15 @@ public class RegisterController {
             userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
             LOGGER.info("...created");
         } catch (AddressException ae) {
-            result.rejectValue("email", null, "That email is invalid");
+            result.rejectValue("email", "registration.error.email.invalid", "That email is invalid");
             LOGGER.info("That email is invalid");
             return "register";
         } catch (UserAlreadyExistsException uae) {
-            //TODO: localize error message (see addroomscontroller.saveNewRoom) and display error message in user friendly way
-            result.rejectValue("username", null, "That name is already taken");
+            result.rejectValue("username", "registration.error.username.taken", "That name is already taken");
             LOGGER.info("That username is taken");
             return "register";
         } catch (EmailAlreadyExistsException eae){
-            result.rejectValue("email", null, "That email is already taken");
+            result.rejectValue("email", "registration.error.email.taken", "That email is already taken");
             LOGGER.info("That email is already taken");
             return "register";
         } catch (Exception e){
@@ -74,7 +73,8 @@ public class RegisterController {
             result.addError(new ObjectError("globalError", "Registration failed. Please use different credentials or try again later."));
             return "register";
         }
-        //TODO: home page will be accessable for unauthenticated user as well, so it's okay to redirect there. But login will be needed once a room is selected
+        //TODO: home page will be accessible for unauthenticated user as well, so it's okay to redirect there. But login will be needed once a room is selected
+        //TODO: introduce a simple page that informs the user of the sent verification email
         return "redirect:/hotelbooking/home";
     }
 
