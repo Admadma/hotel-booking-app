@@ -8,6 +8,8 @@ import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.RoleViewTransformer;
 import com.application.hotelbooking.transformers.UserViewTransformer;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +50,16 @@ public class RegisterController {
         }
 
         try {
+            LOGGER.info("Validating email");
+            InternetAddress internetAddress = new InternetAddress(newUserFormDTO.getEmail());
+            internetAddress.validate();
             LOGGER.info("creating...");
             userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
             LOGGER.info("...created");
-//            LOGGER.info("Result: " + userResult);
+        } catch (AddressException ae) {
+            result.rejectValue("email", null, "That email is invalid");
+            LOGGER.info("That email is invalid");
+            return "register";
         } catch (UserAlreadyExistsException uae) {
             //TODO: localize error message (see addroomscontroller.saveNewRoom) and display error message in user friendly way
             result.rejectValue("username", null, "That name is already taken");
