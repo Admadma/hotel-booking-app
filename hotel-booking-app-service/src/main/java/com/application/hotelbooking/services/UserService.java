@@ -13,6 +13,8 @@ import com.application.hotelbooking.transformers.UserTransformer;
 import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,12 @@ public class UserService {
 
     @Autowired
     private ConfirmationTokenService confirmationTokenService;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private UserTransformer userTransformer;
@@ -135,6 +143,12 @@ public class UserService {
             LOGGER.info("saving ConfirmationTokenModel");
 
             confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
+
+            String link = "http://localhost:8080/hotelbooking/confirm-token?confirmationToken=" + token;
+            Locale locale = LocaleContextHolder.getLocale();
+            emailSenderService.sendEmail(email,
+                    messageSource.getMessage("email.confirmation.link.subject", null, locale),
+                    messageSource.getMessage("email.confirmation.link.body", new String[]{link}, locale));
         }
 
         return "Success";
@@ -150,11 +164,12 @@ public class UserService {
             throw new IllegalStateException("Email already confirmed.");
         }
 
-        if (confirmationTokenModel.getExpiresAt().isAfter(LocalDateTime.now())){
+        if (confirmationTokenModel.getExpiresAt().isBefore(LocalDateTime.now())){
             throw new IllegalStateException("Token already expired");
         }
 
         confirmationTokenModel.setConfirmedAt(LocalDateTime.now());
+        confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
         enableUser(confirmationTokenModel.getUser().getUsername());
     }
 

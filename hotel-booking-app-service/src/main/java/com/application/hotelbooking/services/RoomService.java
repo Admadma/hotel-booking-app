@@ -8,12 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class RoomService {
@@ -28,9 +26,6 @@ public class RoomService {
 
     @Autowired
     private ReservationService reservationService;
-
-    @Autowired
-    private EmailSenderService emailSenderService;
 
 
     private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
@@ -58,15 +53,6 @@ public class RoomService {
     }
 
     public List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-
-        //TODO: To manually test that the localized messages can be loaded, run the application and search for rooms to trigger this method.
-        Locale locale = LocaleContextHolder.getLocale();
-        LOGGER.info(messageSource.getMessage("test.message", null, locale));
-        LOGGER.info(messageSource.getMessage("home.room.form.validation.startdate.must.before", null, locale));
-        LOGGER.info("-------");
-
-        emailSenderService.sendEmail("aranyiadam@gmail.com", "First test", "Test message");
-
         List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
         List<Long> availableRooms = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 

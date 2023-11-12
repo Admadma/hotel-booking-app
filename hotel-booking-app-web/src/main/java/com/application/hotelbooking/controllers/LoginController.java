@@ -19,6 +19,9 @@ public class LoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
+    @Autowired
+    private UserService userService;
+
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
@@ -28,13 +31,12 @@ public class LoginController {
         return authentication.isAuthenticated();
     }
 
-    @Autowired
-    private UserService userService;
-    @PostMapping(value = "/confirm-token")
+    @GetMapping(value = "/confirm-token")
     private String confirmToken(@RequestParam("confirmationToken") String confirmationToken){
+        LOGGER.info("confirming");
         userService.confirmToken(confirmationToken);
         LOGGER.info("token confirmed");
-        return "login";
+        return "redirect:/hotelbooking/login";
     }
 
     @GetMapping("/login")
