@@ -22,16 +22,12 @@ public class RoleService {
 
     @Transactional
     public RoleModel createRoleIfNotFound(String roleName){
-        if (roleRepository.findRoleByName(roleName) == null){
+        if (roleRepository.findRoleByName(roleName).isEmpty()){
             RoleModel roleModel = new RoleModel();
             roleModel.setName(roleName);
             roleRepository.save(roleTransformer.transformToRole(roleModel));
         }
-        return roleTransformer.transformToRoleModel(roleRepository.findRoleByName(roleName));
-    }
-
-    private boolean roleExists(String roleName) {
-        return roleRepository.findRoleByName(roleName) == null;
+        return roleTransformer.transformToRoleModel(roleRepository.findRoleByName(roleName).get());
     }
 
     public Collection<RoleModel> getRoles(List<String> roleNames){

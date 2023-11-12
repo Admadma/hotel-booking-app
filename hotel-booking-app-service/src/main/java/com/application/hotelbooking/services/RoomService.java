@@ -7,6 +7,7 @@ import com.application.hotelbooking.services.repositoryservices.RoomRepositorySe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -18,6 +19,8 @@ public class RoomService {
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomService.class);
     public static final long DEFAULT_STARTING_VERSION = 1l;
 
+    @Autowired
+    private MessageSource messageSource;
     @Autowired
     private RoomRepositoryService roomRepositoryService;
 

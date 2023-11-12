@@ -1,12 +1,11 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.ReservationModel;
-import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
-import com.application.hotelbooking.exceptions.InvalidTimePeriodException;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
+import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ReservationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
     @Autowired
-    private UserService userService;
+    private UserRepositoryService userRepositoryService;
 
     @Autowired
     private ReservationRepositoryService reservationRepositoryService;
@@ -62,7 +60,7 @@ public class ReservationService {
     public ReservationModel prepareReservation(ReservableRoomDTO reservableRoomDTO, String userName){
         return ReservationModel.builder()
                 .room(roomRepositoryService.findRoomByNumberAndHotelName(reservableRoomDTO.getRoomNumber(), reservableRoomDTO.getHotelName()))
-                .user(userService.getUsersByName(userName).get(0))
+                .user(userRepositoryService.getUserByName(userName).get())
                 .totalPrice(reservableRoomDTO.getTotalPrice())
                 .startDate(reservableRoomDTO.getStartDate())
                 .endDate(reservableRoomDTO.getEndDate())

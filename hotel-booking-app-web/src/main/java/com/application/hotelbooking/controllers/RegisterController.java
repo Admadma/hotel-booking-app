@@ -1,11 +1,16 @@
 package com.application.hotelbooking.controllers;
 
+import com.application.hotelbooking.dto.NewUserFormDTO;
 import com.application.hotelbooking.dto.UserFormDTO;
+import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.transformers.RoleViewTransformer;
 import com.application.hotelbooking.transformers.UserViewTransformer;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,24 +42,31 @@ public class RegisterController {
     @Autowired
     private RoleViewTransformer roleViewTransformer;
 
-    @RequestMapping(value = "/register/add-new-user")
-    public String addNewUser(@Valid @ModelAttribute("user") UserFormDTO userFormDTO, BindingResult result){
+    @RequestMapping(value = "register/create-new-user")
+    public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result, HttpServletRequest request){
         if (result.hasErrors()){
-            LOGGER.info("Error while validating");
+            LOGGER.info("Error while validating newUserFormDTO");
             return "register";
         }
 
         try {
-            userService.addNewUser(
-                    userFormDTO.getUsername(),
-                    userFormDTO.getPassword(),
-                    roleService.getRoles(List.of("USER"))
-            );
-            LOGGER.info("back to controller");
-            LOGGER.info("Added user: " + userViewTransformer.transformToUserView(userService.getUsersByName(userFormDTO.getUsername()).get(0)).getUsername());
+            LOGGER.info("Validating email");
+            InternetAddress internetAddress = new InternetAddress(newUserFormDTO.getEmail());
+            internetAddress.validate();
+            LOGGER.info("creating...");
+            userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
+            LOGGER.info("...created");
+        } catch (AddressException ae) {
+            result.rejectValue("email", "registration.error.email.invalid", "That email is invalid");
+            LOGGER.info("That email is invalid");
+            return "register";
         } catch (UserAlreadyExistsException uae) {
-            result.rejectValue("username", null, "That name is already taken");
+            result.rejectValue("username", "registration.error.username.taken", "That name is already taken");
             LOGGER.info("That username is taken");
+            return "register";
+        } catch (EmailAlreadyExistsException eae){
+            result.rejectValue("email", "registration.error.email.taken", "That email is already taken");
+            LOGGER.info("That email is already taken");
             return "register";
         } catch (Exception e){
             LOGGER.error("Failed to add user. Error message: " + e.getMessage());
@@ -62,7 +74,8 @@ public class RegisterController {
             return "register";
         }
 
-        return "redirect:/hotelbooking/home";
+        request.getSession().setAttribute("email", newUserFormDTO.getEmail());
+        return "redirect:/hotelbooking/confirmemail";
     }
 
     @GetMapping("/register")
@@ -70,6 +83,7 @@ public class RegisterController {
         LOGGER.info("Navigating to registration page");
         UserFormDTO user = new UserFormDTO();
         model.addAttribute("user", user);
+        model.addAttribute("newUserFormDTO", new NewUserFormDTO());
 
         return "register";
     }

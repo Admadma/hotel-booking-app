@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -25,6 +26,12 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false, unique = true)
+    private String email;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean locked;
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean enabled;
 
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
@@ -37,4 +44,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(version, user.version) && Objects.equals(username, user.username) && Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, version, username, email);
+    }
 }

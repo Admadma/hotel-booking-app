@@ -3,6 +3,7 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.dto.ChangeCredentialsDto;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import com.application.hotelbooking.transformers.UserViewTransformer;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,9 @@ public class ChangeCredentialsController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepositoryService userRepositoryService;
 
     @Autowired
     private UserViewTransformer userViewTransformer;
@@ -54,7 +58,7 @@ public class ChangeCredentialsController {
         LOGGER.info("Navigating to account page");
         ChangeCredentialsDto changeCredentialsDto = new ChangeCredentialsDto();
         model.addAttribute("credentials", changeCredentialsDto);
-        session.setAttribute("version", userViewTransformer.transformToUserView(userService.getUsersByName(auth.getName()).get(0)).getVersion());
+        session.setAttribute("version", userViewTransformer.transformToUserView(userRepositoryService.getUserByName(auth.getName()).get()).getVersion());
         return "account";
     }
 }

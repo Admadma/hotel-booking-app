@@ -1,5 +1,7 @@
 package com.application.hotelbooking.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "hotelbooking")
 public class LoginController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
@@ -19,6 +23,7 @@ public class LoginController {
         }
         return authentication.isAuthenticated();
     }
+
     @GetMapping("/login")
     public String login(){
         if (isAuthenticated()){
