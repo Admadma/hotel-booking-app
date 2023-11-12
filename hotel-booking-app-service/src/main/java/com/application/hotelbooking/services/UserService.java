@@ -10,6 +10,7 @@ import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,8 +111,8 @@ public class UserService {
         return passwordEncoder.matches(oldPassword, userModel.getPassword());
     }
 
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public String createUser(String username, String password, String email, List<String> rolesAsStrings){
+    @Transactional
+    public String createUser(String username, String password, String email, List<String> rolesAsStrings) {
         //TODO: validate the email format
         if (userExists(username)){
             throw new UserAlreadyExistsException("That username is already taken");
@@ -144,11 +145,18 @@ public class UserService {
 
             confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
 
-            String link = "http://localhost:8080/hotelbooking/confirm-token?confirmationToken=" + token;
             Locale locale = LocaleContextHolder.getLocale();
+            String link = "http://localhost:8080/hotelbooking/confirm-token?confirmationToken=" + token;
+            String content = messageSource.getMessage("email.confirmation.link.body", null, locale)
+                    + "<a href=\""
+                    + link
+                    + "\">"
+                    + messageSource.getMessage("email.confirmation.link.confirm", null, locale)
+                    +"</a>";
+
             emailSenderService.sendEmail(email,
                     messageSource.getMessage("email.confirmation.link.subject", null, locale),
-                    messageSource.getMessage("email.confirmation.link.body", new String[]{link}, locale));
+                    content);
         }
 
         return "Success";
