@@ -4,6 +4,7 @@ import com.application.hotelbooking.domain.ConfirmationTokenModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.*;
 import com.application.hotelbooking.repositories.UserRepository;
+import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
 import jakarta.persistence.OptimisticLockException;
@@ -30,7 +31,7 @@ public class UserService {
     public static final String ADMIN_EMAIL = "hotelbookingservice01@gmail.com";
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepositoryService userRepositoryService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -52,25 +53,17 @@ public class UserService {
     @Autowired
     private RoleTransformer roleTransformer;
 
-    public Optional<UserModel> getUserByName(String username){
-        return userTransformer.transformToOptionalUserModel(userRepository.findByUsername(username));
-    }
-
     public boolean userExists(String username){
-        return getUserByName(username).isPresent();
+        return userRepositoryService.getUserByName(username).isPresent();
     }
 
     private boolean emailExists(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
-
-    private UserModel save(UserModel userModel){
-        return userTransformer.transformToUserModel(userRepository.save(userTransformer.transformToUser(userModel)));
+        return userRepositoryService.getUserByEmail(email).isPresent();
     }
 
     @Transactional
     public void createAdminUserIfNotFound(){
-        if (userRepository.findByEmail(ADMIN_EMAIL).isEmpty()){
+        if (userRepositoryService.getUserByEmail(ADMIN_EMAIL).isEmpty()){
             LOGGER.info("Creating admin user");
             createUser(ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_EMAIL, List.of("ADMIN"));
             LOGGER.info("Created admin user");
@@ -80,11 +73,11 @@ public class UserService {
     }
 
     public void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException{
-        if (getUserByName(username).isEmpty()){
+        if (userRepositoryService.getUserByName(username).isEmpty()){
             throw new IllegalStateException("User does not exist");
         }
 
-        UserModel userModel = getUserByName(username).get();
+        UserModel userModel = userRepositoryService.getUserByName(username).get();
         if (!userVersionMatches(version, userModel)){
             throw new OptimisticLockException();
         }
@@ -94,7 +87,7 @@ public class UserService {
 
         userModel.setPassword(passwordEncoder.encode(newPassword));
         userModel.setVersion(++version);
-        save(userModel);
+        userRepositoryService.save(userModel);
     }
 
     private boolean userVersionMatches(Long version, UserModel userModel) {
@@ -107,7 +100,6 @@ public class UserService {
 
     @Transactional
     public String createUser(String username, String password, String email, List<String> rolesAsStrings) {
-        //TODO: validate the email format
         if (userExists(username)){
             throw new UserAlreadyExistsException("That username is already taken");
         }
@@ -124,36 +116,59 @@ public class UserService {
                 .enabled(isAdmin) //We want to skip the email validation process and enable admin users by default
                 .roles(roleService.getRoles(rolesAsStrings))
                 .build();
-        save(userModel);
+        userRepositoryService.save(userModel);
 
         if (!isAdmin) {
-            LOGGER.info("creating ConfirmationTokenModel");
-            String token = UUID.randomUUID().toString();
-            ConfirmationTokenModel confirmationTokenModel = ConfirmationTokenModel.builder()
-                    .token(token)
-                    .user(getUserByName(username).get())
-                    .createdAt(LocalDateTime.now())
-                    .expiresAt(LocalDateTime.now().plusMinutes(30))
-                    .build();
-            LOGGER.info("saving ConfirmationTokenModel");
-
-            confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
-
-            Locale locale = LocaleContextHolder.getLocale();
-            String link = "http://localhost:8080/hotelbooking/confirm-token?confirmationToken=" + token;
-            String content = messageSource.getMessage("email.confirmation.link.body", null, locale)
-                    + "<a href=\""
-                    + link
-                    + "\">"
-                    + messageSource.getMessage("email.confirmation.link.confirm", null, locale)
-                    +"</a>";
-
-            emailSenderService.sendEmail(email,
-                    messageSource.getMessage("email.confirmation.link.subject", null, locale),
-                    content);
+            sendConfirmationToken(username, email);
         }
 
         return "Success";
+    }
+
+    public void resendConfirmationToken(String email){
+        if (!emailExists(email)){
+            throw new InvalidUserException("There is no user with that email");
+        }
+        // get tokens of user
+//        for each check if confirmedAt not null somewhere
+
+        //List ConfirmationTokenRepository findByUser(User)
+        //for each check confirmedAt != null
+        confirmationTokenService.getAllTokensOfUser(email);
+
+//        if ()
+
+//        simply checking if enabled tells me if it vas already verified or not. There is no need to check all tokens of user
+//        userRepositoryService.getUserByEmail(email).get().getEnabled();
+        sendConfirmationToken(userRepositoryService.getUserByEmail(email).get().getUsername(), email);
+
+    }
+
+    private void sendConfirmationToken(String username, String email) {
+        LOGGER.info("creating ConfirmationTokenModel");
+        String token = UUID.randomUUID().toString();
+        ConfirmationTokenModel confirmationTokenModel = ConfirmationTokenModel.builder()
+                .token(token)
+                .user(userRepositoryService.getUserByName(username).get())
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusMinutes(30))
+                .build();
+        LOGGER.info("saving ConfirmationTokenModel");
+
+        confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
+
+        Locale locale = LocaleContextHolder.getLocale();
+        String link = "http://localhost:8080/hotelbooking/confirm-token?confirmationToken=" + token;
+        String content = messageSource.getMessage("email.confirmation.link.body", null, locale)
+                + "<a href=\""
+                + link
+                + "\">"
+                + messageSource.getMessage("email.confirmation.link.confirm", null, locale)
+                +"</a>";
+
+        emailSenderService.sendEmail(email,
+                messageSource.getMessage("email.confirmation.link.subject", null, locale),
+                content);
     }
 
     @Transactional
@@ -176,8 +191,8 @@ public class UserService {
     }
 
     private void enableUser(String username) {
-        UserModel userModel = getUserByName(username).get();
+        UserModel userModel = userRepositoryService.getUserByName(username).get();
         userModel.setEnabled(true);
-        save(userModel);
+        userRepositoryService.save(userModel);
     }
 }
