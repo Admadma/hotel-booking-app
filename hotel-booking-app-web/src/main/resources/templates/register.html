@@ -19,7 +19,7 @@
         <p  th:if="${#fields.hasErrors('username')}" th:class="${#fields.hasErrors('username')}? error" th:errors="*{username}" style="color: red;"></p>
 
         <label for="password" th:text="#{registration.password}"/>
-        <input class="form-control" type="text" th:field="*{password}" id="password">
+        <input class="form-control" type="password" th:field="*{password}" id="password">
         <p  th:if="${#fields.hasErrors('password')}" th:class="${#fields.hasErrors('password')}? error" th:errors="*{password}" style="color: red;"></p>
 
         <label for="email" th:text="#{registration.email}"/>
@@ -31,7 +31,5 @@
         </div>
     </form>
 </div>
-
-
 </body>
 </html>

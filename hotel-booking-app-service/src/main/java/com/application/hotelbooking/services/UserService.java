@@ -1,22 +1,16 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.ConfirmationTokenModel;
-import com.application.hotelbooking.domain.RoleModel;
-import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.domain.UserModel;
-import com.application.hotelbooking.exceptions.CredentialMismatchException;
-import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
-import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
+import com.application.hotelbooking.exceptions.*;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
-import jakarta.mail.MessagingException;
 import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -169,11 +163,11 @@ public class UserService {
                 .orElseThrow(() -> new IllegalStateException("Confirmation token not found."));
 
         if (confirmationTokenModel.getConfirmedAt() != null){
-            throw new IllegalStateException("Email already confirmed.");
+            throw new EmailAlreadyConfirmedException("Email already confirmed.");
         }
 
         if (confirmationTokenModel.getExpiresAt().isBefore(LocalDateTime.now())){
-            throw new IllegalStateException("Token already expired");
+            throw new ExpiredTokenException("Token already expired");
         }
 
         confirmationTokenModel.setConfirmedAt(LocalDateTime.now());

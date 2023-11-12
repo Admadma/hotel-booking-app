@@ -1,7 +1,6 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.NewUserFormDTO;
-import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.dto.UserFormDTO;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
@@ -11,6 +10,7 @@ import com.application.hotelbooking.transformers.RoleViewTransformer;
 import com.application.hotelbooking.transformers.UserViewTransformer;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class RegisterController {
     private RoleViewTransformer roleViewTransformer;
 
     @RequestMapping(value = "register/create-new-user")
-    public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result){
+    public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result, HttpServletRequest request){
         if (result.hasErrors()){
             LOGGER.info("Error while validating newUserFormDTO");
             return "register";
@@ -73,9 +73,9 @@ public class RegisterController {
             result.addError(new ObjectError("globalError", "Registration failed. Please use different credentials or try again later."));
             return "register";
         }
-        //TODO: home page will be accessible for unauthenticated user as well, so it's okay to redirect there. But login will be needed once a room is selected
-        //TODO: introduce a simple page that informs the user of the sent verification email
-        return "redirect:/hotelbooking/home";
+
+        request.getSession().setAttribute("email", newUserFormDTO.getEmail());
+        return "redirect:/hotelbooking/confirmemail";
     }
 
     @GetMapping("/register")

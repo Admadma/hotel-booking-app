@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ConfirmationTokenModel {
 
+    private String id;
     private String token;
     private UserModel user;
     private LocalDateTime createdAt;
