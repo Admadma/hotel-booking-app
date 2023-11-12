@@ -3,7 +3,7 @@ package com.application.hotelbooking.services;
 import com.application.hotelbooking.domain.ConfirmationTokenModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.*;
-import com.application.hotelbooking.repositories.UserRepository;
+
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
@@ -125,23 +125,16 @@ public class UserService {
         return "Success";
     }
 
+    @Transactional
     public void resendConfirmationToken(String email){
         if (!emailExists(email)){
             throw new InvalidUserException("There is no user with that email");
         }
-        // get tokens of user
-//        for each check if confirmedAt not null somewhere
+        if (userRepositoryService.getUserByEmail(email).get().getEnabled()){
+            throw new EmailAlreadyConfirmedException("That email is already confirmed");
+        }
 
-        //List ConfirmationTokenRepository findByUser(User)
-        //for each check confirmedAt != null
-        confirmationTokenService.getAllTokensOfUser(email);
-
-//        if ()
-
-//        simply checking if enabled tells me if it vas already verified or not. There is no need to check all tokens of user
-//        userRepositoryService.getUserByEmail(email).get().getEnabled();
         sendConfirmationToken(userRepositoryService.getUserByEmail(email).get().getUsername(), email);
-
     }
 
     private void sendConfirmationToken(String username, String email) {
@@ -175,7 +168,7 @@ public class UserService {
     public void confirmToken(String token){
         ConfirmationTokenModel confirmationTokenModel = confirmationTokenService
                 .findToken(token)
-                .orElseThrow(() -> new IllegalStateException("Confirmation token not found."));
+                .orElseThrow(() -> new InvalidTokenException("Confirmation token not found."));
 
         if (confirmationTokenModel.getConfirmedAt() != null){
             throw new EmailAlreadyConfirmedException("Email already confirmed.");
