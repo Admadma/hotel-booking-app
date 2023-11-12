@@ -20,8 +20,8 @@ public class MyUserDetailService implements UserDetailsService {
     private UserViewTransformer userViewTransformer;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (userService.getUsersByName(username).size() == 1){
-            UserDetails user = new MyUserDetails(userViewTransformer.transformToUserView(userService.getUsersByName(username).get(0)));
+        if (userService.getUserByName(username).isPresent()){
+            UserDetails user = new MyUserDetails(userViewTransformer.transformToUserView(userService.getUserByName(username).get()));
             return user;
         } else {
             throw new UsernameNotFoundException("Could not find user with name: " + username);

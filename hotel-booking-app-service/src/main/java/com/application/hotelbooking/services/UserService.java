@@ -49,12 +49,12 @@ public class UserService {
     @Autowired
     private RoleTransformer roleTransformer;
 
-    public List<UserModel> getUsersByName(String username){
-        return userTransformer.transformToUserModels(userRepository.findUserByUsername(username)).stream().toList();
+    public Optional<UserModel> getUserByName(String username){
+        return userTransformer.transformToOptionalUserModel(userRepository.findByUsername(username));
     }
 
     public boolean userExists(String username){
-        return getUsersByName(username).size() == 1;
+        return getUserByName(username).isPresent();
     }
 
     private boolean emailExists(String email) {
@@ -77,7 +77,11 @@ public class UserService {
     }
 
     public void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException{
-        UserModel userModel = getUsersByName(username).get(0);
+        if (getUserByName(username).isEmpty()){
+            throw new IllegalStateException("User does not exist");
+        }
+
+        UserModel userModel = getUserByName(username).get();
         if (!userVersionMatches(version, userModel)){
             throw new OptimisticLockException();
         }
@@ -124,7 +128,7 @@ public class UserService {
             String token = UUID.randomUUID().toString();
             ConfirmationTokenModel confirmationTokenModel = ConfirmationTokenModel.builder()
                     .token(token)
-                    .user(getUsersByName(username).get(0))
+                    .user(getUserByName(username).get())
                     .createdAt(LocalDateTime.now())
                     .expiresAt(LocalDateTime.now().plusMinutes(30))
                     .build();
@@ -155,7 +159,7 @@ public class UserService {
     }
 
     private void enableUser(String username) {
-        UserModel userModel = getUsersByName(username).get(0);
+        UserModel userModel = getUserByName(username).get();
         userModel.setEnabled(true);
         save(userModel);
     }

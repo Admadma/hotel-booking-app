@@ -62,7 +62,7 @@ public class ReservationService {
     public ReservationModel prepareReservation(ReservableRoomDTO reservableRoomDTO, String userName){
         return ReservationModel.builder()
                 .room(roomRepositoryService.findRoomByNumberAndHotelName(reservableRoomDTO.getRoomNumber(), reservableRoomDTO.getHotelName()))
-                .user(userService.getUsersByName(userName).get(0))
+                .user(userService.getUserByName(userName).get())
                 .totalPrice(reservableRoomDTO.getTotalPrice())
                 .startDate(reservableRoomDTO.getStartDate())
                 .endDate(reservableRoomDTO.getEndDate())

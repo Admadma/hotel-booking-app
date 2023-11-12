@@ -54,7 +54,7 @@ public class ChangeCredentialsController {
         LOGGER.info("Navigating to account page");
         ChangeCredentialsDto changeCredentialsDto = new ChangeCredentialsDto();
         model.addAttribute("credentials", changeCredentialsDto);
-        session.setAttribute("version", userViewTransformer.transformToUserView(userService.getUsersByName(auth.getName()).get(0)).getVersion());
+        session.setAttribute("version", userViewTransformer.transformToUserView(userService.getUserByName(auth.getName()).get()).getVersion());
         return "account";
     }
 }

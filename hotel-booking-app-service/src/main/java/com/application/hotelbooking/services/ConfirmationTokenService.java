@@ -22,6 +22,6 @@ public class ConfirmationTokenService {
     }
 
     public Optional<ConfirmationTokenModel> findToken(String token){
-        return confirmationTokenTransformer.transformToConfirmationTokenModel(confirmationTokenRepository.findByToken(token));
+        return confirmationTokenTransformer.transformToOptionalConfirmationTokenModel(confirmationTokenRepository.findByToken(token));
     }
 }
