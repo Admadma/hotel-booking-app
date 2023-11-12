@@ -2,6 +2,7 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.ConfirmationTokenModel;
 import com.application.hotelbooking.domain.RoleModel;
+import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
@@ -12,16 +13,14 @@ import com.application.hotelbooking.transformers.UserTransformer;
 import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -99,8 +98,7 @@ public class UserService {
         return passwordEncoder.matches(oldPassword, userModel.getPassword());
     }
 
-    //TODO: return the UserModel (if I want to do something with that information)
-    @Transactional
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public String createUser(String username, String password, String email, List<String> rolesAsStrings){
         //TODO: validate the email format
         if (userExists(username)){
@@ -120,7 +118,6 @@ public class UserService {
                 .roles(roleService.getRoles(rolesAsStrings))
                 .build();
         save(userModel);
-        LOGGER.info("Saved");
 
         if (!isAdmin) {
             LOGGER.info("creating ConfirmationTokenModel");
@@ -135,12 +132,10 @@ public class UserService {
 
             confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
         }
-        LOGGER.info("done");
 
         return "Success";
     }
 
-    //Simple logic for enabling user. Not used anywhere yet
     @Transactional
     public void confirmToken(String token){
         ConfirmationTokenModel confirmationTokenModel = confirmationTokenService
@@ -151,9 +146,9 @@ public class UserService {
             throw new IllegalStateException("Email already confirmed.");
         }
 
-//        if (confirmationTokenModel.getExpiresAt().isAfter(LocalDateTime.now())){
-//            throw new IllegalStateException("Token already expired");
-//        }
+        if (confirmationTokenModel.getExpiresAt().isAfter(LocalDateTime.now())){
+            throw new IllegalStateException("Token already expired");
+        }
 
         confirmationTokenModel.setConfirmedAt(LocalDateTime.now());
         enableUser(confirmationTokenModel.getUser().getUsername());
