@@ -27,6 +27,8 @@ public class RoomService {
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private HotelService hotelService;
 
     private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
@@ -64,11 +66,8 @@ public class RoomService {
     }
 
     public void createRoomFromDTO(RoomCreationServiceDTO roomCreationServiceDTO){
-        if (roomRepositoryService.isRoomNumberFree(roomCreationServiceDTO.getRoomNumber())) {
-            roomCreationServiceDTO.setVersion(DEFAULT_STARTING_VERSION);
-            roomRepositoryService.saveRoom(roomCreationServiceDTO);
-        } else {
-            throw new InvalidRoomException("That roomNumber is already taken.");
-        }
+        roomCreationServiceDTO.setVersion(DEFAULT_STARTING_VERSION);
+        roomCreationServiceDTO.setRoomNumber(1 + hotelService.getLatestRoomNumberOfHotel(roomCreationServiceDTO.getHotelId()));
+        roomRepositoryService.saveRoom(roomCreationServiceDTO);
     }
 }

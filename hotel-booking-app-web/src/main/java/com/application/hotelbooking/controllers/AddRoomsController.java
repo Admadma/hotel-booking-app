@@ -51,9 +51,6 @@ public class AddRoomsController {
         try {
             roomService.createRoomFromDTO(roomCreationDTOTransformer.transformToRoomCreationServiceDTO(roomCreationDTO));
             model.addAttribute("successMessage", "Success");
-        } catch (InvalidRoomException ire) {
-            LOGGER.error("Failed to save room: " + ire.getMessage());
-            result.rejectValue("roomNumber", "admin.room.validation.roomnumber.taken");
         } catch (Exception e){
             result.addError(new ObjectError("globalError", "Failed to save room"));
             return "addrooms";

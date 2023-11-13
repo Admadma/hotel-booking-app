@@ -13,11 +13,6 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Room findRoomById(Long id);
 
-    List<Room> findRoomByRoomNumber(int roomNumber);
-
-    List<Room> findAllByRoomType(RoomType roomType);
-
-    //TODO: Later roomNumber wont be unique across all rooms since multiple hotels can have the same roomNumber. Instead The combination of roomNumber and hotelName have to be unique
     Room findRoomByRoomNumberAndHotelHotelName(@Param("roomNumber") int roomNumber, @Param("hotelName") String hotelName);
 
     @Query("SELECT r.id FROM Room r JOIN r.hotel h WHERE" +

@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RoomCreationDTO {
 
-    @Positive(message = "{admin.room.validation.roomnumber.positive}")
-    private int roomNumber;
     @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
     private int singleBeds;
     @PositiveOrZero(message = "{admin.room.validation.roomnumber.positiveorzero}")
