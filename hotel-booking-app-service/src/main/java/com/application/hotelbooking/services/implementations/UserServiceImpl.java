@@ -1,9 +1,13 @@
-package com.application.hotelbooking.services;
+package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ConfirmationTokenModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.*;
 
+import com.application.hotelbooking.services.ConfirmationTokenService;
+import com.application.hotelbooking.services.EmailSenderService;
+import com.application.hotelbooking.services.RoleService;
+import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import com.application.hotelbooking.transformers.UserTransformer;
@@ -21,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 

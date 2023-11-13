@@ -1,8 +1,9 @@
-package com.application.hotelbooking.services;
+package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
+import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

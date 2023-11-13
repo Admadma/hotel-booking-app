@@ -1,8 +1,9 @@
-package com.application.hotelbooking.services;
+package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
+import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
@@ -17,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class ReservationServiceImpl implements ReservationService{
+public class ReservationServiceImpl implements ReservationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationService.class);
     @Autowired

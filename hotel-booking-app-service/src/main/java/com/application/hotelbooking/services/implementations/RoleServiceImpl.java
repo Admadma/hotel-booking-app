@@ -1,7 +1,8 @@
-package com.application.hotelbooking.services;
+package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.repositories.RoleRepository;
+import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.transformers.RoleTransformer;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

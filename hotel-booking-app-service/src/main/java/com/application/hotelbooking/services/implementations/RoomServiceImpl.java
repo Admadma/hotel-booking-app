@@ -1,7 +1,10 @@
-package com.application.hotelbooking.services;
+package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.*;
+import com.application.hotelbooking.services.HotelService;
+import com.application.hotelbooking.services.ReservationService;
+import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class RoomServiceImpl implements RoomService{
+public class RoomServiceImpl implements RoomService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomServiceImpl.class);
     public static final long DEFAULT_STARTING_VERSION = 1l;

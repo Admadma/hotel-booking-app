@@ -1,5 +1,6 @@
-package com.application.hotelbooking.services;
+package com.application.hotelbooking.services.implementations;
 
+import com.application.hotelbooking.services.EmailSenderService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;

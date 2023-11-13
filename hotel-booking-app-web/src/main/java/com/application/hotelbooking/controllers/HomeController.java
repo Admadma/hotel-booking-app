@@ -2,7 +2,7 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
-import com.application.hotelbooking.services.RoomServiceImpl;
+import com.application.hotelbooking.services.implementations.RoomServiceImpl;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
