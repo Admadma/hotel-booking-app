@@ -7,6 +7,7 @@ import com.application.hotelbooking.services.repositoryservices.UserRepositorySe
 import com.application.hotelbooking.transformers.UserViewTransformer;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +35,21 @@ public class ChangeCredentialsController {
     private UserViewTransformer userViewTransformer;
 
     @RequestMapping(value = "/change-password")
-    public String changePassword(@ModelAttribute("credentials") ChangeCredentialsDto changeCredentialsDto, BindingResult result, Authentication auth, HttpSession session, Model model){
+    public String changePassword(@Valid @ModelAttribute("credentials") ChangeCredentialsDto changeCredentialsDto, BindingResult result, Authentication auth, HttpSession session, Model model){
+        if (result.hasErrors()){
+            LOGGER.info("Error while validating");
+            return "account";
+        }
 
         Long version = Long.valueOf(session.getAttribute("version").toString());
         try {
             userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), changeCredentialsDto.getOldPassword(), version);
         } catch (OptimisticLockException ole){
             LOGGER.error("OptimisticLockException while changing password.");
-//            result.addError(new ObjectError("globalError", "Failed to change password."));
             return "redirect:/hotelbooking/account?error";
         } catch (CredentialMismatchException cme){
             LOGGER.error("CredentialMismatchException while changing password.");
-            result.rejectValue("oldPassword", null, cme.getMessage());
+            result.rejectValue("oldPassword", "account.form.old.password.not.found");
             return "account";
         }
         LOGGER.info("Successfully changed password!");

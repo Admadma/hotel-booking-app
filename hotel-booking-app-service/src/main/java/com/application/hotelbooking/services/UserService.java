@@ -82,7 +82,7 @@ public class UserService {
             throw new OptimisticLockException();
         }
         if (!oldPasswordMatches(userModel, oldPassword)){
-            throw new CredentialMismatchException("The provided old password does mot match.");
+            throw new CredentialMismatchException("The provided old password does not match.");
         }
 
         userModel.setPassword(passwordEncoder.encode(newPassword));
