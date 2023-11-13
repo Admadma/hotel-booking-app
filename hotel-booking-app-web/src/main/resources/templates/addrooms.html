@@ -16,10 +16,6 @@
         <p th:if="${#fields.hasErrors()}" th:text="#{admin.room.validation.global.error}" class="alert alert-danger"/>
         <p th:if="${successMessage}" th:text="#{admin.room.validation.global.success}" class="alert alert-success"/>
 
-        <label for="roomNumber" th:text="#{admin.room.form.roomnumber}"></label>
-        <input class="form-control" type="number" th:field="*{roomNumber}" id="roomNumber">
-        <p th:if="${#fields.hasErrors('roomNumber')}" th:class="${#fields.hasErrors('roomNumber')}? error" th:errors="*{roomNumber}" style="color: red;"></p>
-
         <label for="singleBeds" th:text="#{admin.room.form.singlebeds}"/>
         <input class="form-control" type="number" th:field="*{singleBeds}" id="singleBeds"/>
         <p th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:errors="*{singleBeds}" style="color: red;"></p>

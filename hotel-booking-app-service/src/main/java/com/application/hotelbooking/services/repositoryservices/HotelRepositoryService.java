@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HotelRepositoryService {
@@ -18,16 +19,16 @@ public class HotelRepositoryService {
     @Autowired
     private HotelTransformer hotelTransformer;
 
-    public HotelModel getHotelDTO(Long hotelId){
-        return hotelTransformer.transformToHotelModel(hotelRepository.findById(hotelId).get());
+    public Optional<HotelModel> getHotelById(Long hotelId){
+        return hotelTransformer.transformToOptionalHotelModel(hotelRepository.findById(hotelId));
     }
 
     public List<HotelModel> getAllHotels(){
         return hotelTransformer.transformToHotelModels(hotelRepository.findAll());
     }
 
-    public List<HotelModel> findHotelByHotelName(String hotelName){
-        return hotelTransformer.transformToHotelModels(hotelRepository.findHotelByHotelName(hotelName));
+    public Optional<HotelModel> findHotelByHotelName(String hotelName){
+        return hotelTransformer.transformToOptionalHotelModel(hotelRepository.findHotelByHotelName(hotelName));
     }
 
     public HotelModel save(HotelCreationServiceDTO hotelCreationServiceDTO){

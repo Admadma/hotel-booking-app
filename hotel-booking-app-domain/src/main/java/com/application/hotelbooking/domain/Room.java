@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "rooms")
+@Table(name = "rooms", uniqueConstraints = @UniqueConstraint(columnNames = {"room_number", "hotel_id"}))
 public class Room {
 
     @Id
@@ -21,7 +21,7 @@ public class Room {
     private Long id;
     private Long version;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "room_number", nullable = false)
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
@@ -35,6 +35,7 @@ public class Room {
     private List<Reservation> reservations;
 
     @ManyToOne
+    @JoinColumn(name = "hotel_id")
     private Hotel hotel;
 
     @Override
