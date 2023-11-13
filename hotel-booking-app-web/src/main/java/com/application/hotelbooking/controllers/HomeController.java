@@ -2,7 +2,7 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
-import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.RoomServiceImpl;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class HomeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
-    private RoomService roomService;
+    private RoomServiceImpl roomServiceImpl;
 
     @Autowired
     private RoomSearchDTOTransformer roomSearchDTOTransformer;
@@ -55,7 +55,7 @@ public class HomeController {
         }
         transformFieldsToNulls(roomSearchFormDTO);
 
-        List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
+        List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomServiceImpl.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
         request.getSession().setAttribute("resultDTOS", resultDTOS);
         LOGGER.info(resultDTOS.toString());
 
