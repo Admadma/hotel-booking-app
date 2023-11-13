@@ -2,37 +2,13 @@ package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.domain.HotelModel;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
-import com.application.hotelbooking.repositories.HotelRepository;
-import com.application.hotelbooking.transformers.HotelTransformer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class HotelRepositoryService {
-
-    @Autowired
-    private HotelRepository hotelRepository;
-
-    @Autowired
-    private HotelTransformer hotelTransformer;
-
-    public Optional<HotelModel> getHotelById(Long hotelId){
-        return hotelTransformer.transformToOptionalHotelModel(hotelRepository.findById(hotelId));
-    }
-
-    public List<HotelModel> getAllHotels(){
-        return hotelTransformer.transformToHotelModels(hotelRepository.findAll());
-    }
-
-    public Optional<HotelModel> findHotelByHotelName(String hotelName){
-        return hotelTransformer.transformToOptionalHotelModel(hotelRepository.findHotelByHotelName(hotelName));
-    }
-
-    public HotelModel save(HotelCreationServiceDTO hotelCreationServiceDTO){
-        return hotelTransformer.transformToHotelModel(hotelRepository.save(hotelTransformer.transformToHotel(hotelCreationServiceDTO)));
-    }
-
+public interface HotelRepositoryService {
+    Optional<HotelModel> getHotelById(Long hotelId);
+    List<HotelModel> getAllHotels();
+    Optional<HotelModel> findHotelByHotelName(String hotelName);
+    HotelModel save(HotelCreationServiceDTO hotelCreationServiceDTO);
 }
