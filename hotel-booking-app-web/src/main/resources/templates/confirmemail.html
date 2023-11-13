@@ -9,7 +9,7 @@
     <title th:text="#{title.confirmemail}" />
 </head>
 <body style="background-color: #73D89F">
-<div th:insert="fragments/navbar ::navbar"/>
+<div th:insert="~{fragments/navbar ::navbar}"/>
 
 <div class="container text-center" style="align-items: center; width: 48rem; padding: 1em; margin-top: 3em; justify-content: center; background-color:white;">
     <div th:if="${param.invalidLink}" class="alert alert-danger" th:text="#{confirm.email.error.invalid.link}" />

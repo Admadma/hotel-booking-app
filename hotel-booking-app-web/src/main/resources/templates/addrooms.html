@@ -9,7 +9,7 @@
     <title th:text="#{title.addrooms}" />
 </head>
 <body style="background-color: #73D89F">
-<div th:insert="fragments/navbaradmin ::navbar"/>
+<div th:insert="~{fragments/navbaradmin ::navbar}"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em; justify-content: center;">
     <form th:class="list-group-item" th:action="@{create-new-room}" th:object="${roomCreationDTO}" method="post">

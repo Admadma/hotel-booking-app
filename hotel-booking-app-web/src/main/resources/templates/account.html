@@ -9,7 +9,7 @@
     <title th:text="#{title.account}" />
 </head>
 <body style="background-color: #73D89F">
-<div th:insert="fragments/navbar ::navbar"/>
+<div th:insert="~{fragments/navbar ::navbar}"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em; justify-content: center;">
     <form th:class="list-group-item" th:action="@{change-password}" th:object="${credentials}" method="POST">

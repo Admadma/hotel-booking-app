@@ -9,7 +9,7 @@
     <title th:text="#{title.addhotels}" />
 </head>
 <body style="background-color: #73D89F">
-<div th:insert="fragments/navbaradmin ::navbar"/>
+<div th:insert="~{fragments/navbaradmin ::navbar}"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em;">
     <form class="list-group-item" th:action="@{create-new-hotel}" th:object="${hotelCreationDTO}" method="post">

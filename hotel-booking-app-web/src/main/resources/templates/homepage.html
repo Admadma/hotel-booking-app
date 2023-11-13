@@ -9,7 +9,7 @@
     <title th:text="#{title.homepage}" />
 </head>
 <body style="background-color: #73D89F">
-<div th:insert="fragments/navbar ::navbar"/>
+<div th:insert="~{fragments/navbar ::navbar}"/>
 
 <div class="container" style="width: 56rem; padding-top: 3em; justify-content: center; background-color:grey;">
     <form th:action="@{search-rooms}" th:object="${roomSearchFormDTO}" method="post">
