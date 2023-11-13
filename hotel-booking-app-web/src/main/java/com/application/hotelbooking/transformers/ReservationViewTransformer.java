@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationViewTransformer {
@@ -19,5 +21,11 @@ public class ReservationViewTransformer {
 
     public ReservationModel transformToReservationModel(ReservationView reservationView) {
         return modelMapper.map(reservationView, ReservationModel.class);
+    }
+
+    public List<ReservationView> transformToReservationViews(List<ReservationModel> reservationModels){
+        return reservationModels.stream()
+                .map(reservationModel -> modelMapper.map(reservationModel, ReservationView.class))
+                .collect(Collectors.toList());
     }
 }

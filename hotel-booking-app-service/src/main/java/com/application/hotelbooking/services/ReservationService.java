@@ -29,6 +29,15 @@ public class ReservationService {
     @Autowired
     private RoomRepositoryService roomRepositoryService;
 
+    public List<ReservationModel> getReservationsOfUser(String username){
+        return reservationRepositoryService.getReservationsByUser(userRepositoryService.getUserByName(username).get());
+    }
+
+    public void cancelReservation(Long reservationId){
+        // Future logic for refunding transaction would go here
+        reservationRepositoryService.delete(reservationId);
+    }
+
     private boolean isRoomAvailableInTimePeriod(List<ReservationModel> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
         for (ReservationModel reservation : reservations) {
             if (!(reservation.getStartDate().plusDays(1).isAfter(selectedEndDate) || reservation.getEndDate().minusDays(1).isBefore(selectedStartDate))) {
