@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                         .permitAll())
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/hotelbooking/home");
+                .logoutSuccessUrl("/hotelbooking/login?logout");
         return http.build();
     }
 
