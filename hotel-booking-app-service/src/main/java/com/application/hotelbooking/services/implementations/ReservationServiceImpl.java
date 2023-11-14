@@ -10,12 +10,15 @@ import com.application.hotelbooking.services.repositoryservices.UserRepositorySe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -29,6 +32,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private RoomRepositoryService roomRepositoryService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     public List<ReservationModel> getReservationsOfUser(String username){
         return reservationRepositoryService.getReservationsByUser(userRepositoryService.getUserByName(username).get());
@@ -83,10 +89,26 @@ public class ReservationServiceImpl implements ReservationService {
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
             reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
             roomRepositoryService.updateRoom(reservation.getRoom());
+            sendReservationConfirmationEmail(reservation);
             return reservation;
         } else {
             throw new OutdatedReservationException("This reservation is no longer valid");
         }
+    }
+
+    private void sendReservationConfirmationEmail(ReservationModel reservationModel){
+////        reservationModel.getUser().getEmail()
+//        Locale locale = LocaleContextHolder.getLocale();
+//        String content = messageSource.getMessage("reservation.confirmation.email.body", null, locale)
+//                + "<a href=\""
+//                + link
+//                + "\">"
+//                + messageSource.getMessage("email.confirmation.link.confirm", null, locale)
+//                +"</a>";
+//
+//        emailSenderService.sendEmail(email,
+//                messageSource.getMessage("email.confirmation.link.subject", null, locale),
+//                content);
     }
 
     private boolean isRoomStillAvailable(ReservationModel reservationModel) {
