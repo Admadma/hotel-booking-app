@@ -15,31 +15,30 @@
     <div class = "row justify-content-center">
         <h1 th:text="#{myreservations.myReservations}"/>
     </div>
-    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}">
-        Failed to cancel reservation.
-    </div>
-    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}">
-        Reservation cancelled successfully!
-    </div>
+    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>
+    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>
 <table class = "table table-striped table-bordered text-center">
     <thead class = "table-dark">
     <tr>
         <th th:text="#{reservation.roomType}"/>
+        <th th:text="#{reservation.hotelName}"/>
+        <th th:text="#{reservation.city}"/>
         <th th:text="#{reservation.roomNumber}"/>
         <th th:text="#{reservation.startDate}"/>
         <th th:text="#{reservation.endDate}"/>
         <th th:text="#{reservation.totalPrice}"/>
-        <th/>
-
+        <th th:text="#{myreservations.button.cancel}"/>
     </tr>
     </thead>
     <div class="text-center">
     <tbody>
     <tr th:if="${reservations.empty}">
-        <td colspan="6" th:text="#{myreservations.noReservationsYet}"/>
+        <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>
     </tr>
     <tr th:each="reservation : ${reservations}">
         <td th:insert="fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})" hidden="true"></td>
+        <td><span th:text="${reservation.room.hotel.hotelName}"> </span></td>
+        <td><span th:text="${reservation.room.hotel.city}"> </span></td>
         <td><span th:text="${reservation.room.roomNumber}"> </span></td>
         <td><span th:text="${reservation.startDate}"> </span></td>
         <td><span th:text="${reservation.endDate}"> </span></td>

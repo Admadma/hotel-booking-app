@@ -1,7 +1,6 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
-import com.application.hotelbooking.exceptions.CancellationErrorException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import org.slf4j.Logger;
@@ -32,13 +31,13 @@ public class MyReservationsController {
     public String cancelReservation(@ModelAttribute("reservationId") Long reservationId){
         try {
             reservationService.cancelReservation(reservationId);
-        } catch (CancellationErrorException cee) {
-            LOGGER.info(cee.getMessage());
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
             return "redirect:/hotelbooking/myreservations?error";
         }
         LOGGER.info("Successfully deleted reservation!");
 
-        return "redirect:/hotelbooking/myreservations?success";
+        return "redirect:/hotelbooking/myreservations";
     }
 
     @GetMapping("/myreservations")

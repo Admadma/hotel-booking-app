@@ -54,7 +54,7 @@ public class ReserveRoomController {
         }
 
         request.getSession().removeAttribute("reservationPlan");
-        return "redirect:/hotelbooking/home";
+        return "redirect:/hotelbooking/myreservations?reservationSuccess";
     }
 
     @GetMapping("/reserveroom")
