@@ -35,7 +35,7 @@ public class RoomServiceImpl implements RoomService {
     private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
         for (Long roomId : roomIds) {
-            RoomModel room = roomRepositoryService.getRoomDTO(roomId);
+            RoomModel room = roomRepositoryService.getRoomModel(roomId);
             reservableRoomDTOS.add(createReservableRoomDTO(room, roomSearchFormServiceDTO));
         }
         return reservableRoomDTOS;

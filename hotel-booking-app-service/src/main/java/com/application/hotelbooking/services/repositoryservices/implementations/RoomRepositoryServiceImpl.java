@@ -24,7 +24,7 @@ public class RoomRepositoryServiceImpl implements RoomRepositoryService {
     @Autowired
     private RoomTransformer roomTransformer;
 
-    public RoomModel getRoomDTO(Long roomId){
+    public RoomModel getRoomModel(Long roomId){
         return roomTransformer.transformToRoomModel(roomRepository.findById(roomId).get());
     }
 

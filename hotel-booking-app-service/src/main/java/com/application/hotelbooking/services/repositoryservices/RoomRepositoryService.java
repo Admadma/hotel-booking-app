@@ -7,7 +7,7 @@ import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import java.util.List;
 
 public interface RoomRepositoryService {
-    RoomModel getRoomDTO(Long roomId);
+    RoomModel getRoomModel(Long roomId);
     RoomModel findRoomByNumberAndHotelName(int roomNumber, String hotelName);
     RoomModel saveRoom(RoomCreationServiceDTO roomCreationServiceDTO);
     RoomModel updateRoom(RoomModel roomModel);

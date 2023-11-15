@@ -12,6 +12,7 @@
 <div th:insert="~{fragments/navbar ::navbar}"/>
 
 <div class="container" style="width: 56rem; padding-top: 3em; justify-content: center; background-color:grey;">
+    <div th:if="${param.reservationError}" class="alert alert-danger" th:text="#{home.reservation.error}"/>
     <form th:action="@{search-rooms}" th:object="${roomSearchFormDTO}" method="post">
         <div class="form-row">
             <div class="form-group col-md-3">

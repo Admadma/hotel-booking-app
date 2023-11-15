@@ -88,11 +88,10 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public ReservationModel reserveRoom(ReservationModel reservationModel){
-        if (isRoomStillAvailable(reservationModel)){
-            // If a room has multiple reservations (10000+) this is a more efficient way of checking since it only checks if the version had changed.
+        // While the user stayed on the confirm reservation page someone else might have created a reservation in the same time period.
+        // This solution works for now. But later I could lock the room for example 15 minutes to give time for the user to confirm the reservation and enhance user experience.
+        if (isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
-            reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
-            roomRepositoryService.updateRoom(reservation.getRoom());
             sendReservationConfirmationEmail(reservation);
             return reservation;
         } else {
@@ -147,10 +146,5 @@ public class ReservationServiceImpl implements ReservationService {
                 "            <td>" + reservationModel.getTotalPrice() + " HUF</td>\n" +
                 "        </tr>\n" +
                 "    </table>";
-    }
-
-    private boolean isRoomStillAvailable(ReservationModel reservationModel) {
-        //TODO: This is not the correct way to do it. This way the version will also change when the room gets reserved in a different time period. I will need to check all reservations of the room again to see if its still free
-        return reservationModel.getRoom().getVersion() == roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getVersion();
     }
 }

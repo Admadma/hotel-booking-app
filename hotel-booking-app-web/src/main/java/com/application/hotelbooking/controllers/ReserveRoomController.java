@@ -46,14 +46,15 @@ public class ReserveRoomController {
             LOGGER.info("Reserved room");
         } catch (OutdatedReservationException ore){
             LOGGER.info(ore.getMessage());
+            return "redirect:/hotelbooking/home?reservationError";
         } catch (Exception e){
-            //TODO: display error messages in user friendly way
             LOGGER.info("Failed to reserve room");
-            LOGGER.info(String.valueOf(e.getClass()));
-            LOGGER.info(e.getMessage());
+            return "redirect:/hotelbooking/home?reservationError";
+        } finally {
+            request.getSession().removeAttribute("reservationPlan");
+            request.getSession().removeAttribute("resultDTOS");
         }
 
-        request.getSession().removeAttribute("reservationPlan");
         return "redirect:/hotelbooking/myreservations?reservationSuccess";
     }
 
