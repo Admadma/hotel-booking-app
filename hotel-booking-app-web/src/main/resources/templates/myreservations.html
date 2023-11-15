@@ -36,7 +36,7 @@
         <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>
     </tr>
     <tr th:each="reservation : ${reservations}">
-        <td th:insert="fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})" hidden="true"></td>
+        <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>
         <td><span th:text="${reservation.room.hotel.hotelName}"> </span></td>
         <td><span th:text="${reservation.room.hotel.city}"> </span></td>
         <td><span th:text="${reservation.room.roomNumber}"> </span></td>
