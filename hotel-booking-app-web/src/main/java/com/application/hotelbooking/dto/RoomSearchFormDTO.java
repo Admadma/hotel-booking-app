@@ -23,13 +23,13 @@ public class RoomSearchFormDTO {
 
     //TODO: add min-max prices
 
-    @NotNull
-    @FutureOrPresent
+    @NotNull(message = "{home.room.form.validation.startdate.not.null}")
+    @FutureOrPresent(message = "{home.room.form.validation.startdate.future.or.present}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotNull
-    @Future
+    @NotNull(message = "{home.room.form.validation.enddate.not.null}")
+    @Future(message = "{home.room.form.validation.enddate.future}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 }

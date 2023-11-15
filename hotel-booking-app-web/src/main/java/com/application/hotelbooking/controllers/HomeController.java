@@ -1,8 +1,11 @@
 package com.application.hotelbooking.controllers;
 
+import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.services.implementations.RoomServiceImpl;
+import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
+import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -18,8 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "hotelbooking")
@@ -31,7 +36,13 @@ public class HomeController {
     private RoomServiceImpl roomServiceImpl;
 
     @Autowired
+    private HotelRepositoryService hotelRepositoryService;
+
+    @Autowired
     private RoomSearchDTOTransformer roomSearchDTOTransformer;
+
+    @Autowired
+    private HotelViewTransformer hotelViewTransformer;
 
     private void transformFieldsToNulls(RoomSearchFormDTO roomSearchFormDTO){
         if ("".equals(roomSearchFormDTO.getCity())){
@@ -66,7 +77,7 @@ public class HomeController {
 
 
     @GetMapping(value = "/home")
-    public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO){
+    public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, HttpServletRequest request){
         LOGGER.info("Navigating to home page");
 
         if (Objects.isNull(roomSearchFormDTO)) {
@@ -74,6 +85,9 @@ public class HomeController {
         } else {
             model.addAttribute("roomSearchFormDTO", roomSearchFormDTO);
         }
+        request.getSession().setAttribute("roomTypes", Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList()));
+        request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelRepositoryService.getAllHotels()));
+        request.getSession().setAttribute("cities", hotelRepositoryService.getAllHotels().stream().map(hotelModel -> hotelModel.getCity()).collect(Collectors.toList()));
 
         return "homepage";
     }

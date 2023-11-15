@@ -25,23 +25,31 @@
                 <input type="number" th:field="*{doubleBeds}" id="doubleBeds" name="doubleBeds">
                 <p th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:errors="*{doubleBeds}" style="color: red;"></p>
             </div>
+        </div>
+        <div class="form-row">
             <div class="form-group col-md-3">
                 <label for="roomType" th:text="#{home.room.form.roomtype}"/>
-                <!--                Instead of text make this a dropdown with the list of room types available-->
-                <input type="text" th:field="*{roomType}" id="roomType" name="roomType">
-                <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
+                <select th:field="*{roomType}" class="form-control" id="roomType">
+                    <option value="" th:text="#{home.dropdown.select.roomtype}"/>
+                    <option th:each="roomType : ${session.roomTypes}" th:value="${roomType}" th:insert="~{fragments/roomtypenames ::roomtypenames(roomType)}"/>
+                </select>
+                <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{home.room.form.validation.invalid.roomtype}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
                 <label for="city" th:text="#{home.room.form.city}"/>
-<!--                Instead of text make this a dropdown with the list of cities associated with hotels-->
-                <input type="text" th:field="*{city}" id="city" name="city">
-                <p th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:errors="*{city}" style="color: red;"></p>
+                <select th:field="*{city}" class="form-control" id="city">
+                    <option value="" th:text="#{home.dropdown.select.city}"/>
+                    <option th:each="city : ${session.cities}" th:value="${city}" th:text="${city}"/>
+                </select>
+                <p th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:text="#{home.room.form.validation.invalid.city}" style="color: red;"></p>
             </div>
             <div class="form-group col-md-3">
-                <label for="city" th:text="#{home.room.form.hotelname}"/>
-                <!--                Instead of text make this a dropdown with the list of cities associated with hotels-->
-                <input type="text" th:field="*{hotelName}" id="hotelName" name="hotelName">
-                <p th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}" style="color: red;"></p>
+                <label for="hotelName" th:text="#{home.room.form.hotelname}"/>
+                <select th:field="*{hotelName}" class="form-control" id="hotelName">
+                    <option value="" th:text="#{home.dropdown.select.hotel}"/>
+                    <option th:each="hotel : ${session.hotels}" th:value="${hotel.hotelName}" th:text="${hotel.hotelName}"/>
+                </select>
+                <p th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:text="#{home.room.form.validation.invalid.hotel}" style="color: red;"></p>
             </div>
         </div>
         <div class="form-row">
