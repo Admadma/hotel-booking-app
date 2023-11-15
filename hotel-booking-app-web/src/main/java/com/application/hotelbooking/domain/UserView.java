@@ -13,7 +13,6 @@ import java.util.List;
 public class UserView {
 
     private Long id;
-    private Long version;
     private String username;
     private String password;
     private String email;

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Objects;
+
 @Controller
 @RequestMapping(path = "hotelbooking")
 public class ChangeCredentialsController {
@@ -41,9 +43,8 @@ public class ChangeCredentialsController {
             return "account";
         }
 
-        Long version = Long.valueOf(session.getAttribute("version").toString());
         try {
-            userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), changeCredentialsDto.getOldPassword(), version);
+            userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), changeCredentialsDto.getOldPassword());
         } catch (OptimisticLockException ole){
             LOGGER.error("OptimisticLockException while changing password.");
             return "redirect:/hotelbooking/account?error";
@@ -62,7 +63,6 @@ public class ChangeCredentialsController {
         LOGGER.info("Navigating to account page");
         ChangeCredentialsDto changeCredentialsDto = new ChangeCredentialsDto();
         model.addAttribute("credentials", changeCredentialsDto);
-        session.setAttribute("version", userViewTransformer.transformToUserView(userRepositoryService.getUserByName(auth.getName()).get()).getVersion());
         return "account";
     }
 }

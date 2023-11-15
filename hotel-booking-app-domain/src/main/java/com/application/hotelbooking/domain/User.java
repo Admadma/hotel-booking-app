@@ -20,8 +20,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long version;
-
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
@@ -51,11 +49,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(version, user.version) && Objects.equals(username, user.username) && Objects.equals(email, user.email);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, version, username, email);
+        return Objects.hash(id, username, email);
     }
 }

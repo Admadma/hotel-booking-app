@@ -75,26 +75,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException{
+    public void changePassword(String username, String newPassword, String oldPassword) throws OptimisticLockException{
         if (userRepositoryService.getUserByName(username).isEmpty()){
             throw new IllegalStateException("User does not exist");
         }
 
         UserModel userModel = userRepositoryService.getUserByName(username).get();
-        if (!userVersionMatches(version, userModel)){
-            throw new OptimisticLockException();
-        }
         if (!oldPasswordMatches(userModel, oldPassword)){
             throw new CredentialMismatchException("The provided old password does not match.");
         }
 
         userModel.setPassword(passwordEncoder.encode(newPassword));
-        userModel.setVersion(++version);
         userRepositoryService.save(userModel);
-    }
-
-    private boolean userVersionMatches(Long version, UserModel userModel) {
-        return userModel.getVersion().equals(version);
     }
 
     private boolean oldPasswordMatches(UserModel userModel, String oldPassword){
@@ -112,7 +104,6 @@ public class UserServiceImpl implements UserService {
         boolean isAdmin = rolesAsStrings.contains("ADMIN");
         UserModel userModel = UserModel.builder()
                 .username(username)
-                .version(DEFAULT_STARTING_VERSION)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .enabled(isAdmin) //We want to skip the email validation process and enable admin users by default

@@ -16,7 +16,6 @@ import java.util.Objects;
 public class UserModel {
 
     private Long id;
-    private Long version;
     private String username;
     private String password;
     private String email;

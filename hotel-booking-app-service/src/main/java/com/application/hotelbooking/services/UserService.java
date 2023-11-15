@@ -14,5 +14,5 @@ public interface UserService {
     void confirmToken(String token);
     @Transactional
     void resendConfirmationToken(String email);
-    void changePassword(String username, String newPassword, String oldPassword, Long version) throws OptimisticLockException;
+    void changePassword(String username, String newPassword, String oldPassword) throws OptimisticLockException;
 }
