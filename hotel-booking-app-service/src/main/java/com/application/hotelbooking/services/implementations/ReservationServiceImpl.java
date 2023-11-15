@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.EmailSenderService;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -87,16 +87,27 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
     }
 
+    /**
+     *         While the user stayed on the confirm reservation page someone else might have created a reservation in the same time period.
+     *         This solution works for now. But later I could lock the room for example 15 minutes to give time for the user to confirm the reservation and enhance user experience.
+     * @param reservationModel a reservation prepared by UserService.prepareReservation, with attributes provided by the user
+     * @return returns the reservation that was saved to the database.
+     */
     public ReservationModel reserveRoom(ReservationModel reservationModel){
-        // While the user stayed on the confirm reservation page someone else might have created a reservation in the same time period.
-        // This solution works for now. But later I could lock the room for example 15 minutes to give time for the user to confirm the reservation and enhance user experience.
-        if (isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
+        // By checking that the version is still the same, I can guarantee that the selected time period had no new reservations, and I can skip checking it all again
+        if (isRoomVersionUnchanged(reservationModel) || isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
+            reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
+            roomRepositoryService.updateRoom(reservation.getRoom());
             sendReservationConfirmationEmail(reservation);
             return reservation;
         } else {
-            throw new OutdatedReservationException("This reservation is no longer valid");
+            throw new OutdatedReservationException("This reservation is no longer valid because the room has been updated");
         }
+    }
+
+    private boolean isRoomVersionUnchanged(ReservationModel reservationModel) {
+        return reservationModel.getRoom().getVersion() == roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getVersion();
     }
 
     private void sendReservationConfirmationEmail(ReservationModel reservationModel){

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ReservableRoomViewDTO {
 
+    private Long version;
     private int roomNumber;
     private int singleBeds;
     private int doubleBeds;
