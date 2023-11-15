@@ -70,7 +70,6 @@ public class ReserveRoomController {
                         roomSearchDTOTransformer.transformToRoomSearchResultDTO(
                                 reservableRoomViewDTOS.get(index)),
                         auth.getName())));
-        //TODO: If I want non logged in users to be able to browse rooms, I should only add auth.getName() during reservation
 
         return "reserveroom";
     }

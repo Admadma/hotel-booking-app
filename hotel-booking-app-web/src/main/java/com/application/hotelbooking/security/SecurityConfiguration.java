@@ -16,13 +16,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/register/**", "/error/**").permitAll();
-//                    auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
-                    auth.requestMatchers("/hotelbooking/admin/**").permitAll(); //TODO: REMOVE WHEN DONE WITH ADMIN PAGE DEVELOPMENT
+                    auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/search-rooms/**", "/hotelbooking/register/**", "/error/**").permitAll();
+                    auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
                     auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/images/*").permitAll();
-//                    auth.anyRequest().hasAnyAuthority("USER");
-                    auth.anyRequest().permitAll(); //TODO: REMOVE WHEN DONE WITH DEBUGGING
+                    auth.anyRequest().hasAnyAuthority("USER");
                  })
                 .formLogin(form -> form
                         .loginPage("/hotelbooking/login")
