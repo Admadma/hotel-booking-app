@@ -4,7 +4,7 @@ import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationService;
-import com.application.hotelbooking.services.implementations.RoomServiceImpl;
+import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
@@ -28,7 +28,7 @@ public class ReserveRoomController {
     private ReservationService reservationService;
 
     @Autowired
-    private RoomServiceImpl roomServiceImpl;
+    private RoomService roomService;
 
     @Autowired
     private RoomRepositoryService roomRepositoryService;
