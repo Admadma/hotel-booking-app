@@ -1,5 +1,6 @@
 package com.application.hotelbooking.controllers;
 
+import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
@@ -19,6 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "hotelbooking/admin")
@@ -62,6 +67,7 @@ public class AddRoomsController {
         LOGGER.info("Navigating to addRooms page");
         model.addAttribute("roomCreationDTO", new RoomCreationDTO());
         request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelRepositoryService.getAllHotels()));
+        request.getSession().setAttribute("roomTypes", Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList()));
 
         return "addrooms";
     }

@@ -23,5 +23,5 @@ public class RoomCreationDTO {
     @NotNull
     private RoomType roomType;
     @NotNull
-    private String hotelId;
+    private Long hotelId;
 }

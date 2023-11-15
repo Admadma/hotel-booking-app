@@ -26,7 +26,7 @@
     </div>
     <div class="row justify-content-between">
         <div class="col-6" th:text="#{reservation.roomType}"/>
-        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:insert="fragments/roomtypenames ::roomtypenames(${session.reservationPlan.room.roomType})"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:insert="~{fragments/roomtypenames ::roomtypenames(${session.reservationPlan.room.roomType})}"/>
     </div>
     <div class="row justify-content-between" style="background-color: #EEEEEE">
         <div class="col-6" th:text="#{reservation.singleBeds}"/>

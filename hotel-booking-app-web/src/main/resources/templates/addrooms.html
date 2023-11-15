@@ -24,18 +24,23 @@
         <input class="form-control" type="number" th:field="*{doubleBeds}" id="doubleBeds" >
         <p th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:errors="*{doubleBeds}" style="color: red;"></p>
 
-        <label for="roomType" th:text="#{admin.room.form.roomtype}"/>
-        <input class="form-control" type="text" th:field="*{roomType}" id="roomType" >
-        <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
-
-        <label for="roomType" th:text="#{admin.room.form.pricepernight}"/>
+        <label for="pricePerNight" th:text="#{admin.room.form.pricepernight}"/>
         <input class="form-control" type="text" th:field="*{pricePerNight}" id="pricePerNight" >
         <p th:if="${#fields.hasErrors('pricePerNight')}" th:class="${#fields.hasErrors('pricePerNight')}? error" th:text="#{admin.room.validation.invalid.pricePerNight}" style="color: red;"></p>
 
-        <select th:field="*{hotelId}" class="form-control">
+        <label for="roomType" th:text="#{admin.room.form.roomtype}"/>
+        <select th:field="*{roomType}" class="form-control" id="roomType">
+            <option value="" th:text="#{admin.dropdown.select.roomtype}"/>
+            <option th:each="roomType : ${session.roomTypes}" th:value="${roomType}" th:insert="~{fragments/roomtypenames ::roomtypenames(roomType)}"/>
+        </select>
+        <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{admin.room.validation.invalid.roomtype}" style="color: red;"></p>
+
+        <label for="hotel" th:text="#{admin.room.form.hotel}"/>
+        <select th:field="*{hotelId}" class="form-control" id="hotel">
             <option value="" th:text="#{admin.dropdown.select.hotel}"/>
             <option th:each="hotel : ${session.hotels}" th:value="${hotel.id}" th:text="${hotel.hotelName}" />
         </select>
+        <p th:if="${#fields.hasErrors('hotelId')}" th:class="${#fields.hasErrors('hotelId')}? error" th:text="#{admin.room.validation.invalid.hotel}" style="color: red;"></p>
 
         <div class="row justify-content-center" style="padding: 1.5em;">
             <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createroom" th:text="#{admin.button.submit.create.room}"/>
