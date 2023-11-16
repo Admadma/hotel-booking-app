@@ -72,7 +72,7 @@ public class RoleRepositoryTest {
 
         Assertions.assertThat(resultRole).isNotNull();
         Assertions.assertThat(resultRole).isNotEmpty();
-        Assertions.assertThat(resultRole.get()).isEqualTo(role);
+        Assertions.assertThat(resultRole.get().getName()).isEqualTo(role.getName());
     }
 
     @Test

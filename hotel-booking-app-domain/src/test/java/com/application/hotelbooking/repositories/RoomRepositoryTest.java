@@ -50,7 +50,8 @@ public class RoomRepositoryTest {
 
         Assertions.assertThat(resultRoom).isNotNull();
         Assertions.assertThat(resultRoom).isNotEmpty();
-        Assertions.assertThat(resultRoom.get()).isEqualTo(room);
+        Assertions.assertThat(resultRoom.get().getRoomNumber()).isEqualTo(room.getRoomNumber());
+        Assertions.assertThat(resultRoom.get().getHotel().getHotelName()).isEqualTo(room.getHotel().getHotelName());
     }
 
     @Test

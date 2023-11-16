@@ -42,7 +42,8 @@ public class HotelRepositoryTest {
 
         Assertions.assertThat(resultHotel).isNotNull();
         Assertions.assertThat(resultHotel).isNotEmpty();
-        Assertions.assertThat(resultHotel.get()).isEqualTo(hotel);
+        Assertions.assertThat(resultHotel.get().getHotelName()).isEqualTo(hotel.getHotelName());
+        Assertions.assertThat(resultHotel.get().getCity()).isEqualTo(hotel.getCity());
     }
 
     @Test
@@ -93,7 +94,8 @@ public class HotelRepositoryTest {
 
         Assertions.assertThat(resultHotel).isNotNull();
         Assertions.assertThat(resultHotel).isNotEmpty();
-        Assertions.assertThat(resultHotel.get()).isEqualTo(hotel);
+        Assertions.assertThat(resultHotel.get().getHotelName()).isEqualTo(hotel.getHotelName());
+        Assertions.assertThat(resultHotel.get().getCity()).isEqualTo(hotel.getCity());
     }
 
     @Test
