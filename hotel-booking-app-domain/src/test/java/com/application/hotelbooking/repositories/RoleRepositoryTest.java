@@ -63,7 +63,7 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void testFindHotelByHotelNameReturnsOptionalOfHotelWithProvidedName(){
+    public void testFindRoleByNameReturnsOptionalOfRoleWithProvidedName(){
         Role role = roleRepository.save(Role.builder()
                 .name("TEST_USER")
                 .build());
@@ -76,7 +76,7 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void testFindHotelByHotelNameReturnsEmptyOptionalWithNonexistentNameProvided(){
+    public void testFindRoleByNameReturnsEmptyOptionalWithNonexistentNameProvided(){
 
         Optional<Role> resultRole = roleRepository.findRoleByName("TEST_USER");
 
