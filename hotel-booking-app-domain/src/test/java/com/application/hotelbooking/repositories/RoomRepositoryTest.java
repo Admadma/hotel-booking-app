@@ -55,17 +55,8 @@ public class RoomRepositoryTest {
 
     @Test
     public void testFindByIdReturnsEmptyOptionalWithNonexistentIdProvided(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-        Room room = roomRepository.save(Room.builder()
-                .roomNumber(1)
-                .hotel(hotel)
-                .roomType(RoomType.SINGLE_ROOM)
-                .build());
 
-        Optional<Room> resultRoom = roomRepository.findById(room.getId() + 1);
+        Optional<Room> resultRoom = roomRepository.findById(1l);
 
         Assertions.assertThat(resultRoom).isNotNull();
         Assertions.assertThat(resultRoom).isEmpty();
