@@ -59,7 +59,7 @@ public class AddRoomsController {
             result.addError(new ObjectError("globalError", "Failed to save room"));
             return "addrooms";
         }
-        return "addRooms";
+        return "addrooms";
     }
 
     @GetMapping("/addRooms")
