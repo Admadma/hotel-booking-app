@@ -1,7 +1,6 @@
 package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ReservationModel;
-import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.EmailSenderService;
@@ -41,7 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
     private EmailSenderService emailSenderService;
 
     public List<ReservationModel> getReservationsOfUser(String username){
-        return reservationRepositoryService.getReservationsByUser(userRepositoryService.getUserByName(username).get());
+        return reservationRepositoryService.getReservationsByUserId(userRepositoryService.getUserByName(username).get().getId());
     }
 
     public void cancelReservation(Long reservationId){
