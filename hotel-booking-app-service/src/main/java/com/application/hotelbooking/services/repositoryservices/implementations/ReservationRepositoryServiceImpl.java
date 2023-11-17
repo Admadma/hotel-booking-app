@@ -31,8 +31,8 @@ public class ReservationRepositoryServiceImpl implements ReservationRepositorySe
         return reservationTransformer.transformToReservationModels(reservationRepository.findAllByRoomId(roomId));
     }
 
-    public List<ReservationModel> getReservationsByUser(UserModel userModel){
-        return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUser(userTransformer.transformToUser(userModel)));
+    public List<ReservationModel> getReservationsByUserId(Long userId){
+        return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUserId(userId));
     }
 
     public void delete(Long reservationId) {
