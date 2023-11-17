@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
         confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
 
         Locale locale = LocaleContextHolder.getLocale();
-        String link = "http://localhost:8080/hotelbooking/confirm-token?confirmationToken=" + token;
+        String link = "http://localhost:8080/hotelbooking/register/confirmemail/confirm-token?confirmationToken=" + token;
         String content = messageSource.getMessage("email.confirmation.link.body", null, locale)
                 + "<a href=\""
                 + link

@@ -75,7 +75,7 @@ public class RegisterController {
         }
 
         request.getSession().setAttribute("email", newUserFormDTO.getEmail());
-        return "redirect:/hotelbooking/confirmemail";
+        return "redirect:/hotelbooking/register/confirmemail";
     }
 
     @GetMapping("/register")

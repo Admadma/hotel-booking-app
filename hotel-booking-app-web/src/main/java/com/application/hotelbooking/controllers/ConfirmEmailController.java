@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/register")
 public class ConfirmEmailController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmEmailController.class);
@@ -22,24 +22,24 @@ public class ConfirmEmailController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/confirm-token")
+    @GetMapping(value = "/confirmemail/confirm-token")
     private String confirmToken(@RequestParam("confirmationToken") String confirmationToken){
         try{
             userService.confirmToken(confirmationToken);
         } catch (InvalidTokenException itc){
             LOGGER.info("Invalid token.");
-            return "redirect:/hotelbooking/confirmemail?invalidLink";
+            return "redirect:/hotelbooking/register/confirmemail?invalidLink";
         } catch (EmailAlreadyConfirmedException eac){
             LOGGER.info("Email already confirmed.");
-            return "redirect:/hotelbooking/confirmemail?emailAlreadyConfirmed";
+            return "redirect:/hotelbooking/register/confirmemail?emailAlreadyConfirmed";
         } catch (ExpiredTokenException ete){
             LOGGER.info("Token already expired");
-            return "redirect:/hotelbooking/confirmemail?tokenAlreadyExpired";
+            return "redirect:/hotelbooking/register/confirmemail?tokenAlreadyExpired";
         }
         return "redirect:/hotelbooking/login";
     }
 
-    @PostMapping(value = "/send-new-token")
+    @PostMapping(value = "/confirmemail/send-new-token")
     private String sendNewToken(@SessionAttribute("email") String email){
         LOGGER.info("send-new-token");
         try {
