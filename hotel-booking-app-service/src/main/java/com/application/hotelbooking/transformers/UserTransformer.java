@@ -27,14 +27,9 @@ public class UserTransformer {
 
     public Optional<UserModel> transformToOptionalUserModel(Optional<User> user){
         if (user.isPresent()){
-            return Optional.of(modelMapper.map(user.get(), UserModel.class));
+            return Optional.of(modelMapper.map(user, UserModel.class));
         } else {
             return Optional.empty();
         }
-    }
-    public Collection<UserModel> transformToUserModels(Collection<User> users){
-        return users.stream()
-                .map(user -> modelMapper.map(user, UserModel.class))
-                .collect(Collectors.toList());
     }
 }
