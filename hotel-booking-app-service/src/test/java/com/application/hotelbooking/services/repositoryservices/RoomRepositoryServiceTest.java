@@ -122,13 +122,13 @@ public class RoomRepositoryServiceTest {
         when(roomRepository.save(ROOM)).thenReturn(ROOM);
         when(roomTransformer.transformToRoomModel(ROOM)).thenReturn(ROOM_MODEL);
 
-        RoomModel resultRoomModel = roomRepositoryService.saveRoom(roomCreationServiceDTO);
+        RoomModel savedRoom = roomRepositoryService.saveRoom(roomCreationServiceDTO);
 
         verify(roomTransformer).transformToRoom(roomCreationServiceDTO);
         verify(roomRepository).save(ROOM);
         verify(roomTransformer).transformToRoomModel(ROOM);
-        Assertions.assertThat(resultRoomModel).isNotNull();
-        Assertions.assertThat(resultRoomModel.getRoomNumber()).isEqualTo(ROOM_NUMBER);
+        Assertions.assertThat(savedRoom).isNotNull();
+        Assertions.assertThat(savedRoom.getRoomNumber()).isEqualTo(ROOM_NUMBER);
     }
 
     @Test
@@ -137,13 +137,13 @@ public class RoomRepositoryServiceTest {
         when(roomRepository.save(ROOM)).thenReturn(ROOM);
         when(roomTransformer.transformToRoomModel(ROOM)).thenReturn(ROOM_MODEL);
 
-        RoomModel resultRoomModel = roomRepositoryService.updateRoom(ROOM_MODEL);
+        RoomModel updatedRoom = roomRepositoryService.updateRoom(ROOM_MODEL);
 
         verify(roomTransformer).transformToRoom(ROOM_MODEL);
         verify(roomRepository).save(ROOM);
         verify(roomTransformer).transformToRoomModel(ROOM);
-        Assertions.assertThat(resultRoomModel).isNotNull();
-        Assertions.assertThat(resultRoomModel.getRoomNumber()).isEqualTo(ROOM_NUMBER);
+        Assertions.assertThat(updatedRoom).isNotNull();
+        Assertions.assertThat(updatedRoom.getRoomNumber()).isEqualTo(ROOM_NUMBER);
     }
 
     @Test
