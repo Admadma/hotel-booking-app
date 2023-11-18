@@ -129,10 +129,11 @@ public class HotelRepositoryServiceImplTest {
     }
 
     @Test
-    public void testSaveReturnsHotelModelOfSavedHotel() {
-        HotelCreationServiceDTO hotelCreationServiceDTO = new HotelCreationServiceDTO();
-        Hotel hotel = new Hotel();
-        HotelModel transformedNoHotel = new HotelModel();
+    public void testSaveShouldReturnHotelModelOfSavedHotel() {
+        String hotelName = "Test hotel";
+        HotelCreationServiceDTO hotelCreationServiceDTO = HotelCreationServiceDTO.builder().hotelName(hotelName).build();
+        Hotel hotel = Hotel.builder().hotelName(hotelName).build();
+        HotelModel transformedNoHotel = HotelModel.builder().hotelName(hotelName).build();
         when(hotelTransformer.transformToHotel(hotelCreationServiceDTO)).thenReturn(hotel);
         when(hotelRepository.save(hotel)).thenReturn(hotel);
         when(hotelTransformer.transformToHotelModel(hotel)).thenReturn(transformedNoHotel);
@@ -143,6 +144,6 @@ public class HotelRepositoryServiceImplTest {
         verify(hotelRepository).save(hotel);
         verify(hotelTransformer).transformToHotelModel(hotel);
         Assertions.assertThat(savedHotel).isNotNull();
-        Assertions.assertThat(savedHotel).isEqualTo(transformedNoHotel);
+        Assertions.assertThat(savedHotel.getHotelName()).isEqualTo(hotelName);
     }
 }
