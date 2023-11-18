@@ -5,10 +5,11 @@ import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomRepositoryService {
-    RoomModel getRoomModel(Long roomId);
-    RoomModel findRoomByNumberAndHotelName(int roomNumber, String hotelName);
+    Optional<RoomModel> getRoomById(Long roomId);
+    Optional<RoomModel> findRoomByNumberAndHotelName(int roomNumber, String hotelName);
     RoomModel saveRoom(RoomCreationServiceDTO roomCreationServiceDTO);
     RoomModel updateRoom(RoomModel roomModel);
     List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO);

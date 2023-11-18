@@ -78,7 +78,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     public ReservationModel prepareReservation(ReservableRoomDTO reservableRoomDTO, String userName){
         return ReservationModel.builder()
-                .room(roomRepositoryService.findRoomByNumberAndHotelName(reservableRoomDTO.getRoomNumber(), reservableRoomDTO.getHotelName()))
+                .room(roomRepositoryService.findRoomByNumberAndHotelName(reservableRoomDTO.getRoomNumber(), reservableRoomDTO.getHotelName()).get())
                 .user(userRepositoryService.getUserByName(userName).get())
                 .totalPrice(reservableRoomDTO.getTotalPrice())
                 .startDate(reservableRoomDTO.getStartDate())
@@ -94,7 +94,7 @@ public class ReservationServiceImpl implements ReservationService {
      */
     public ReservationModel reserveRoom(ReservationModel reservationModel){
         // By checking that the version is still the same, I can guarantee that the selected time period had no new reservations, and I can skip checking it all again
-        if (isRoomVersionUnchanged(reservationModel) || isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
+        if (isRoomVersionUnchanged(reservationModel) || isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
             reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
             roomRepositoryService.updateRoom(reservation.getRoom());
@@ -106,7 +106,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private boolean isRoomVersionUnchanged(ReservationModel reservationModel) {
-        return reservationModel.getRoom().getVersion() == roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).getVersion();
+        return reservationModel.getRoom().getVersion() == roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getVersion();
     }
 
     private void sendReservationConfirmationEmail(ReservationModel reservationModel){

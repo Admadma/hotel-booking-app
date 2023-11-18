@@ -7,11 +7,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class RoomTransformer {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    public Optional<RoomModel> transformToOptionalRoomModel(Optional<Room> room){
+        if (room.isPresent()){
+            return Optional.of(modelMapper.map(room.get(), RoomModel.class));
+        } else {
+            return Optional.empty();
+        }
+    }
 
     public RoomModel transformToRoomModel(Room room){
         return modelMapper.map(room, RoomModel.class);

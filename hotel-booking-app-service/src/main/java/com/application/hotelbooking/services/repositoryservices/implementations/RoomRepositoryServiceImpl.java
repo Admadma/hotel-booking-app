@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomRepositoryServiceImpl implements RoomRepositoryService {
@@ -24,12 +25,12 @@ public class RoomRepositoryServiceImpl implements RoomRepositoryService {
     @Autowired
     private RoomTransformer roomTransformer;
 
-    public RoomModel getRoomModel(Long roomId){
-        return roomTransformer.transformToRoomModel(roomRepository.findById(roomId).get());
+    public Optional<RoomModel> getRoomById(Long roomId){
+        return roomTransformer.transformToOptionalRoomModel(roomRepository.findById(roomId));
     }
 
-    public RoomModel findRoomByNumberAndHotelName(int roomNumber, String hotelName){
-        return roomTransformer.transformToRoomModel(roomRepository.findRoomByRoomNumberAndHotelHotelName(roomNumber, hotelName));
+    public Optional<RoomModel> findRoomByNumberAndHotelName(int roomNumber, String hotelName){
+        return roomTransformer.transformToOptionalRoomModel(roomRepository.findRoomByRoomNumberAndHotelHotelName(roomNumber, hotelName));
     }
 
     public RoomModel saveRoom(RoomCreationServiceDTO roomCreationServiceDTO){

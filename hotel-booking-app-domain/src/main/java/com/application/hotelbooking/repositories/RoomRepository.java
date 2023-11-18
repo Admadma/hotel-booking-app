@@ -8,11 +8,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    Room findRoomByRoomNumberAndHotelHotelName(@Param("roomNumber") int roomNumber, @Param("hotelName") String hotelName);
+    Optional<Room> findRoomByRoomNumberAndHotelHotelName(@Param("roomNumber") int roomNumber, @Param("hotelName") String hotelName);
 
     @Query("SELECT r.id FROM Room r JOIN r.hotel h WHERE" +
             "(:singleBeds IS NULL OR r.singleBeds = :singleBeds)" +
