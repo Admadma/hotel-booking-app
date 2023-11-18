@@ -36,4 +36,8 @@ public class HotelRepositoryServiceImpl implements HotelRepositoryService {
         return hotelTransformer.transformToHotelModel(hotelRepository.save(hotelTransformer.transformToHotel(hotelCreationServiceDTO)));
     }
 
+    public boolean testMethod() {
+        return true;
+    }
+
 }

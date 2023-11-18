@@ -11,4 +11,6 @@ public interface HotelRepositoryService {
     List<HotelModel> getAllHotels();
     Optional<HotelModel> findHotelByHotelName(String hotelName);
     HotelModel save(HotelCreationServiceDTO hotelCreationServiceDTO);
+
+    boolean testMethod();
 }
