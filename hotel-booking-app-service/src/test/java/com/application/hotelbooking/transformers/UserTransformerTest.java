@@ -19,11 +19,11 @@ public class UserTransformerTest {
 
     public static final Class<User> USER_CLASS = User.class;
     public static final User USER = new User();
-    public static final Optional<User> OPTIONAL_USER = Optional.of(new User());
+    public static final Optional<User> OPTIONAL_USER = Optional.of(USER);
     public static final Optional<User> EMPTY_USER = Optional.empty();
     public static final Class<UserModel> USER_MODEL_CLASS = UserModel.class;
     public static final UserModel USER_MODEL = new UserModel();
-    public static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(new UserModel());
+    public static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(USER_MODEL);
 
     @InjectMocks
     private UserTransformer userTransformer;
