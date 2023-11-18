@@ -38,7 +38,7 @@ public class HotelTransformerTest {
     private ModelMapper modelMapper;
 
     @Test
-    public void testTransformToHotelShouldReturnTransformedHotel(){
+    public void testTransformToHotelShouldReturnTransformedHotelCreationServiceDTO(){
         when(modelMapper.map(HOTEL_CREATION_SERVICE_DTO, HOTEL_CLASS)).thenReturn(HOTEL);
 
         Hotel resultHotel = hotelTransformer.transformToHotel(HOTEL_CREATION_SERVICE_DTO);
@@ -48,7 +48,7 @@ public class HotelTransformerTest {
     }
 
     @Test
-    public void testTransformToHotelModelShouldReturnTransformedHotelModel(){
+    public void testTransformToHotelModelShouldReturnTransformedHotel(){
         when(modelMapper.map(HOTEL, HOTEL_MODEL_CLASS)).thenReturn(HOTEL_MODEL);
 
         HotelModel resultHotelModel = hotelTransformer.transformToHotelModel(HOTEL);
@@ -59,7 +59,7 @@ public class HotelTransformerTest {
     }
 
     @Test
-    public void testTransformToOptionalHotelModelShouldReturnOptionalOfPresentHotelModel(){
+    public void testTransformToOptionalHotelModelShouldReturnOptionalOfPresentHotel(){
         when(modelMapper.map(OPTIONAL_HOTEL, HOTEL_MODEL_CLASS)).thenReturn(HOTEL_MODEL);
 
         Optional<HotelModel> resultHotelModel = hotelTransformer.transformToOptionalHotelModel(OPTIONAL_HOTEL);
@@ -80,7 +80,7 @@ public class HotelTransformerTest {
     }
 
     @Test
-    public void testTransformToHotelModelsShouldReturnOptionalOfPresentHotelModel(){
+    public void testTransformToHotelModelsShouldReturnListOfTransformedHotels(){
         when(modelMapper.map(HOTEL, HOTEL_MODEL_CLASS)).thenReturn(HOTEL_MODEL);
 
         List<HotelModel> resultHotelModels = hotelTransformer.transformToHotelModels(HOTEL_LIST);

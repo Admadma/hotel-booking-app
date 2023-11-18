@@ -33,7 +33,7 @@ public class RoleTransformerTest {
     private ModelMapper modelMapper;
 
     @Test
-    public void testTransformToUserShouldReturnTransformedUserModel(){
+    public void testTransformToRoleShouldReturnTransformedRoleModel(){
         when(modelMapper.map(ROLE_MODEL, ROLE_CLASS)).thenReturn(ROLE);
 
         Role resultRole = roleTransformer.transformToRole(ROLE_MODEL);
@@ -44,7 +44,7 @@ public class RoleTransformerTest {
     }
 
     @Test
-    public void testTransformToUserModelShouldReturnTransformedUser(){
+    public void testTransformToRoleModelShouldReturnTransformedRole(){
         when(modelMapper.map(ROLE, ROLE_MODEL_CLASS)).thenReturn(ROLE_MODEL);
 
         RoleModel resultRoleModel = roleTransformer.transformToRoleModel(ROLE);
@@ -55,7 +55,7 @@ public class RoleTransformerTest {
     }
 
     @Test
-    public void testTransformToRoleModelsReturnsCollectionOfTransformedRoles(){
+    public void testTransformToRoleModelsShouldReturnCollectionOfTransformedRoles(){
         when(modelMapper.map(ROLE, ROLE_MODEL_CLASS)).thenReturn(ROLE_MODEL);
 
         Collection<RoleModel> resultRoleModels = roleTransformer.transformToRoleModels(ROLES);

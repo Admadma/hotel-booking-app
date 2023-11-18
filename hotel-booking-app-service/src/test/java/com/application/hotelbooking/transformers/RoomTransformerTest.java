@@ -1,9 +1,7 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.HotelModel;
 import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.domain.RoomModel;
-import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
