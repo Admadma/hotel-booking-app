@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class UserTransformerTest {
 
     public static final Class<User> USER_CLASS = User.class;
-    public static final User USER  = new User();
+    public static final User USER = new User();
     public static final Optional<User> OPTIONAL_USER = Optional.of(new User());
     public static final Optional<User> EMPTY_USER = Optional.empty();
     public static final Class<UserModel> USER_MODEL_CLASS = UserModel.class;
