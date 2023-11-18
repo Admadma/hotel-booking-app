@@ -20,9 +20,6 @@ public class ReservationRepositoryServiceImpl implements ReservationRepositorySe
     @Autowired
     private ReservationTransformer reservationTransformer;
 
-    @Autowired
-    private UserTransformer userTransformer;
-
     public ReservationModel save(ReservationModel reservationModel){
         return reservationTransformer.transformToReservationModel(reservationRepository.save(reservationTransformer.transformToReservation(reservationModel)));
     }
