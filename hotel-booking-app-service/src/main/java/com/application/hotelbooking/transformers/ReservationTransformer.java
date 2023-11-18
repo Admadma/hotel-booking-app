@@ -15,12 +15,12 @@ public class ReservationTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ReservationModel transformToReservationModel(Reservation reservation){
-        return modelMapper.map(reservation, ReservationModel.class);
-    }
-
     public Reservation transformToReservation(ReservationModel reservationModel){
         return modelMapper.map(reservationModel, Reservation.class);
+    }
+
+    public ReservationModel transformToReservationModel(Reservation reservation){
+        return modelMapper.map(reservation, ReservationModel.class);
     }
 
     public List<ReservationModel> transformToReservationModels(List<Reservation> reservations){

@@ -18,7 +18,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-
 public class HotelTransformerTest {
 
     public static final Class<Hotel> HOTEL_CLASS = Hotel.class;

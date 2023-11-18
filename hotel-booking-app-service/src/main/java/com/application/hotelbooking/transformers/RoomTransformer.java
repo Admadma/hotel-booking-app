@@ -15,17 +15,6 @@ public class RoomTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Optional<RoomModel> transformToOptionalRoomModel(Optional<Room> room){
-        if (room.isPresent()){
-            return Optional.of(modelMapper.map(room.get(), RoomModel.class));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public RoomModel transformToRoomModel(Room room){
-        return modelMapper.map(room, RoomModel.class);
-    }
 
     public Room transformToRoom(RoomCreationServiceDTO roomCreationServiceDTO){
         modelMapper.typeMap(RoomCreationServiceDTO.class, Room.class).addMappings(modelMapper -> modelMapper.skip(Room::setId));
@@ -33,5 +22,17 @@ public class RoomTransformer {
     }
     public Room transformToRoom(RoomModel roomModel){
         return modelMapper.map(roomModel, Room.class);
+    }
+
+    public RoomModel transformToRoomModel(Room room){
+        return modelMapper.map(room, RoomModel.class);
+    }
+
+    public Optional<RoomModel> transformToOptionalRoomModel(Optional<Room> room){
+        if (room.isPresent()){
+            return Optional.of(modelMapper.map(room, RoomModel.class));
+        } else {
+            return Optional.empty();
+        }
     }
 }

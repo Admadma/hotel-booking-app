@@ -15,12 +15,12 @@ public class RoleTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public RoleModel transformToRoleModel(Role role){
-        return modelMapper.map(role, RoleModel.class);
-    }
-
     public Role transformToRole(RoleModel roleModel){
         return modelMapper.map(roleModel, Role.class);
+    }
+
+    public RoleModel transformToRoleModel(Role role){
+        return modelMapper.map(role, RoleModel.class);
     }
 
     public Collection<RoleModel> transformToRoleModels(Collection<Role> roles){
