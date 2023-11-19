@@ -90,7 +90,6 @@ public class ReservationServiceImpl implements ReservationService {
         // By checking that the version is still the same, I can guarantee that the selected time period had no new reservations, and I can skip checking it all again
         if (isRoomVersionUnchanged(reservationModel) || isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
-            reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
             roomRepositoryService.incrementRoomVersion(reservation.getRoom());
             reservationConfirmationEmailService.sendReservationConfirmationEmail(reservation);
             return reservation;
