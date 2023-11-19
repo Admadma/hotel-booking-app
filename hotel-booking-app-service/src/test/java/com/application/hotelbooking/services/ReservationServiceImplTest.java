@@ -1,7 +1,10 @@
 package com.application.hotelbooking.services;
 
+import com.application.hotelbooking.domain.HotelModel;
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.services.implementations.ReservationServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -25,11 +28,13 @@ public class ReservationServiceImplTest {
 
     public static final Long USER_ID = 1l;
     public static final String USER_NAME = "Test user";
+    public static final String HOTEL_NAME = "Test hotel";
     public static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(UserModel.builder().id(USER_ID).username(USER_NAME).build());
     public static final List<ReservationModel> RESERVATION_MODELS = List.of(ReservationModel.builder().build());
     public static final long RESERVATION_ID = 1l;
     public static final LocalDate OBSERVED_START_DATE = LocalDate.now();
     public static final LocalDate OBSERVED_END_DATE = LocalDate.now().plusDays(4);
+    public static final ReservableRoomDTO RESERVABLE_ROOM_DTO = ReservableRoomDTO.builder().roomNumber(1).hotelName(HOTEL_NAME).totalPrice(100).startDate(OBSERVED_START_DATE).endDate(OBSERVED_END_DATE).build();
     public static final LocalDate OBSERVED_START_DATE_PLUS_ONE = OBSERVED_START_DATE.plusDays(1);
     public static final LocalDate OBSERVED_END_DATE_MINUS_ONE = OBSERVED_END_DATE.minusDays(1);
     public static final LocalDate OBSERVED_START_DATE_MINUS_9 = OBSERVED_START_DATE.minusDays(9);
@@ -40,6 +45,8 @@ public class ReservationServiceImplTest {
     public static final long ROOM_ID_2 = 2l;
     public static final long ROOM_ID_3 = 3l;
     public static final long ROOM_ID_4 = 4l;
+    public static final Optional<RoomModel> OPTIONAL_ROOM_MODEL = Optional.of(RoomModel.builder().roomNumber(1).version(0l).build());
+    public static final ReservationModel RESERVATION_MODEL = ReservationModel.builder().room(RoomModel.builder().roomNumber(1).hotel(HotelModel.builder().hotelName(HOTEL_NAME).build()).version(0l).build()).build();
     @InjectMocks
     private ReservationServiceImpl reservationService;
 
@@ -172,4 +179,43 @@ public class ReservationServiceImplTest {
         Assertions.assertThat(resultRoomIds).isNotEmpty();
         Assertions.assertThat(resultRoomIds).isEqualTo(List.of(ROOM_ID_1));
     }
+
+    @Test
+    public void testCalculateTotalPriceShouldReturnPricePerNightMultipliedByDifferenceOfStartAndEndDate(){
+        int totalPrice = reservationService.calculateTotalPrice(OBSERVED_START_DATE, OBSERVED_END_DATE, 10);
+
+        Assertions.assertThat(totalPrice).isEqualTo(40);
+    }
+
+    @Test
+    public void testPrepareReservationShouldReturnReservationModelOfPreparedReservation(){
+        when(roomRepositoryService.findRoomByNumberAndHotelName(RESERVABLE_ROOM_DTO.getRoomNumber(), RESERVABLE_ROOM_DTO.getHotelName())).thenReturn(OPTIONAL_ROOM_MODEL);
+        when(userRepositoryService.getUserByName(USER_NAME)).thenReturn(OPTIONAL_USER_MODEL);
+
+        ReservationModel resultReservationModel = reservationService.prepareReservation(RESERVABLE_ROOM_DTO, USER_NAME);
+
+        verify(roomRepositoryService).findRoomByNumberAndHotelName(RESERVABLE_ROOM_DTO.getRoomNumber(), RESERVABLE_ROOM_DTO.getHotelName());
+        verify(userRepositoryService).getUserByName(USER_NAME);
+        Assertions.assertThat(resultReservationModel).isNotNull();
+        Assertions.assertThat(resultReservationModel.getRoom().getRoomNumber()).isEqualTo(RESERVABLE_ROOM_DTO.getRoomNumber());
+        Assertions.assertThat(resultReservationModel.getUser().getUsername()).isEqualTo(USER_NAME);
+        Assertions.assertThat(resultReservationModel.getStartDate()).isEqualTo(RESERVABLE_ROOM_DTO.getStartDate());
+    }
+
+//    @Test
+//    public void testReserveRoomShouldReturnReservationModelOfSavedReservationIfRoomVersionUnchanged(){
+//        when(roomRepositoryService.findRoomByNumberAndHotelName(RESERVATION_MODEL.getRoom().getRoomNumber(), RESERVATION_MODEL.getRoom().getHotel().getHotelName())).thenReturn(OPTIONAL_ROOM_MODEL);
+//        when(reservationRepositoryService.save(RESERVATION_MODEL)).thenReturn(RESERVATION_MODEL);
+//        when(roomRepositoryService.updateRoom(RESERVATION_MODEL.getRoom())).thenReturn(RESERVATION_MODEL.getRoom());
+//
+//        ReservationModel resultReservationModel = reservationService.reserveRoom(RESERVATION_MODEL);
+//
+//        verify(roomRepositoryService).findRoomByNumberAndHotelName(RESERVABLE_ROOM_DTO.getRoomNumber(), RESERVABLE_ROOM_DTO.getHotelName());
+//        verify(reservationRepositoryService).save(RESERVATION_MODEL);
+//        verify(roomRepositoryService).updateRoom(RESERVATION_MODEL.getRoom());
+////        Assertions.assertThat(resultReservationModel).isNotNull();
+////        Assertions.assertThat(resultReservationModel.getRoom().getRoomNumber()).isEqualTo(RESERVABLE_ROOM_DTO.getRoomNumber());
+////        Assertions.assertThat(resultReservationModel.getUser().getUsername()).isEqualTo(USER_NAME);
+////        Assertions.assertThat(resultReservationModel.getStartDate()).isEqualTo(RESERVABLE_ROOM_DTO.getStartDate());
+//    }
 }
