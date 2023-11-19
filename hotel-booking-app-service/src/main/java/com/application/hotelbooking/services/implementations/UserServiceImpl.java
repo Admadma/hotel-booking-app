@@ -20,7 +20,6 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    public static final long DEFAULT_STARTING_VERSION = 1l;
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "adminadmin";
     public static final String ADMIN_EMAIL = "hotelbookingservice01@gmail.com";
@@ -36,11 +35,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleService roleService;
-
-    public boolean userExists(String username){
-        return userRepositoryService.getUserByName(username).isPresent();
-    }
-
 
     public void createAdminUserIfNotFound(){
         if (userRepositoryService.getUserByEmail(ADMIN_EMAIL).isEmpty()){
@@ -70,8 +64,8 @@ public class UserServiceImpl implements UserService {
         return passwordEncoder.matches(oldPassword, userModel.getPassword());
     }
 
-    public String createUser(String username, String password, String email, List<String> rolesAsStrings) {
-        if (userExists(username)){
+    public UserModel createUser(String username, String password, String email, List<String> rolesAsStrings) {
+        if (userRepositoryService.userExists(username)){
             throw new UserAlreadyExistsException("That username is already taken");
         }
         if (userRepositoryService.emailExists(email)){
@@ -86,12 +80,12 @@ public class UserServiceImpl implements UserService {
                 .enabled(isAdmin) //We want to skip the email validation process and enable admin users by default
                 .roles(roleService.getRoles(rolesAsStrings))
                 .build();
-        userRepositoryService.save(userModel);
+        UserModel savedUser = userRepositoryService.save(userModel);
 
         if (!isAdmin) {
             userEmailConfirmationService.sendConfirmationToken(username, email);
         }
 
-        return "Success";
+        return savedUser;
     }
 }

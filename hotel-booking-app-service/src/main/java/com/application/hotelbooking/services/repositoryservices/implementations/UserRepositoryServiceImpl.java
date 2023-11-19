@@ -30,6 +30,9 @@ public class UserRepositoryServiceImpl implements UserRepositoryService {
         return userTransformer.transformToUserModel(userRepository.save(userTransformer.transformToUser(userModel)));
     }
 
+    public boolean userExists(String username){
+        return userRepository.existsByUsername(username);
+    }
     public boolean emailExists(String email) {
         return userRepository.existsByEmail(email);
     }

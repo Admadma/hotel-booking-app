@@ -6,6 +6,7 @@ import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
+import com.application.hotelbooking.services.implementations.ReservationConfirmationEmailServiceImpl;
 import com.application.hotelbooking.services.implementations.ReservationServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -102,7 +103,7 @@ public class ReservationServiceImplTest {
     private RoomRepositoryService roomRepositoryService;
 
     @Mock
-    private ReservationConfirmationEmailService reservationConfirmationEmailService;
+    private ReservationConfirmationEmailServiceImpl reservationConfirmationEmailService;
 
     @Test
     public void testGetReservationsOfUserShouldReturnListOfReservationModelsBelongingToUser(){
