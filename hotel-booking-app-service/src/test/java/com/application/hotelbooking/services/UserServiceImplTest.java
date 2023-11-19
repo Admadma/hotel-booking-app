@@ -2,7 +2,9 @@ package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
+import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.implementations.UserEmailConfirmationServiceImpl;
 import com.application.hotelbooking.services.implementations.UserServiceImpl;
@@ -25,6 +27,7 @@ public class UserServiceImplTest {
 
     public static final String TEST_USERNAME = "Test_user";
     public static final String TEST_PASSWORD = "Test_password";
+    public static final String INCORRECT_OLD_PASSWORD = "incorrect_old_password";
     public static final String TEST_EMAIL = "Test_email";
     public static final List<String> USER_ROLES_STRINGS = List.of("USER");
     public static final List<RoleModel> USER_ROLE_MODELS = List.of(RoleModel.builder().name("USER").build());
@@ -44,7 +47,7 @@ public class UserServiceImplTest {
             .enabled(true)
             .roles(ADMIN_ROLE_MODELS)
             .build();
-    public static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(UserModel.builder().username(TEST_USERNAME).build());
+    public static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(UserModel.builder().username(TEST_USERNAME).password(TEST_PASSWORD).build());
     public static final Optional<UserModel> EMPTY_OPTIONAL_USER_MODEL = Optional.empty();
     @InjectMocks
     private UserServiceImpl userService;
@@ -121,5 +124,44 @@ public class UserServiceImplTest {
         verify(userRepositoryService).save(USER_USER_MODEL);
         verify(userEmailConfirmationService).sendConfirmationToken(TEST_USERNAME, TEST_EMAIL);
         Assertions.assertThat(resultUserModel).isNotNull();
+    }
+
+    @Test
+    public void testChangePasswordShouldThrowInvalidUserExceptionIfUserNotFound(){
+        when(userRepositoryService.getUserByName(TEST_USERNAME)).thenReturn(EMPTY_OPTIONAL_USER_MODEL);
+
+        Assertions.assertThatThrownBy(() -> userService.changePassword(TEST_USERNAME, TEST_PASSWORD, TEST_PASSWORD))
+                .isInstanceOf(InvalidUserException.class)
+                .hasMessage("User does not exist");
+
+        verify(userRepositoryService).getUserByName(TEST_USERNAME);
+    }
+
+    @Test
+    public void testChangePasswordShouldThrowCredentialMismatchExceptionIfProvidedOldPasswordDoesNotMatchExistingCurrentPassword(){
+        when(userRepositoryService.getUserByName(TEST_USERNAME)).thenReturn(OPTIONAL_USER_MODEL);
+        when(passwordEncoder.matches(INCORRECT_OLD_PASSWORD, OPTIONAL_USER_MODEL.get().getPassword())).thenReturn(false);
+
+        Assertions.assertThatThrownBy(() -> userService.changePassword(TEST_USERNAME, TEST_PASSWORD, INCORRECT_OLD_PASSWORD))
+                .isInstanceOf(CredentialMismatchException.class)
+                .hasMessage("The provided old password does not match.");
+
+        verify(userRepositoryService, times(2)).getUserByName(TEST_USERNAME);
+        verify(passwordEncoder).matches(INCORRECT_OLD_PASSWORD, OPTIONAL_USER_MODEL.get().getPassword());
+    }
+
+    @Test
+    public void testChangePasswordShouldSaveUserModelWithUpdatedPassword(){
+        when(userRepositoryService.getUserByName(TEST_USERNAME)).thenReturn(OPTIONAL_USER_MODEL);
+        when(passwordEncoder.matches(TEST_PASSWORD, OPTIONAL_USER_MODEL.get().getPassword())).thenReturn(true);
+        when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_PASSWORD);
+        when(userRepositoryService.save(OPTIONAL_USER_MODEL.get())).thenReturn(OPTIONAL_USER_MODEL.get());
+
+        userService.changePassword(TEST_USERNAME, TEST_PASSWORD, TEST_PASSWORD);
+
+        verify(userRepositoryService, times(2)).getUserByName(TEST_USERNAME);
+        verify(passwordEncoder).matches(TEST_PASSWORD, OPTIONAL_USER_MODEL.get().getPassword());
+        verify(passwordEncoder).encode(TEST_PASSWORD);
+        verify(userRepositoryService).save(OPTIONAL_USER_MODEL.get());
     }
 }

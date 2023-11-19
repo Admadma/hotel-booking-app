@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     public void changePassword(String username, String newPassword, String oldPassword) throws OptimisticLockException{
         if (userRepositoryService.getUserByName(username).isEmpty()){
-            throw new IllegalStateException("User does not exist");
+            throw new InvalidUserException("User does not exist");
         }
 
         UserModel userModel = userRepositoryService.getUserByName(username).get();
