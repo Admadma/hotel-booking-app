@@ -1,27 +1,18 @@
 package com.application.hotelbooking.services.implementations;
 
-import com.application.hotelbooking.domain.ConfirmationTokenModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.*;
 
-import com.application.hotelbooking.services.ConfirmationTokenService;
-import com.application.hotelbooking.services.EmailSenderService;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
-import com.application.hotelbooking.transformers.RoleTransformer;
-import com.application.hotelbooking.transformers.UserTransformer;
 import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -38,32 +29,18 @@ public class UserServiceImpl implements UserService {
     private UserRepositoryService userRepositoryService;
 
     @Autowired
+    private UserEmailConfirmationServiceImpl userEmailConfirmationService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private ConfirmationTokenService confirmationTokenService;
-
-    @Autowired
-    private EmailSenderService emailSenderService;
-
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private UserTransformer userTransformer;
-    @Autowired
-    private RoleTransformer roleTransformer;
-
     public boolean userExists(String username){
         return userRepositoryService.getUserByName(username).isPresent();
     }
 
-    private boolean emailExists(String email) {
-        return userRepositoryService.getUserByEmail(email).isPresent();
-    }
 
     public void createAdminUserIfNotFound(){
         if (userRepositoryService.getUserByEmail(ADMIN_EMAIL).isEmpty()){
@@ -97,7 +74,7 @@ public class UserServiceImpl implements UserService {
         if (userExists(username)){
             throw new UserAlreadyExistsException("That username is already taken");
         }
-        if (emailExists(email)){
+        if (userRepositoryService.emailExists(email)){
             throw new EmailAlreadyExistsException("That email is already taken");
         }
 
@@ -112,71 +89,9 @@ public class UserServiceImpl implements UserService {
         userRepositoryService.save(userModel);
 
         if (!isAdmin) {
-            sendConfirmationToken(username, email);
+            userEmailConfirmationService.sendConfirmationToken(username, email);
         }
 
         return "Success";
-    }
-
-    public void resendConfirmationToken(String email){
-        if (!emailExists(email)){
-            throw new InvalidUserException("There is no user with that email");
-        }
-        if (userRepositoryService.getUserByEmail(email).get().getEnabled()){
-            throw new EmailAlreadyConfirmedException("That email is already confirmed");
-        }
-
-        sendConfirmationToken(userRepositoryService.getUserByEmail(email).get().getUsername(), email);
-    }
-
-    private void sendConfirmationToken(String username, String email) {
-        LOGGER.info("creating ConfirmationTokenModel");
-        String token = UUID.randomUUID().toString();
-        ConfirmationTokenModel confirmationTokenModel = ConfirmationTokenModel.builder()
-                .token(token)
-                .user(userRepositoryService.getUserByName(username).get())
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(30))
-                .build();
-        LOGGER.info("saving ConfirmationTokenModel");
-
-        confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
-
-        Locale locale = LocaleContextHolder.getLocale();
-        String link = "http://localhost:8080/hotelbooking/register/confirmemail/confirm-token?confirmationToken=" + token;
-        String content = messageSource.getMessage("email.confirmation.link.body", null, locale)
-                + "<a href=\""
-                + link
-                + "\">"
-                + messageSource.getMessage("email.confirmation.link.confirm", null, locale)
-                +"</a>";
-
-        emailSenderService.sendEmail(email,
-                messageSource.getMessage("email.confirmation.link.subject", null, locale),
-                content);
-    }
-
-    public void confirmToken(String token){
-        ConfirmationTokenModel confirmationTokenModel = confirmationTokenService
-                .findToken(token)
-                .orElseThrow(() -> new InvalidTokenException("Confirmation token not found."));
-
-        if (confirmationTokenModel.getConfirmedAt() != null){
-            throw new EmailAlreadyConfirmedException("Email already confirmed.");
-        }
-
-        if (confirmationTokenModel.getExpiresAt().isBefore(LocalDateTime.now())){
-            throw new ExpiredTokenException("Token already expired");
-        }
-
-        confirmationTokenModel.setConfirmedAt(LocalDateTime.now());
-        confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
-        enableUser(confirmationTokenModel.getUser().getUsername());
-    }
-
-    private void enableUser(String username) {
-        UserModel userModel = userRepositoryService.getUserByName(username).get();
-        userModel.setEnabled(true);
-        userRepositoryService.save(userModel);
     }
 }

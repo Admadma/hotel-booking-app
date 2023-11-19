@@ -4,7 +4,7 @@ import com.application.hotelbooking.exceptions.EmailAlreadyConfirmedException;
 import com.application.hotelbooking.exceptions.ExpiredTokenException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
-import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.services.UserEmailConfirmationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +20,12 @@ public class ConfirmEmailController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmEmailController.class);
 
     @Autowired
-    private UserService userService;
+    private UserEmailConfirmationService userEmailConfirmationService;
 
     @GetMapping(value = "/confirmemail/confirm-token")
     private String confirmToken(@RequestParam("confirmationToken") String confirmationToken){
         try{
-            userService.confirmToken(confirmationToken);
+            userEmailConfirmationService.confirmToken(confirmationToken);
         } catch (InvalidTokenException itc){
             LOGGER.info("Invalid token.");
             return "redirect:/hotelbooking/register/confirmemail?invalidLink";
@@ -43,7 +43,7 @@ public class ConfirmEmailController {
     private String sendNewToken(@SessionAttribute("email") String email){
         LOGGER.info("send-new-token");
         try {
-            userService.resendConfirmationToken(email);
+            userEmailConfirmationService.resendConfirmationToken(email);
         } catch (InvalidUserException iue){
             LOGGER.info("There is no user with that email");
             return "redirect:/hotelbooking/confirmemail?invalidUser";

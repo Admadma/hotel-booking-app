@@ -10,9 +10,5 @@ public interface UserService {
     void createAdminUserIfNotFound();
     @Transactional
     String createUser(String username, String password, String email, List<String> rolesAsStrings);
-    @Transactional
-    void confirmToken(String token);
-    @Transactional
-    void resendConfirmationToken(String email);
     void changePassword(String username, String newPassword, String oldPassword) throws OptimisticLockException;
 }

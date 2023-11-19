@@ -8,4 +8,5 @@ public interface UserRepositoryService {
     Optional<UserModel> getUserByName(String username);
     Optional<UserModel> getUserByEmail(String email);
     UserModel save(UserModel userModel);
+    boolean emailExists(String email);
 }
