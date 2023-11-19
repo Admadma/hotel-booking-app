@@ -91,7 +91,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (isRoomVersionUnchanged(reservationModel) || isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
             reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
-            roomRepositoryService.updateRoom(reservation.getRoom());
+            roomRepositoryService.incrementRoomVersion(reservation.getRoom());
             reservationConfirmationEmailService.sendReservationConfirmationEmail(reservation);
             return reservation;
         } else {

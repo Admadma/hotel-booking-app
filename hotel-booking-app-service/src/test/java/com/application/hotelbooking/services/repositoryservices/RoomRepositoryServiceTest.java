@@ -29,7 +29,8 @@ public class RoomRepositoryServiceTest {
     public static final Hotel HOTEL = Hotel.builder().hotelName(HOTEL_NAME).build();
     public static final long ROOM_ID = 1l;
     public static final int ROOM_NUMBER = 1;
-    public static final RoomModel ROOM_MODEL = RoomModel.builder().roomNumber(ROOM_NUMBER).build();
+    public static final long VERSION = 0l;
+    public static final RoomModel ROOM_MODEL = RoomModel.builder().roomNumber(ROOM_NUMBER).version(VERSION).build();
     public static final Room ROOM = Room.builder().roomNumber(ROOM_NUMBER).build();
     public static final int NONEXISTENT_ROOM_NUMBER = 1;
     public static final Optional<Room> EMPTY_ROOM = Optional.empty();
@@ -132,18 +133,17 @@ public class RoomRepositoryServiceTest {
     }
 
     @Test
-    public void testUpdateRoomShouldReturnRoomModelOfUpdatedRoom(){
-        when(roomTransformer.transformToRoom(ROOM_MODEL)).thenReturn(ROOM);
+    public void testIncrementRoomVersionShouldIncreaseVersionOfRoomModelByOne(){
+        RoomModel copyOfRoomModel = RoomModel.builder().roomNumber(ROOM_MODEL.getRoomNumber()).version(ROOM_MODEL.getVersion()).build();
+        when(roomTransformer.transformToRoom(copyOfRoomModel)).thenReturn(ROOM);
         when(roomRepository.save(ROOM)).thenReturn(ROOM);
-        when(roomTransformer.transformToRoomModel(ROOM)).thenReturn(ROOM_MODEL);
 
-        RoomModel updatedRoom = roomRepositoryService.updateRoom(ROOM_MODEL);
+        roomRepositoryService.incrementRoomVersion(copyOfRoomModel);
 
-        verify(roomTransformer).transformToRoom(ROOM_MODEL);
+        verify(roomTransformer).transformToRoom(copyOfRoomModel);
         verify(roomRepository).save(ROOM);
-        verify(roomTransformer).transformToRoomModel(ROOM);
-        Assertions.assertThat(updatedRoom).isNotNull();
-        Assertions.assertThat(updatedRoom.getRoomNumber()).isEqualTo(ROOM_NUMBER);
+        Assertions.assertThat(copyOfRoomModel).isNotNull();
+        Assertions.assertThat(copyOfRoomModel.getVersion()).isEqualTo(ROOM_MODEL.getVersion() + 1);
     }
 
     @Test
