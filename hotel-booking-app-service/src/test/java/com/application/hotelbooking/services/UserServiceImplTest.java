@@ -122,16 +122,4 @@ public class UserServiceImplTest {
         verify(userEmailConfirmationService).sendConfirmationToken(TEST_USERNAME, TEST_EMAIL);
         Assertions.assertThat(resultUserModel).isNotNull();
     }
-
-
-
-//    @Test
-//    public void testCreateAdminUserIfNotFoundShouldCallCreateUserWithProvided(){
-//        when(userRepositoryService.getUserByName(TEST_USER_NAME)).thenReturn(EMPTY_OPTIONAL_USER_MODEL);
-//
-//        boolean resultUserExists = userService.userExists(TEST_USER_NAME);
-//
-//        verify(userRepositoryService).getUserByName(TEST_USER_NAME);
-//        Assertions.assertThat(resultUserExists).isFalse();
-//    }
 }

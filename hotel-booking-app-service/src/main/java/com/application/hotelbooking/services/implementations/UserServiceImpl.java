@@ -20,10 +20,6 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    public static final String ADMIN_USERNAME = "admin";
-    public static final String ADMIN_PASSWORD = "adminadmin";
-    public static final String ADMIN_EMAIL = "hotelbookingservice01@gmail.com";
-
     @Autowired
     private UserRepositoryService userRepositoryService;
 
@@ -35,16 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleService roleService;
-
-    public void createAdminUserIfNotFound(){
-        if (userRepositoryService.getUserByEmail(ADMIN_EMAIL).isEmpty()){
-            LOGGER.info("Creating admin user");
-            createUser(ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_EMAIL, List.of("ADMIN"));
-            LOGGER.info("Created admin user");
-        } else {
-            LOGGER.info("Admin user already exists");
-        }
-    }
 
     public void changePassword(String username, String newPassword, String oldPassword) throws OptimisticLockException{
         if (userRepositoryService.getUserByName(username).isEmpty()){
@@ -64,7 +50,7 @@ public class UserServiceImpl implements UserService {
         return passwordEncoder.matches(oldPassword, userModel.getPassword());
     }
 
-    public UserModel createUser(String username, String password, String email, List<String> rolesAsStrings) {
+    public UserModel createUser(String username, String password, String email, List<String> rolesAsStrings) throws UserAlreadyExistsException, EmailAlreadyExistsException{
         if (userRepositoryService.userExists(username)){
             throw new UserAlreadyExistsException("That username is already taken");
         }
