@@ -3,7 +3,6 @@ package com.application.hotelbooking.services.implementations;
 import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
-import com.application.hotelbooking.services.ReservationConfirmationEmailService;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -31,7 +30,7 @@ public class ReservationServiceImpl implements ReservationService {
     private RoomRepositoryService roomRepositoryService;
 
     @Autowired
-    private ReservationConfirmationEmailService reservationConfirmationEmailService;
+    private ReservationConfirmationEmailServiceImpl reservationConfirmationEmailServiceImpl;
 
     public List<ReservationModel> getReservationsOfUser(String username){
         return reservationRepositoryService.getReservationsByUserId(userRepositoryService.getUserByName(username).get().getId());
@@ -91,7 +90,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (isRoomVersionUnchanged(reservationModel) || isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
             roomRepositoryService.incrementRoomVersion(reservation.getRoom());
-            reservationConfirmationEmailService.sendReservationConfirmationEmail(reservation);
+            reservationConfirmationEmailServiceImpl.sendReservationConfirmationEmail(reservation);
             return reservation;
         } else {
             throw new OutdatedReservationException("This reservation is no longer valid because the room has been updated");
