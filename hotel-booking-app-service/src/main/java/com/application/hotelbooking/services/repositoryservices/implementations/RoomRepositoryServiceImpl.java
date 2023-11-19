@@ -37,8 +37,9 @@ public class RoomRepositoryServiceImpl implements RoomRepositoryService {
         return roomTransformer.transformToRoomModel(roomRepository.save(roomTransformer.transformToRoom(roomCreationServiceDTO)));
     }
 
-    public RoomModel updateRoom(RoomModel roomModel){
-        return roomTransformer.transformToRoomModel(roomRepository.save(roomTransformer.transformToRoom(roomModel)));
+    public void incrementRoomVersion(RoomModel roomModel){
+        roomModel.setVersion(roomModel.getVersion() + 1);
+        roomRepository.save(roomTransformer.transformToRoom(roomModel));
     }
 
     public List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
