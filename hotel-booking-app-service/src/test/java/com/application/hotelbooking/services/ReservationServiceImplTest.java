@@ -60,10 +60,7 @@ public class ReservationServiceImplTest {
     private RoomRepositoryService roomRepositoryService;
 
     @Mock
-    private EmailSenderService emailSenderService;
-
-    @Mock
-    private MessageSource messageSource;
+    private ReservationConfirmationEmailService reservationConfirmationEmailService;
 
     @Test
     public void testGetReservationsOfUserShouldReturnListOfReservationModelsBelongingToUser(){

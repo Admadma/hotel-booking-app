@@ -3,7 +3,7 @@ package com.application.hotelbooking.services.implementations;
 import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
-import com.application.hotelbooking.services.EmailSenderService;
+import com.application.hotelbooking.services.ReservationConfirmationEmailService;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -11,14 +11,11 @@ import com.application.hotelbooking.services.repositoryservices.UserRepositorySe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -34,10 +31,7 @@ public class ReservationServiceImpl implements ReservationService {
     private RoomRepositoryService roomRepositoryService;
 
     @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    private EmailSenderService emailSenderService;
+    private ReservationConfirmationEmailService reservationConfirmationEmailService;
 
     public List<ReservationModel> getReservationsOfUser(String username){
         return reservationRepositoryService.getReservationsByUserId(userRepositoryService.getUserByName(username).get().getId());
@@ -98,7 +92,7 @@ public class ReservationServiceImpl implements ReservationService {
             ReservationModel reservation = reservationRepositoryService.save(reservationModel);
             reservation.getRoom().setVersion(reservation.getRoom().getVersion() + 1);
             roomRepositoryService.updateRoom(reservation.getRoom());
-            sendReservationConfirmationEmail(reservation);
+            reservationConfirmationEmailService.sendReservationConfirmationEmail(reservation);
             return reservation;
         } else {
             throw new OutdatedReservationException("This reservation is no longer valid because the room has been updated");
@@ -107,54 +101,5 @@ public class ReservationServiceImpl implements ReservationService {
 
     private boolean isRoomVersionUnchanged(ReservationModel reservationModel) {
         return reservationModel.getRoom().getVersion() == roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getVersion();
-    }
-
-    private void sendReservationConfirmationEmail(ReservationModel reservationModel){
-        Locale locale = LocaleContextHolder.getLocale();
-        emailSenderService.sendEmail(reservationModel.getUser().getEmail(),
-                messageSource.getMessage("email.reservation.confirmed.subject", null, locale),
-                getBody(reservationModel, locale));
-    }
-
-    private String getBody(ReservationModel reservationModel, Locale locale) {
-        return messageSource.getMessage("email.reservation.message", null, locale) +
-                "<table border=\"1\" style=\"margin: auto;\">\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.roomNumber", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getRoom().getRoomNumber() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.hotelName", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getRoom().getHotel().getHotelName() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.city", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getRoom().getHotel().getCity() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.roomType", null, locale) + "</td>\n" +
-                "            <td>" + messageSource.getMessage("roomname." + reservationModel.getRoom().getRoomType().name().toLowerCase(), null, locale) + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.singleBeds", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getRoom().getSingleBeds() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.doubleBeds", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getRoom().getDoubleBeds() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.startDate", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getStartDate() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.endDate", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getEndDate() + "</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td>" + messageSource.getMessage("email.reservation.totalPrice", null, locale) + "</td>\n" +
-                "            <td>" + reservationModel.getTotalPrice() + " HUF</td>\n" +
-                "        </tr>\n" +
-                "    </table>";
     }
 }
