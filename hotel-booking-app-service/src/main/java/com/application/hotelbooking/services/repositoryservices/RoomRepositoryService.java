@@ -11,6 +11,6 @@ public interface RoomRepositoryService {
     Optional<RoomModel> getRoomById(Long roomId);
     Optional<RoomModel> findRoomByNumberAndHotelName(int roomNumber, String hotelName);
     RoomModel saveRoom(RoomCreationServiceDTO roomCreationServiceDTO);
-    RoomModel updateRoom(RoomModel roomModel);
+    void incrementRoomVersion(RoomModel roomModel);
     List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO);
 }
