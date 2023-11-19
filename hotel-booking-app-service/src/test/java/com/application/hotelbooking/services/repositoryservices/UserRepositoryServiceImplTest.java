@@ -114,7 +114,7 @@ public class UserRepositoryServiceImplTest {
     public void testUserExistsShouldReturnTrueIfUserExists() {
         when(userRepository.existsByUsername(USER_NAME)).thenReturn(true);
 
-        boolean resultExists = userRepository.existsByUsername(USER_NAME);
+        boolean resultExists = userRepositoryService.userExists(USER_NAME);
 
         verify(userRepository).existsByUsername(USER_NAME);
         Assertions.assertThat(resultExists).isNotNull();
@@ -125,7 +125,7 @@ public class UserRepositoryServiceImplTest {
     public void testUserExistsShouldReturnFalseIfUserDoesNotExist() {
         when(userRepository.existsByUsername(USER_NAME)).thenReturn(false);
 
-        boolean resultExists = userRepository.existsByUsername(USER_NAME);
+        boolean resultExists = userRepositoryService.userExists(USER_NAME);
 
         verify(userRepository).existsByUsername(USER_NAME);
         Assertions.assertThat(resultExists).isNotNull();
@@ -136,7 +136,7 @@ public class UserRepositoryServiceImplTest {
     public void testEmailExistsShouldReturnTrueIfEmailExists() {
         when(userRepository.existsByEmail(USER_EMAIL)).thenReturn(true);
 
-        boolean resultExists = userRepository.existsByEmail(USER_EMAIL);
+        boolean resultExists = userRepositoryService.emailExists(USER_EMAIL);
 
         verify(userRepository).existsByEmail(USER_EMAIL);
         Assertions.assertThat(resultExists).isNotNull();
@@ -147,7 +147,7 @@ public class UserRepositoryServiceImplTest {
     public void testEmailExistsShouldReturnFalseIfEmailDoesNotExist() {
         when(userRepository.existsByEmail(USER_EMAIL)).thenReturn(false);
 
-        boolean resultExists = userRepository.existsByEmail(USER_EMAIL);
+        boolean resultExists = userRepositoryService.emailExists(USER_EMAIL);
 
         verify(userRepository).existsByEmail(USER_EMAIL);
         Assertions.assertThat(resultExists).isNotNull();
