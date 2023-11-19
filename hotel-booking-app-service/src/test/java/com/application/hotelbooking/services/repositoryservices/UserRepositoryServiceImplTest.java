@@ -22,14 +22,14 @@ public class UserRepositoryServiceImplTest {
 
     public static final String USER_NAME = "TestUsername";
     public static final String NONEXISTENT_USER_NAME = "NonexistentUsername";
-    public static final String EMAIL = "test@email";
+    public static final String USER_EMAIL = "test@email";
     public static final String NONEXISTENT_EMAIL = "Nonexistent@email";
-    public static final Optional<User> FOUND_USER = Optional.of(User.builder().username(USER_NAME).email(EMAIL).build());
-    public static final Optional<UserModel> TRANSFORMED_USER = Optional.of(UserModel.builder().username(USER_NAME).email(EMAIL).build());
+    public static final Optional<User> FOUND_USER = Optional.of(User.builder().username(USER_NAME).email(USER_EMAIL).build());
+    public static final Optional<UserModel> TRANSFORMED_USER = Optional.of(UserModel.builder().username(USER_NAME).email(USER_EMAIL).build());
     public static final Optional<User> EMPTY_USER = Optional.empty();
     public static final Optional<UserModel> EMPTY_TRANSFORMED_USER = Optional.empty();
-    public static final User USER = User.builder().username(USER_NAME).email(EMAIL).build();
-    public static final UserModel USER_MODEL = UserModel.builder().username(USER_NAME).email(EMAIL).build();
+    public static final User USER = User.builder().username(USER_NAME).email(USER_EMAIL).build();
+    public static final UserModel USER_MODEL = UserModel.builder().username(USER_NAME).email(USER_EMAIL).build();
 
 
     @InjectMocks
@@ -70,16 +70,16 @@ public class UserRepositoryServiceImplTest {
 
     @Test
     public void testGetUserByEmailShouldReturnOptionalOfUserModelIfEmailExists(){
-        when(userRepository.findByEmail(EMAIL)).thenReturn(FOUND_USER);
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(FOUND_USER);
         when(userTransformer.transformToOptionalUserModel(FOUND_USER)).thenReturn(TRANSFORMED_USER);
 
-        Optional<UserModel> resultUser = userRepositoryService.getUserByEmail(EMAIL);
+        Optional<UserModel> resultUser = userRepositoryService.getUserByEmail(USER_EMAIL);
 
-        verify(userRepository).findByEmail(EMAIL);
+        verify(userRepository).findByEmail(USER_EMAIL);
         verify(userTransformer).transformToOptionalUserModel(FOUND_USER);
         Assertions.assertThat(resultUser).isNotNull();
         Assertions.assertThat(resultUser).isNotEmpty();
-        Assertions.assertThat(resultUser.get().getEmail()).isEqualTo(EMAIL);
+        Assertions.assertThat(resultUser.get().getEmail()).isEqualTo(USER_EMAIL);
     }
 
     @Test
@@ -108,5 +108,49 @@ public class UserRepositoryServiceImplTest {
         verify(userTransformer).transformToUserModel(USER);
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(savedUser.getUsername()).isEqualTo(USER_NAME);
+    }
+
+    @Test
+    public void testUserExistsShouldReturnTrueIfUserExists() {
+        when(userRepository.existsByUsername(USER_NAME)).thenReturn(true);
+
+        boolean resultExists = userRepository.existsByUsername(USER_NAME);
+
+        verify(userRepository).existsByUsername(USER_NAME);
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isTrue();
+    }
+
+    @Test
+    public void testUserExistsShouldReturnFalseIfUserDoesNotExist() {
+        when(userRepository.existsByUsername(USER_NAME)).thenReturn(false);
+
+        boolean resultExists = userRepository.existsByUsername(USER_NAME);
+
+        verify(userRepository).existsByUsername(USER_NAME);
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isFalse();
+    }
+
+    @Test
+    public void testEmailExistsShouldReturnTrueIfEmailExists() {
+        when(userRepository.existsByEmail(USER_EMAIL)).thenReturn(true);
+
+        boolean resultExists = userRepository.existsByEmail(USER_EMAIL);
+
+        verify(userRepository).existsByEmail(USER_EMAIL);
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isTrue();
+    }
+
+    @Test
+    public void testEmailExistsShouldReturnFalseIfEmailDoesNotExist() {
+        when(userRepository.existsByEmail(USER_EMAIL)).thenReturn(false);
+
+        boolean resultExists = userRepository.existsByEmail(USER_EMAIL);
+
+        verify(userRepository).existsByEmail(USER_EMAIL);
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isFalse();
     }
 }
