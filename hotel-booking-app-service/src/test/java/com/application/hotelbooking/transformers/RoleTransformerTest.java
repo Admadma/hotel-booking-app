@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,9 +21,13 @@ import static org.mockito.Mockito.when;
 public class RoleTransformerTest {
     public static final Class<Role> ROLE_CLASS = Role.class;
     public static final Role ROLE = new Role();
+    public static final Optional<Role> OPTIONAL_ROLE = Optional.of(ROLE);
+    public static final Optional<Role> EMPTY_OPTIONAL_ROLE = Optional.empty();
     public static final Collection<Role> ROLES = List.of(ROLE);
     public static final Class<RoleModel> ROLE_MODEL_CLASS = RoleModel.class;
     public static final RoleModel ROLE_MODEL = new RoleModel();
+    public static final Optional<RoleModel> OPTIONAL_ROLE_MODEL = Optional.of(ROLE_MODEL);
+
     public static final Collection<RoleModel> ROLE_MODELS = List.of(ROLE_MODEL);
 
 
@@ -44,14 +49,24 @@ public class RoleTransformerTest {
     }
 
     @Test
-    public void testTransformToRoleModelShouldReturnTransformedRole(){
-        when(modelMapper.map(ROLE, ROLE_MODEL_CLASS)).thenReturn(ROLE_MODEL);
+    public void testTransformToOptionalRoleModelShouldReturnTransformedRoleIfRolePresent(){
+        when(modelMapper.map(OPTIONAL_ROLE, ROLE_MODEL_CLASS)).thenReturn(ROLE_MODEL);
 
-        RoleModel resultRoleModel = roleTransformer.transformToRoleModel(ROLE);
+        Optional<RoleModel> resultRoleModel = roleTransformer.transformToOptionalRoleModel(OPTIONAL_ROLE);
 
-        verify(modelMapper).map(ROLE, ROLE_MODEL_CLASS);
+        verify(modelMapper).map(OPTIONAL_ROLE, ROLE_MODEL_CLASS);
         Assertions.assertThat(resultRoleModel).isNotNull();
-        Assertions.assertThat(resultRoleModel).isEqualTo(ROLE_MODEL);
+        Assertions.assertThat(resultRoleModel).isNotEmpty();
+        Assertions.assertThat(resultRoleModel).isEqualTo(OPTIONAL_ROLE_MODEL);
+    }
+
+    @Test
+    public void testTransformToOptionalRoleModelShouldReturnEmptyOptionalIfRolePresent(){
+
+        Optional<RoleModel> resultRoleModel = roleTransformer.transformToOptionalRoleModel(EMPTY_OPTIONAL_ROLE);
+
+        Assertions.assertThat(resultRoleModel).isNotNull();
+        Assertions.assertThat(resultRoleModel).isEmpty();
     }
 
     @Test

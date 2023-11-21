@@ -6,7 +6,7 @@ import com.application.hotelbooking.exceptions.EmailAlreadyConfirmedException;
 import com.application.hotelbooking.exceptions.ExpiredTokenException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
-import com.application.hotelbooking.services.ConfirmationTokenService;
+import com.application.hotelbooking.services.repositoryservices.ConfirmationTokenRepositoryService;
 import com.application.hotelbooking.services.EmailSenderService;
 import com.application.hotelbooking.services.UserEmailConfirmationService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
@@ -27,7 +27,7 @@ public class UserEmailConfirmationServiceImpl implements UserEmailConfirmationSe
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEmailConfirmationServiceImpl.class);
     public static final String BASE_LINK = "http://localhost:8080/hotelbooking/register/confirmemail/confirm-token?confirmationToken=";
     @Autowired
-    private ConfirmationTokenService confirmationTokenService;
+    private ConfirmationTokenRepositoryService confirmationTokenRepositoryService;
     @Autowired
     private UserRepositoryService userRepositoryService;
     @Autowired
@@ -57,7 +57,7 @@ public class UserEmailConfirmationServiceImpl implements UserEmailConfirmationSe
                 .build();
 
         LOGGER.info("saving ConfirmationTokenModel");
-        confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
+        confirmationTokenRepositoryService.saveConfirmationToken(confirmationTokenModel);
 
         Locale locale = LocaleContextHolder.getLocale();
         String link = BASE_LINK + token;
@@ -77,7 +77,7 @@ public class UserEmailConfirmationServiceImpl implements UserEmailConfirmationSe
     }
 
     public void confirmToken(String token){
-        ConfirmationTokenModel confirmationTokenModel = confirmationTokenService
+        ConfirmationTokenModel confirmationTokenModel = confirmationTokenRepositoryService
                 .findToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Confirmation token not found."));
 
@@ -90,7 +90,7 @@ public class UserEmailConfirmationServiceImpl implements UserEmailConfirmationSe
         }
 
         confirmationTokenModel.setConfirmedAt(LocalDateTime.now());
-        confirmationTokenService.saveConfirmationToken(confirmationTokenModel);
+        confirmationTokenRepositoryService.saveConfirmationToken(confirmationTokenModel);
         enableUser(confirmationTokenModel.getUser().getUsername());
     }
 
