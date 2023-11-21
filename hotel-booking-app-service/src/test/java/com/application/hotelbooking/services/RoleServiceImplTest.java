@@ -44,23 +44,10 @@ public class RoleServiceImplTest {
 
     @Test
     public void testGetRolesShouldReturnCollectionOfRolesWhereNameIsInTheList(){
-        when(roleRepository.findAll()).thenReturn(ROLES);
-        when(roleTransformer.transformToRoleModels(SELECTED_ROLES)).thenReturn(SELECTED_ROLE_MODELS);
-
-        Collection<RoleModel> roleModels = roleService.getRoles(ROLE_NAMES);
-
-        verify(roleRepository).findAll();
-        verify(roleTransformer).transformToRoleModels(SELECTED_ROLES);
-        Assertions.assertThat(roleModels).isNotNull();
-        Assertions.assertThat(roleModels).isEqualTo(SELECTED_ROLE_MODELS);
-    }
-
-    @Test
-    public void testGetRolesSimplerShouldReturnCollectionOfRolesWhereNameIsInTheList(){
         when(roleRepository.findByNameIn(ROLE_NAMES)).thenReturn(SELECTED_ROLES);
         when(roleTransformer.transformToRoleModels(SELECTED_ROLES)).thenReturn(SELECTED_ROLE_MODELS);
 
-        Collection<RoleModel> roleModels = roleService.getRolesSimpler(ROLE_NAMES);
+        Collection<RoleModel> roleModels = roleService.getRoles(ROLE_NAMES);
 
         verify(roleRepository).findByNameIn(ROLE_NAMES);
         verify(roleTransformer).transformToRoleModels(SELECTED_ROLES);

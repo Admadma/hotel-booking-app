@@ -34,13 +34,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     public Collection<RoleModel> getRoles(List<String> roleNames){
-        return roleTransformer.transformToRoleModels(
-                roleRepository.findAll().stream()
-                        .filter(role -> roleNames.contains(role.getName()))
-                        .collect(Collectors.toList())
-        );
-    }
-    public Collection<RoleModel> getRolesSimpler(List<String> roleNames){
         return roleTransformer.transformToRoleModels(roleRepository.findByNameIn(roleNames));
     }
 
