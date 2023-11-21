@@ -16,26 +16,14 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private RoleTransformer roleTransformer;
-
-    @Autowired
     private RoleRepositoryService roleRepositoryService;
 
     public RoleModel createRoleIfNotFound(String roleName){
         if (roleRepositoryService.getRoleByName(roleName).isEmpty()){
             RoleModel roleModel = new RoleModel();
             roleModel.setName(roleName);
-            roleRepository.save(roleTransformer.transformToRole(roleModel));
+            roleRepositoryService.saveRole(roleModel); //TODO: implement logic for saving role
         }
         return roleRepositoryService.getRoleByName(roleName).get();
     }
-
-    public Collection<RoleModel> getRoles(List<String> roleNames){
-        return roleTransformer.transformToRoleModels(roleRepository.findByNameIn(roleNames));
-    }
-
-
 }

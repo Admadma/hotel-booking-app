@@ -9,5 +9,4 @@ import java.util.List;
 public interface RoleService {
     @Transactional
     RoleModel createRoleIfNotFound(String roleName);
-    Collection<RoleModel> getRoles(List<String> roleNames);
 }

@@ -3,8 +3,8 @@ package com.application.hotelbooking.services.implementations;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.*;
 
-import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.services.repositoryservices.RoleRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private RoleService roleService;
+    private RoleRepositoryService roleRepositoryService;
 
     public void changePassword(String username, String newPassword, String oldPassword) throws OptimisticLockException{
         if (userRepositoryService.getUserByName(username).isEmpty()){
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .enabled(isAdmin) //We want to skip the email validation process and enable admin users by default
-                .roles(roleService.getRoles(rolesAsStrings))
+                .roles(roleRepositoryService.getRoles(rolesAsStrings))
                 .build();
         UserModel savedUser = userRepositoryService.save(userModel);
 

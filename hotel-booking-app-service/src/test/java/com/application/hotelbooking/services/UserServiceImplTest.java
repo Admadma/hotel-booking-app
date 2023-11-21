@@ -8,6 +8,7 @@ import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.implementations.UserEmailConfirmationServiceImpl;
 import com.application.hotelbooking.services.implementations.UserServiceImpl;
+import com.application.hotelbooking.services.repositoryservices.RoleRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private RoleService roleService;
+    private RoleRepositoryService roleRepositoryService;
 
     @Test
     public void testCreateUserShouldThrowExceptionIfUsernameTaken(){
@@ -93,7 +94,7 @@ public class UserServiceImplTest {
         when(userRepositoryService.userExists(TEST_USERNAME)).thenReturn(false);
         when(userRepositoryService.emailExists(TEST_EMAIL)).thenReturn(false);
         when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_PASSWORD);
-        when(roleService.getRoles(ADMIN_ROLES_STRINGS)).thenReturn(ADMIN_ROLE_MODELS);
+        when(roleRepositoryService.getRoles(ADMIN_ROLES_STRINGS)).thenReturn(ADMIN_ROLE_MODELS);
         when(userRepositoryService.save(ADMIN_USER_MODEL)).thenReturn(ADMIN_USER_MODEL);
 
         UserModel resultUserModel = userService.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_EMAIL, ADMIN_ROLES_STRINGS);
@@ -101,7 +102,7 @@ public class UserServiceImplTest {
         verify(userRepositoryService).userExists(TEST_USERNAME);
         verify(userRepositoryService).emailExists(TEST_EMAIL);
         verify(passwordEncoder).encode(TEST_PASSWORD);
-        verify(roleService).getRoles(ADMIN_ROLES_STRINGS);
+        verify(roleRepositoryService).getRoles(ADMIN_ROLES_STRINGS);
         verify(userRepositoryService).save(ADMIN_USER_MODEL);
         Assertions.assertThat(resultUserModel).isNotNull();
     }
@@ -111,7 +112,7 @@ public class UserServiceImplTest {
         when(userRepositoryService.userExists(TEST_USERNAME)).thenReturn(false);
         when(userRepositoryService.emailExists(TEST_EMAIL)).thenReturn(false);
         when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_PASSWORD);
-        when(roleService.getRoles(USER_ROLES_STRINGS)).thenReturn(USER_ROLE_MODELS);
+        when(roleRepositoryService.getRoles(USER_ROLES_STRINGS)).thenReturn(USER_ROLE_MODELS);
         when(userRepositoryService.save(USER_USER_MODEL)).thenReturn(USER_USER_MODEL);
         doNothing().when(userEmailConfirmationService).sendConfirmationToken(TEST_USERNAME, TEST_EMAIL);
 
@@ -120,7 +121,7 @@ public class UserServiceImplTest {
         verify(userRepositoryService).userExists(TEST_USERNAME);
         verify(userRepositoryService).emailExists(TEST_EMAIL);
         verify(passwordEncoder).encode(TEST_PASSWORD);
-        verify(roleService).getRoles(USER_ROLES_STRINGS);
+        verify(roleRepositoryService).getRoles(USER_ROLES_STRINGS);
         verify(userRepositoryService).save(USER_USER_MODEL);
         verify(userEmailConfirmationService).sendConfirmationToken(TEST_USERNAME, TEST_EMAIL);
         Assertions.assertThat(resultUserModel).isNotNull();
