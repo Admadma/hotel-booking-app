@@ -2,6 +2,8 @@ package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.domain.RoleModel;
+import com.application.hotelbooking.domain.RoomModel;
+import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.repositories.RoleRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.RoleRepositoryServiceImpl;
 import com.application.hotelbooking.transformers.RoleTransformer;
@@ -78,5 +80,20 @@ public class RoleRepositoryServiceImplTest {
         verify(roleTransformer).transformToRoleModels(SELECTED_ROLES);
         Assertions.assertThat(roleModels).isNotNull();
         Assertions.assertThat(roleModels).isEqualTo(SELECTED_ROLE_MODELS);
+    }
+
+    @Test
+    public void testSaveRoleShouldReturnRoleModelOfSavedRole(){
+        when(roleTransformer.transformToRole(ROLE_MODEL)).thenReturn(ROLE);
+        when(roleRepository.save(ROLE)).thenReturn(ROLE);
+        when(roleTransformer.transformToRoleModel(ROLE)).thenReturn(ROLE_MODEL);
+
+        RoleModel savedRoleModel = roleRepositoryService.saveRole(ROLE_MODEL);
+
+        verify(roleTransformer).transformToRole(ROLE_MODEL);
+        verify(roleRepository).save(ROLE);
+        verify(roleTransformer).transformToRoleModel(ROLE);
+        Assertions.assertThat(savedRoleModel).isNotNull();
+        Assertions.assertThat(savedRoleModel.getName()).isEqualTo(ROLE_NAME);
     }
 }

@@ -21,7 +21,7 @@ public class RoleRepositoryServiceImpl implements RoleRepositoryService {
     private RoleTransformer roleTransformer;
 
     public RoleModel saveRole(RoleModel roleModel){
-        return null;
+        return roleTransformer.transformToRoleModel(roleRepository.save(roleTransformer.transformToRole(roleModel)));
     }
     public Optional<RoleModel> getRoleByName(String roleName){
         return roleTransformer.transformToOptionalRoleModel(roleRepository.findRoleByName(roleName));

@@ -22,7 +22,7 @@ public class RoleServiceImpl implements RoleService {
         if (roleRepositoryService.getRoleByName(roleName).isEmpty()){
             RoleModel roleModel = new RoleModel();
             roleModel.setName(roleName);
-            roleRepositoryService.saveRole(roleModel); //TODO: implement logic for saving role
+            roleRepositoryService.saveRole(roleModel);
         }
         return roleRepositoryService.getRoleByName(roleName).get();
     }

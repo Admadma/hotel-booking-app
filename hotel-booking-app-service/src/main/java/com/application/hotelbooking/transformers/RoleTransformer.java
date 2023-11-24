@@ -22,6 +22,10 @@ public class RoleTransformer {
         return modelMapper.map(roleModel, Role.class);
     }
 
+    public RoleModel transformToRoleModel(Role role){
+        return modelMapper.map(role, RoleModel.class);
+    }
+
     public Optional<RoleModel> transformToOptionalRoleModel(Optional<Role> role){
         if (role.isPresent()){
             return Optional.of(modelMapper.map(role, RoleModel.class));
