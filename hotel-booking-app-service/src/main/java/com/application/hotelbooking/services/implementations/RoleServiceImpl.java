@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,11 +20,12 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepositoryService roleRepositoryService;
 
     public RoleModel createRoleIfNotFound(String roleName){
-        if (roleRepositoryService.getRoleByName(roleName).isEmpty()){
-            RoleModel roleModel = new RoleModel();
-            roleModel.setName(roleName);
-            roleRepositoryService.saveRole(roleModel);
+        Optional<RoleModel> existingRole = roleRepositoryService.getRoleByName(roleName);
+        if (existingRole.isEmpty()){
+            RoleModel roleToBeCreated = new RoleModel();
+            roleToBeCreated.setName(roleName);
+            return roleRepositoryService.saveRole(roleToBeCreated);
         }
-        return roleRepositoryService.getRoleByName(roleName).get();
+        return existingRole.get();
     }
 }
