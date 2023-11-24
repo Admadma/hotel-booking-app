@@ -2,8 +2,6 @@ package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.domain.Role;
 import com.application.hotelbooking.domain.RoleModel;
-import com.application.hotelbooking.domain.RoomModel;
-import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.repositories.RoleRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.RoleRepositoryServiceImpl;
 import com.application.hotelbooking.transformers.RoleTransformer;
