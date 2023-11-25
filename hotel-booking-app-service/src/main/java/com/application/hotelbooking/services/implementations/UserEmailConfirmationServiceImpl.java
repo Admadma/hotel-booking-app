@@ -78,7 +78,7 @@ public class UserEmailConfirmationServiceImpl implements UserEmailConfirmationSe
 
     public void confirmToken(String token){
         ConfirmationTokenModel confirmationTokenModel = confirmationTokenRepositoryService
-                .findToken(token)
+                .getByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Confirmation token not found."));
 
         if (confirmationTokenModel.getConfirmedAt() != null){

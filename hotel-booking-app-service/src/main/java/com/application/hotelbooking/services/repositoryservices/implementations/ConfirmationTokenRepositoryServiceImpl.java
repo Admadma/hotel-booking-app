@@ -18,11 +18,11 @@ public class ConfirmationTokenRepositoryServiceImpl implements ConfirmationToken
     @Autowired
     private ConfirmationTokenTransformer confirmationTokenTransformer;
 
-    public void saveConfirmationToken(ConfirmationTokenModel confirmationTokenModel){
-        confirmationTokenRepository.save(confirmationTokenTransformer.transformToConfirmationToken(confirmationTokenModel));
+    public ConfirmationTokenModel saveConfirmationToken(ConfirmationTokenModel confirmationTokenModel){
+        return confirmationTokenTransformer.transformToConfirmationTokenModel(confirmationTokenRepository.save(confirmationTokenTransformer.transformToConfirmationToken(confirmationTokenModel)));
     }
 
-    public Optional<ConfirmationTokenModel> findToken(String token){
+    public Optional<ConfirmationTokenModel> getByToken(String token){
         return confirmationTokenTransformer.transformToOptionalConfirmationTokenModel(confirmationTokenRepository.findByToken(token));
     }
 }

@@ -22,6 +22,10 @@ public class ConfirmationTokenTransformer {
         return modelMapper.map(confirmationTokenModel, ConfirmationToken.class);
     }
 
+    public ConfirmationTokenModel transformToConfirmationTokenModel(ConfirmationToken confirmationToken){
+        return modelMapper.map(confirmationToken, ConfirmationTokenModel.class);
+    }
+
     public Optional<ConfirmationTokenModel> transformToOptionalConfirmationTokenModel(Optional<ConfirmationToken> confirmationToken){
         if (confirmationToken.isPresent()){
             return Optional.of(modelMapper.map(confirmationToken, ConfirmationTokenModel.class));
