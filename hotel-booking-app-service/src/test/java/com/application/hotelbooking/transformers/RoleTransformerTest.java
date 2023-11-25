@@ -49,6 +49,17 @@ public class RoleTransformerTest {
     }
 
     @Test
+    public void testTransformToRoleModelShouldReturnTransformedRole(){
+        when(modelMapper.map(ROLE, ROLE_MODEL_CLASS)).thenReturn(ROLE_MODEL);
+
+        RoleModel resultRoleModel = roleTransformer.transformToRoleModel(ROLE);
+
+        verify(modelMapper).map(ROLE, ROLE_MODEL_CLASS);
+        Assertions.assertThat(resultRoleModel).isNotNull();
+        Assertions.assertThat(resultRoleModel).isEqualTo(ROLE_MODEL);
+    }
+
+    @Test
     public void testTransformToOptionalRoleModelShouldReturnTransformedRoleIfRolePresent(){
         when(modelMapper.map(OPTIONAL_ROLE, ROLE_MODEL_CLASS)).thenReturn(ROLE_MODEL);
 

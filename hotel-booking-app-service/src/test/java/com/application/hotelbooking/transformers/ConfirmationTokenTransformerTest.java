@@ -44,6 +44,17 @@ public class ConfirmationTokenTransformerTest {
     }
 
     @Test
+    public void testTransformToConfirmationTokenModelShouldReturnTransformedConfirmationToken(){
+        when(modelMapper.map(CONFIRMATION_TOKEN, CONFIRMATION_TOKEN_MODEL_CLASS)).thenReturn(CONFIRMATION_TOKEN_MODEL);
+
+        ConfirmationTokenModel resultConfirmationTokenModel = confirmationTokenTransformer.transformToConfirmationTokenModel(CONFIRMATION_TOKEN);
+
+        verify(modelMapper).map(CONFIRMATION_TOKEN, CONFIRMATION_TOKEN_MODEL_CLASS);
+        Assertions.assertThat(resultConfirmationTokenModel).isNotNull();
+        Assertions.assertThat(resultConfirmationTokenModel).isEqualTo(CONFIRMATION_TOKEN_MODEL);
+    }
+
+    @Test
     public void testTransformToOptionalConfirmationTokenModelShouldReturnOptionalOfPresentConfirmationToken(){
         when(modelMapper.map(OPTIONAL_CONFIRMATION_TOKEN, CONFIRMATION_TOKEN_MODEL_CLASS)).thenReturn(CONFIRMATION_TOKEN_MODEL);
 
