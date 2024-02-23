@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services.implementations;
 
+import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.services.RoomCreationService;
@@ -14,7 +15,6 @@ public class RoomCreationServiceImpl implements RoomCreationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomCreationServiceImpl.class);
 
-
     public static final long DEFAULT_STARTING_VERSION = 1l;
 
     @Autowired
@@ -23,9 +23,11 @@ public class RoomCreationServiceImpl implements RoomCreationService {
     @Autowired
     private HotelService hotelService;
 
-    public void createRoomFromDTO(RoomCreationServiceDTO roomCreationServiceDTO){
+    public RoomModel createRoomFromDTO(RoomCreationServiceDTO roomCreationServiceDTO){
         roomCreationServiceDTO.setVersion(DEFAULT_STARTING_VERSION);
         roomCreationServiceDTO.setRoomNumber(1 + hotelService.getLatestRoomNumberOfHotel(roomCreationServiceDTO.getHotelId()));
-        roomRepositoryService.saveRoom(roomCreationServiceDTO);
+        RoomModel savedRoom = roomRepositoryService.saveRoom(roomCreationServiceDTO);
+        LOGGER.info("Saved room with roomNumber: " + savedRoom.getRoomNumber());
+        return savedRoom;
     }
 }
