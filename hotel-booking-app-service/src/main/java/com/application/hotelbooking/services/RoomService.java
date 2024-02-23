@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface RoomService {
     List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO);
-    void createRoomFromDTO(RoomCreationServiceDTO roomCreationServiceDTO);
 }

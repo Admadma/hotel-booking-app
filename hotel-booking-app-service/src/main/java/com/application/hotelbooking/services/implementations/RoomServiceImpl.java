@@ -2,7 +2,6 @@ package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.*;
-import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -19,18 +18,12 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomServiceImpl.class);
-    public static final long DEFAULT_STARTING_VERSION = 1l;
 
-    @Autowired
-    private MessageSource messageSource;
     @Autowired
     private RoomRepositoryService roomRepositoryService;
 
     @Autowired
     private ReservationService reservationService;
-
-    @Autowired
-    private HotelService hotelService;
 
     private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
@@ -56,20 +49,14 @@ public class RoomServiceImpl implements RoomService {
                 roomSearchFormServiceDTO.getEndDate());
     }
 
+    private List<Long> filterAvailableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO, List<Long> roomIds) {
+        return reservationService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate());
+    }
+
     public List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
         List<Long> availableRooms = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 
         return createRoomSearchResultDTOs(availableRooms, roomSearchFormServiceDTO);
-    }
-
-    private List<Long> filterAvailableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO, List<Long> roomIds) {
-        return reservationService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate());
-    }
-
-    public void createRoomFromDTO(RoomCreationServiceDTO roomCreationServiceDTO){
-        roomCreationServiceDTO.setVersion(DEFAULT_STARTING_VERSION);
-        roomCreationServiceDTO.setRoomNumber(1 + hotelService.getLatestRoomNumberOfHotel(roomCreationServiceDTO.getHotelId()));
-        roomRepositoryService.saveRoom(roomCreationServiceDTO);
     }
 }
