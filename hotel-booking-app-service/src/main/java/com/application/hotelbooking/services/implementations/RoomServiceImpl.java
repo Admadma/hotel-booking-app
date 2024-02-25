@@ -8,7 +8,6 @@ import com.application.hotelbooking.services.repositoryservices.RoomRepositorySe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -55,8 +54,8 @@ public class RoomServiceImpl implements RoomService {
 
     public List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
-        List<Long> availableRooms = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
+        List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 
-        return createRoomSearchResultDTOs(availableRooms, roomSearchFormServiceDTO);
+        return createRoomSearchResultDTOs(availableRoomsIds, roomSearchFormServiceDTO);
     }
 }
