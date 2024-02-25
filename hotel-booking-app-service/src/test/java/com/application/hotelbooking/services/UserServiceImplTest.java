@@ -41,6 +41,13 @@ public class UserServiceImplTest {
             .enabled(false)
             .roles(USER_ROLE_MODELS)
             .build();
+    public static final UserModel USER_USER_MODEL_ENABLED = UserModel.builder()
+            .username(TEST_USERNAME)
+            .password(TEST_PASSWORD)
+            .email(TEST_EMAIL)
+            .enabled(true)
+            .roles(USER_ROLE_MODELS)
+            .build();
     public static final UserModel ADMIN_USER_MODEL = UserModel.builder()
             .username(TEST_USERNAME)
             .password(TEST_PASSWORD)
@@ -48,7 +55,7 @@ public class UserServiceImplTest {
             .enabled(true)
             .roles(ADMIN_ROLE_MODELS)
             .build();
-    public static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(UserModel.builder().username(TEST_USERNAME).password(TEST_PASSWORD).build());
+    public static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(USER_USER_MODEL);
     public static final Optional<UserModel> EMPTY_OPTIONAL_USER_MODEL = Optional.empty();
     @InjectMocks
     private UserServiceImpl userService;
@@ -114,7 +121,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_PASSWORD);
         when(roleRepositoryService.getRoles(USER_ROLES_STRINGS)).thenReturn(USER_ROLE_MODELS);
         when(userRepositoryService.save(USER_USER_MODEL)).thenReturn(USER_USER_MODEL);
-        doNothing().when(userEmailConfirmationService).sendConfirmationToken(TEST_USERNAME, TEST_EMAIL);
+        doNothing().when(userEmailConfirmationService).sendConfirmationToken(USER_USER_MODEL);
 
         UserModel resultUserModel = userService.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_EMAIL, USER_ROLES_STRINGS);
 
@@ -123,7 +130,7 @@ public class UserServiceImplTest {
         verify(passwordEncoder).encode(TEST_PASSWORD);
         verify(roleRepositoryService).getRoles(USER_ROLES_STRINGS);
         verify(userRepositoryService).save(USER_USER_MODEL);
-        verify(userEmailConfirmationService).sendConfirmationToken(TEST_USERNAME, TEST_EMAIL);
+        verify(userEmailConfirmationService).sendConfirmationToken(USER_USER_MODEL);
         Assertions.assertThat(resultUserModel).isNotNull();
     }
 
@@ -164,5 +171,17 @@ public class UserServiceImplTest {
         verify(passwordEncoder).matches(TEST_PASSWORD, OPTIONAL_USER_MODEL.get().getPassword());
         verify(passwordEncoder).encode(TEST_PASSWORD);
         verify(userRepositoryService).save(OPTIONAL_USER_MODEL.get());
+    }
+
+    @Test
+    public void testEnableUserShouldReturnSavedEnabledUser(){
+        when(userRepositoryService.getUserByEmail(TEST_EMAIL)).thenReturn(OPTIONAL_USER_MODEL);
+        when(userRepositoryService.save(USER_USER_MODEL_ENABLED)).thenReturn(USER_USER_MODEL_ENABLED);
+
+        UserModel resultUserModel = userService.enableUser(TEST_EMAIL);
+
+        verify(userRepositoryService).getUserByEmail(TEST_EMAIL);
+        verify(userRepositoryService).save(USER_USER_MODEL_ENABLED);
+        Assertions.assertThat(resultUserModel).isEqualTo(USER_USER_MODEL_ENABLED);
     }
 }

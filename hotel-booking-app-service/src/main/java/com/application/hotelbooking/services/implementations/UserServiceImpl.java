@@ -69,9 +69,15 @@ public class UserServiceImpl implements UserService {
         UserModel savedUser = userRepositoryService.save(userModel);
 
         if (!isAdmin) {
-            userEmailConfirmationService.sendConfirmationToken(username, email);
+            userEmailConfirmationService.sendConfirmationToken(savedUser);
         }
 
         return savedUser;
+    }
+
+    public UserModel enableUser(String email) {
+        UserModel userModel = userRepositoryService.getUserByEmail(email).get();
+        userModel.setEnabled(true);
+        return userRepositoryService.save(userModel);
     }
 }
