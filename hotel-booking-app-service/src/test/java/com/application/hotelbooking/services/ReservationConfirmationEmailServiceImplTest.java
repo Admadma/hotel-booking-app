@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ReservationConfirmationEmailServiceTest {
+public class ReservationConfirmationEmailServiceImplTest {
 
     private static final String EMAIL = "test_email";
     private static final String RESERVATION_SUBJECT_CODE = "email.reservation.confirmed.subject";

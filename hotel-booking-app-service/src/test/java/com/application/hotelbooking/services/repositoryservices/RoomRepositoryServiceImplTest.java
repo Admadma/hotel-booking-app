@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RoomRepositoryServiceTest {
+public class RoomRepositoryServiceImplTest {
 
     public static final String HOTEL_NAME = "Test hotel";
     public static final String NONEXISTENT_HOTEL_NAME = "Test hotel";

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ResendConfirmationTokenServiceTest {
+public class ResendConfirmationTokenServiceImplTest {
 
     private static final String USERNAME = "test_username";
     private static final String EMAIL = "test_email";
