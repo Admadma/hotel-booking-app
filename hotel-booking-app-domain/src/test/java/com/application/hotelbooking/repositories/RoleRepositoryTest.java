@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,4 +85,23 @@ public class RoleRepositoryTest {
         Assertions.assertThat(resultRole).isEmpty();
     }
 
+    @Test
+    public void testFindByRoleNameInShouldReturnCollectionOfRolesWhereRoleNameInList(){
+        Role role1 = roleRepository.save(Role.builder()
+                .name("TEST_ROLE_1")
+                .build());
+        Role role2 = roleRepository.save(Role.builder()
+                .name("TEST_ROLE_2")
+                .build());
+        Role role3 = roleRepository.save(Role.builder()
+                .name("TEST_ROLE_3")
+                .build());
+
+        Collection<Role> resultRoles = roleRepository.findByNameIn(List.of("TEST_ROLE_1", "TEST_ROLE_3"));
+
+
+        Assertions.assertThat(resultRoles).isNotNull();
+        Assertions.assertThat(resultRoles).isNotEmpty();
+        Assertions.assertThat(resultRoles).isEqualTo(List.of(role1, role3));
+    }
 }

@@ -2,6 +2,7 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.ChangeCredentialsDto;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
+import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import com.application.hotelbooking.transformers.UserViewTransformer;
@@ -45,6 +46,9 @@ public class ChangeCredentialsController {
 
         try {
             userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), changeCredentialsDto.getOldPassword());
+        } catch (InvalidUserException iue){
+            LOGGER.error("InvalidUserException while changing password.");
+            return "redirect:/hotelbooking/account?error";
         } catch (OptimisticLockException ole){
             LOGGER.error("OptimisticLockException while changing password.");
             return "redirect:/hotelbooking/account?error";

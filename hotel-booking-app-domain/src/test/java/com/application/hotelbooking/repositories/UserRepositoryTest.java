@@ -95,4 +95,54 @@ public class UserRepositoryTest {
         Assertions.assertThat(resultUser).isNotNull();
         Assertions.assertThat(resultUser).isEmpty();
     }
+
+    @Test
+    public void testExistsByUsernameShouldReturnTrueIfUsernameExists(){
+        userRepository.save(User.builder()
+                .username("TEST_USER_NAME")
+                .password("TEST_PASSWORD")
+                .email("TEST_USER_EMAIL")
+                .enabled(true)
+                .locked(false)
+                .build());
+
+        boolean resultExists = userRepository.existsByUsername("TEST_USER_NAME");
+
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isTrue();
+    }
+
+    @Test
+    public void testExistsByUsernameShouldReturnFalseIfUsernameDoesNotExist(){
+
+        boolean resultExists = userRepository.existsByUsername("TEST_USER_NAME");
+
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isFalse();
+    }
+
+    @Test
+    public void testExistsByEmailShouldReturnTrueIfEmailExists(){
+        userRepository.save(User.builder()
+                .username("TEST_USER_NAME")
+                .password("TEST_PASSWORD")
+                .email("TEST_USER_EMAIL")
+                .enabled(true)
+                .locked(false)
+                .build());
+
+        boolean resultExists = userRepository.existsByEmail("TEST_USER_EMAIL");
+
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isTrue();
+    }
+
+    @Test
+    public void testExistsByUsEmailShouldReturnFalseIfEmailDoesNotExist(){
+
+        boolean resultExists = userRepository.existsByEmail("TEST_USER_EMAIL");
+
+        Assertions.assertThat(resultExists).isNotNull();
+        Assertions.assertThat(resultExists).isFalse();
+    }
 }

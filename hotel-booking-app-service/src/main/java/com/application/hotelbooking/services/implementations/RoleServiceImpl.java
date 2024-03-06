@@ -3,38 +3,29 @@ package com.application.hotelbooking.services.implementations;
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.repositories.RoleRepository;
 import com.application.hotelbooking.services.RoleService;
+import com.application.hotelbooking.services.repositoryservices.RoleRepositoryService;
 import com.application.hotelbooking.transformers.RoleTransformer;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private RoleTransformer roleTransformer;
+    private RoleRepositoryService roleRepositoryService;
 
     public RoleModel createRoleIfNotFound(String roleName){
-        if (roleRepository.findRoleByName(roleName).isEmpty()){
-            RoleModel roleModel = new RoleModel();
-            roleModel.setName(roleName);
-            roleRepository.save(roleTransformer.transformToRole(roleModel));
+        Optional<RoleModel> existingRole = roleRepositoryService.getRoleByName(roleName);
+        if (existingRole.isEmpty()){
+            RoleModel roleToBeCreated = new RoleModel();
+            roleToBeCreated.setName(roleName);
+            return roleRepositoryService.saveRole(roleToBeCreated);
         }
-        return roleTransformer.transformToRoleModel(roleRepository.findRoleByName(roleName).get());
-    }
-
-    public Collection<RoleModel> getRoles(List<String> roleNames){
-        return roleTransformer.transformToRoleModels(
-                roleRepository.findAll().stream()
-                        .filter(role -> roleNames.contains(role.getName()))
-                        .collect(Collectors.toList())
-        );
+        return existingRole.get();
     }
 }

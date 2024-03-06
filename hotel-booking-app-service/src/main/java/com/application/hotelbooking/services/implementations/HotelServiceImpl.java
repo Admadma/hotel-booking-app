@@ -19,15 +19,15 @@ public class HotelServiceImpl implements HotelService {
     private HotelRepositoryService hotelRepositoryService;
 
     public void createHotel(HotelCreationServiceDTO hotelCreationServiceDTO) {
-        if (isHotelNameFree(hotelCreationServiceDTO)){
+        if (isHotelNameFree(hotelCreationServiceDTO.getHotelName())){
             hotelRepositoryService.save(hotelCreationServiceDTO);
         } else {
             throw new InvalidHotelException("That hotelName is already taken");
         }
     }
 
-    private boolean isHotelNameFree(HotelCreationServiceDTO hotelCreationServiceDTO) {
-        return hotelRepositoryService.findHotelByHotelName(hotelCreationServiceDTO.getHotelName()).isEmpty();
+    private boolean isHotelNameFree(String hotelName) {
+        return hotelRepositoryService.findHotelByHotelName(hotelName).isEmpty();
     }
 
     public int getLatestRoomNumberOfHotel(Long hotelId) {

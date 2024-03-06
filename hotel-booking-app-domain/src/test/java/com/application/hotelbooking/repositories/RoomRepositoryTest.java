@@ -64,7 +64,7 @@ public class RoomRepositoryTest {
     }
 
     @Test
-    public void testFindRoomByRoomNumberAndHotelHotelNameShouldReturnDesiredRoom(){
+    public void testFindRoomByRoomNumberAndHotelHotelNameShouldReturnOptionalOfDesiredRoom(){
         Hotel hotel1 = hotelRepository.save(Hotel.builder()
                 .hotelName("Hotel 1")
                 .city("City 1")
@@ -89,16 +89,19 @@ public class RoomRepositoryTest {
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 
-        Room resultRoom1 = roomRepository.findRoomByRoomNumberAndHotelHotelName(1, "Hotel 1");
-        Room resultRoom2 = roomRepository.findRoomByRoomNumberAndHotelHotelName(2, "Hotel 1");
-        Room resultRoom3 = roomRepository.findRoomByRoomNumberAndHotelHotelName(1, "Hotel 2");
+        Optional<Room> resultRoom1 = roomRepository.findRoomByRoomNumberAndHotelHotelName(1, "Hotel 1");
+        Optional<Room> resultRoom2 = roomRepository.findRoomByRoomNumberAndHotelHotelName(2, "Hotel 1");
+        Optional<Room> resultRoom3 = roomRepository.findRoomByRoomNumberAndHotelHotelName(1, "Hotel 2");
 
         Assertions.assertThat(resultRoom1).isNotNull();
         Assertions.assertThat(resultRoom2).isNotNull();
         Assertions.assertThat(resultRoom3).isNotNull();
-        Assertions.assertThat(resultRoom1).isEqualTo(room1);
-        Assertions.assertThat(resultRoom2).isEqualTo(room2);
-        Assertions.assertThat(resultRoom3).isEqualTo(room3);
+        Assertions.assertThat(resultRoom1).isNotEmpty();
+        Assertions.assertThat(resultRoom2).isNotEmpty();
+        Assertions.assertThat(resultRoom3).isNotEmpty();
+        Assertions.assertThat(resultRoom1.get()).isEqualTo(room1);
+        Assertions.assertThat(resultRoom2.get()).isEqualTo(room2);
+        Assertions.assertThat(resultRoom3.get()).isEqualTo(room3);
     }
 
     @Test

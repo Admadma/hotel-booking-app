@@ -2,7 +2,7 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomCreationDTO;
-import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.RoomCreationService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomCreationDTOTransformer;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -32,7 +31,7 @@ public class AddRoomsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddRoomsController.class);
 
     @Autowired
-    private RoomService roomService;
+    private RoomCreationService roomService;
 
     @Autowired
     private HotelRepositoryService hotelRepositoryService;
