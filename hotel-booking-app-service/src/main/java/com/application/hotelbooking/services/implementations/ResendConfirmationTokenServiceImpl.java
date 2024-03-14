@@ -3,7 +3,7 @@ package com.application.hotelbooking.services.implementations;
 import com.application.hotelbooking.exceptions.EmailAlreadyConfirmedException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.services.ResendConfirmationTokenService;
-import com.application.hotelbooking.services.UserEmailConfirmationService;
+import com.application.hotelbooking.services.UserEmailConfirmationSenderService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class ResendConfirmationTokenServiceImpl implements ResendConfirmationTok
     private UserRepositoryService userRepositoryService;
 
     @Autowired
-    private UserEmailConfirmationService userEmailConfirmationService;
+    private UserEmailConfirmationSenderService userEmailConfirmationService;
 
     public void resendConfirmationToken(String email){
         if (!userRepositoryService.emailExists(email)){

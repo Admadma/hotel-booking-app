@@ -5,7 +5,7 @@ import com.application.hotelbooking.exceptions.ExpiredTokenException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.services.ResendConfirmationTokenService;
-import com.application.hotelbooking.services.UserEmailConfirmationService;
+import com.application.hotelbooking.services.UserEmailTokenConfirmationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class ConfirmEmailController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmEmailController.class);
 
     @Autowired
-    private UserEmailConfirmationService userEmailConfirmationService;
+    private UserEmailTokenConfirmationService userEmailConfirmationService;
     @Autowired
     private ResendConfirmationTokenService resendConfirmationTokenService;
 
