@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services.implementations;
 
+import com.application.hotelbooking.domain.HotelModel;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
@@ -18,9 +19,9 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     private HotelRepositoryService hotelRepositoryService;
 
-    public void createHotel(HotelCreationServiceDTO hotelCreationServiceDTO) {
+    public HotelModel createHotel(HotelCreationServiceDTO hotelCreationServiceDTO) {
         if (isHotelNameFree(hotelCreationServiceDTO.getHotelName())){
-            hotelRepositoryService.save(hotelCreationServiceDTO);
+            return hotelRepositoryService.save(hotelCreationServiceDTO);
         } else {
             throw new InvalidHotelException("That hotelName is already taken");
         }

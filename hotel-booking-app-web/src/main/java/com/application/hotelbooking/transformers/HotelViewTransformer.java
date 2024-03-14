@@ -17,7 +17,7 @@ public class HotelViewTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public HotelCreationServiceDTO HotelCreationServiceDTO(HotelCreationDTO hotelCreationDTO){
+    public HotelCreationServiceDTO transformToHotelCreationServiceDTO(HotelCreationDTO hotelCreationDTO){
         return modelMapper.map(hotelCreationDTO, HotelCreationServiceDTO.class);
     }
 

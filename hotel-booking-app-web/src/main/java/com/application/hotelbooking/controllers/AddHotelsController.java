@@ -37,7 +37,8 @@ public class AddHotelsController {
         }
 
         try {
-            hotelService.createHotel(hotelViewTransformer.HotelCreationServiceDTO(hotelCreationDTO));
+            hotelService.createHotel(hotelViewTransformer.transformToHotelCreationServiceDTO(hotelCreationDTO));
+            System.out.println("3");
             model.addAttribute("successMessage", "Success");
         } catch (InvalidHotelException ihe){
             result.rejectValue("hotelName", "admin.hotel.validation.hotelname.taken");

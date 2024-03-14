@@ -20,7 +20,8 @@
             <label for="hotelName"></label>
             <input class="form-control" type="text" th:field="*{hotelName}" id="hotelName" th:placeholder="#{admin.hotel.form.hotelname}">
         </div>
-        <p  th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}"></p>
+<!--        <p  th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:errors="*{hotelName}"></p>-->
+        <p  th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:text="*{hotelName}"></p>
         <div class="input-group mb-3">
             <label for="city"></label>
             <input class="form-control" type="text" th:field="*{city}" id="city" th:placeholder="#{admin.hotel.form.city}">
