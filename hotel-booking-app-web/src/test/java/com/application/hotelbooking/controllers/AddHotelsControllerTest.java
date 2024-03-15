@@ -3,6 +3,7 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.dto.HotelCreationDTO;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
+import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import org.hamcrest.Matchers;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,9 +19,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Import(SecurityConfiguration.class)
 @WebMvcTest(AddHotelsController.class)
 public class AddHotelsControllerTest {
 
@@ -38,7 +40,7 @@ public class AddHotelsControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "testUser", roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     public void testAdminUserCanNavigateToAddHotelsPage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addHotels"))
                 .andExpect(status().isOk())
@@ -48,12 +50,28 @@ public class AddHotelsControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "ADMIN")
+    @WithMockUser(authorities = "USER")
+    public void testNonAdminUserForbiddenToNavigateToAddHotelsPage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addHotels"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = "USER")
+    public void testCreateNewHotelForbiddenForNonAdminUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/admin/create-new-hotel")
+                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    @WithMockUser(authorities = "ADMIN")
     public void testCreateNewHotelShouldReturnToAddHotelsPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_SHORT_NAME_HAS_CITY)
-                        .with(csrf()))
+                        .flashAttr("hotelCreationDTO", HOTEL_SHORT_NAME_HAS_CITY))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(view().name("addhotels"))
@@ -62,8 +80,7 @@ public class AddHotelsControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_GOOD_NAME_NO_CITY)
-                        .with(csrf()))
+                        .flashAttr("hotelCreationDTO", HOTEL_GOOD_NAME_NO_CITY))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(view().name("addhotels"))
@@ -72,15 +89,14 @@ public class AddHotelsControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     public void testCreateNewHotelShouldRejectHotelNameAndReturnToAddHotelsPageWithErrorCode() throws Exception {
         when(hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO)).thenReturn(HOTEL_CREATION_SERVICE_DTO);
         when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenThrow(InvalidHotelException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO)
-                        .with(csrf()))
+                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
@@ -93,15 +109,14 @@ public class AddHotelsControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     public void testCreateNewHotelShouldRejectHotelIfAnyOtherErrorHappenedDuringSavingAndReturnToAddHotelsPageWithGlobalError() throws Exception {
         when(hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO)).thenReturn(HOTEL_CREATION_SERVICE_DTO);
         when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenThrow(DataIntegrityViolationException.class); // Example error that might occur during JpaRepository.save
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO)
-                        .with(csrf()))
+                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
@@ -115,15 +130,14 @@ public class AddHotelsControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     public void testCreateNewHotelShouldAddSuccessMessageAttributeAndReturnToAddHotelsPage() throws Exception {
         when(hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO)).thenReturn(HOTEL_CREATION_SERVICE_DTO);
         when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenReturn(null);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO)
-                        .with(csrf()))
+                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("successMessage"))
                 .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
