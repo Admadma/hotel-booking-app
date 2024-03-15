@@ -30,7 +30,7 @@ public class ResendConfirmationTokenServiceImplTest {
     @Mock
     private UserRepositoryService userRepositoryService;
     @Mock
-    private UserEmailConfirmationService userEmailConfirmationService;
+    private UserEmailConfirmationSenderService userEmailConfirmationService;
 
     @Test
     public void testResendConfirmationTokenShouldThrowInvalidUserExceptionIfEmailDoesNotExist(){

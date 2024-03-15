@@ -6,7 +6,7 @@ import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
-import com.application.hotelbooking.services.implementations.UserEmailConfirmationServiceImpl;
+import com.application.hotelbooking.services.implementations.UserEmailConfirmationSenderServiceImpl;
 import com.application.hotelbooking.services.implementations.UserServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.RoleRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
@@ -64,7 +64,7 @@ public class UserServiceImplTest {
     private UserRepositoryService userRepositoryService;
 
     @Mock
-    private UserEmailConfirmationServiceImpl userEmailConfirmationService;
+    private UserEmailConfirmationSenderServiceImpl userEmailConfirmationSenderService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -121,7 +121,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_PASSWORD);
         when(roleRepositoryService.getRoles(USER_ROLES_STRINGS)).thenReturn(USER_ROLE_MODELS);
         when(userRepositoryService.save(USER_USER_MODEL)).thenReturn(USER_USER_MODEL);
-        doNothing().when(userEmailConfirmationService).sendConfirmationToken(USER_USER_MODEL);
+        doNothing().when(userEmailConfirmationSenderService).sendConfirmationToken(USER_USER_MODEL);
 
         UserModel resultUserModel = userService.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_EMAIL, USER_ROLES_STRINGS);
 
@@ -130,7 +130,7 @@ public class UserServiceImplTest {
         verify(passwordEncoder).encode(TEST_PASSWORD);
         verify(roleRepositoryService).getRoles(USER_ROLES_STRINGS);
         verify(userRepositoryService).save(USER_USER_MODEL);
-        verify(userEmailConfirmationService).sendConfirmationToken(USER_USER_MODEL);
+        verify(userEmailConfirmationSenderService).sendConfirmationToken(USER_USER_MODEL);
         Assertions.assertThat(resultUserModel).isNotNull();
     }
 

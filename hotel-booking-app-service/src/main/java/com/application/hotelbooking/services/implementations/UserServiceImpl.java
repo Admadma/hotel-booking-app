@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private UserRepositoryService userRepositoryService;
 
     @Autowired
-    private UserEmailConfirmationServiceImpl userEmailConfirmationService;
+    private UserEmailConfirmationSenderServiceImpl userEmailConfirmationSenderService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         UserModel savedUser = userRepositoryService.save(userModel);
 
         if (!isAdmin) {
-            userEmailConfirmationService.sendConfirmationToken(savedUser);
+            userEmailConfirmationSenderService.sendConfirmationToken(savedUser);
         }
 
         return savedUser;
