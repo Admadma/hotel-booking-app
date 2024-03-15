@@ -6,7 +6,6 @@ import com.application.hotelbooking.services.RoomCreationService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomCreationDTOTransformer;
-import com.application.hotelbooking.transformers.RoomViewTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -35,8 +34,6 @@ public class AddRoomsController {
 
     @Autowired
     private HotelRepositoryService hotelRepositoryService;
-    @Autowired
-    private RoomViewTransformer roomViewTransformer;
 
     @Autowired
     private RoomCreationDTOTransformer roomCreationDTOTransformer;

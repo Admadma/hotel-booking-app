@@ -21,14 +21,14 @@ public class ConfirmEmailController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmEmailController.class);
 
     @Autowired
-    private UserEmailTokenConfirmationService userEmailConfirmationService;
+    private UserEmailTokenConfirmationService userEmailTokenConfirmationService;
     @Autowired
     private ResendConfirmationTokenService resendConfirmationTokenService;
 
     @GetMapping(value = "/confirmemail/confirm-token")
     private String confirmToken(@RequestParam("confirmationToken") String confirmationToken){
         try{
-            userEmailConfirmationService.confirmToken(confirmationToken);
+            userEmailTokenConfirmationService.confirmToken(confirmationToken);
         } catch (InvalidTokenException itc){
             LOGGER.info("Invalid token.");
             return "redirect:/hotelbooking/register/confirmemail?invalidLink";

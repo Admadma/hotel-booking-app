@@ -4,10 +4,7 @@ import com.application.hotelbooking.dto.NewUserFormDTO;
 import com.application.hotelbooking.dto.UserFormDTO;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
-import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
-import com.application.hotelbooking.transformers.RoleViewTransformer;
-import com.application.hotelbooking.transformers.UserViewTransformer;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,14 +30,6 @@ public class RegisterController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private UserViewTransformer userViewTransformer;
-    @Autowired
-    private RoleViewTransformer roleViewTransformer;
 
     @RequestMapping(value = "register/create-new-user")
     public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result, HttpServletRequest request){
