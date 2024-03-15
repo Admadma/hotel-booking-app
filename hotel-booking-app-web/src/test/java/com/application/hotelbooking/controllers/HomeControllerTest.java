@@ -7,6 +7,7 @@ import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
+import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -26,16 +27,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
+@Import(SecurityConfiguration.class)
 @WebMvcTest(HomeController.class)
 public class HomeControllerTest {
 
     private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
     private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
-    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_EMPTY_HOTEL_CITY_NAME = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
     private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
     private static RoomSearchFormDTO EMPTY_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO();
     private static RoomSearchFormDTO INVALID_DATE_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(10), LocalDate.now().plusDays(5));
@@ -85,7 +85,6 @@ public class HomeControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser(username = "testUser", roles = "USER")
     public void testNavigatingToHomePageWithRoomSearchFormSubmittedAddsEmptyFormToModelAttributesAndSetsSessionAttributes() throws Exception {
         when(hotelRepositoryService.getAllHotels()).thenReturn(HOTEL_MODEL_LIST);
         when(hotelViewTransformer.transformToHotelViews(HOTEL_MODEL_LIST)).thenReturn(HOTEL_VIEW_LIST);
@@ -106,12 +105,10 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "USER")
     public void testSearchRoomsReturnsToHomePageIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", EMPTY_ROOM_SEARCH_FORM_DTO)
-                        .with(csrf()))
+                        .flashAttr("roomSearchFormDTO", EMPTY_ROOM_SEARCH_FORM_DTO))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
                 .andExpect(model().attributeExists("roomSearchFormDTO"))
@@ -120,12 +117,10 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "USER")
     public void testSearchRoomsReturnsToHomePageAndRejectsDatesIfEndDateIsNotAfterStartDate() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", INVALID_DATE_ROOM_SEARCH_FORM_DTO)
-                        .with(csrf()))
+                        .flashAttr("roomSearchFormDTO", INVALID_DATE_ROOM_SEARCH_FORM_DTO))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
                 .andExpect(model().attributeHasFieldErrorCode("roomSearchFormDTO", "startDate", "home.room.form.validation.startdate.must.before"))
@@ -133,7 +128,6 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "USER")
     public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTO() throws Exception {
         when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
         when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
@@ -141,8 +135,7 @@ public class HomeControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO)
-                        .with(csrf()))
+                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
                 .andExpect(flash().attribute("successRoomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
                 .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
                 .andExpect(redirectedUrl("/hotelbooking/home"));
@@ -153,7 +146,6 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testUser", roles = "USER")
     public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTOWithoutReplacingEmptyStrings() throws Exception {
         when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
         when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
@@ -161,8 +153,7 @@ public class HomeControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL)
-                        .with(csrf()))
+                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL))
                 .andExpect(flash().attribute("successRoomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
                 .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
                 .andExpect(redirectedUrl("/hotelbooking/home"));
