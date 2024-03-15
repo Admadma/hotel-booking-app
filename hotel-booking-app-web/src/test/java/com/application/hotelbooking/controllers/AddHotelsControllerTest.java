@@ -49,7 +49,7 @@ public class AddHotelsControllerTest {
 
     @Test
     @WithMockUser(username = "testUser", roles = "ADMIN")
-    public void testCreateNewHotelShouldReturnToAddHotelsPageWithErrorIfProvidedAttributesAreInvalid() throws Exception {
+    public void testCreateNewHotelShouldReturnToAddHotelsPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
                         .flashAttr("hotelCreationDTO", HOTEL_SHORT_NAME_HAS_CITY)

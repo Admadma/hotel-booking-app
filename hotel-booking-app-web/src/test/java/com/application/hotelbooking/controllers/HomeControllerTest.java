@@ -3,7 +3,10 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.domain.HotelModel;
 import com.application.hotelbooking.domain.HotelView;
 import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.dto.ReservableRoomDTO;
+import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
+import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
@@ -16,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -24,19 +26,49 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @WebMvcTest(HomeController.class)
 public class HomeControllerTest {
 
-    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_EMPTY_HOTEL_CITY_NAME = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static RoomSearchFormDTO EMPTY_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO();
+    private static RoomSearchFormDTO INVALID_DATE_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(10), LocalDate.now().plusDays(5));
+    private static RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO = RoomSearchFormServiceDTO.builder()
+            .singleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getSingleBeds())
+            .doubleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getDoubleBeds())
+            .hotelName(ROOM_SEARCH_FORM_DTO_REPLACED.getHotelName())
+            .city(ROOM_SEARCH_FORM_DTO_REPLACED.getCity())
+            .roomType(ROOM_SEARCH_FORM_DTO_REPLACED.getRoomType())
+            .startDate(ROOM_SEARCH_FORM_DTO_REPLACED.getStartDate())
+            .endDate(ROOM_SEARCH_FORM_DTO_REPLACED.getEndDate())
+            .build();
+    private static ReservableRoomDTO RESERVABLE_ROOM_DTO = ReservableRoomDTO.builder()
+            .roomNumber(1)
+            .totalPrice(100)
+            .singleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getSingleBeds())
+            .doubleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getDoubleBeds())
+            .hotelName(ROOM_SEARCH_FORM_DTO_REPLACED.getHotelName())
+            .city(ROOM_SEARCH_FORM_DTO_REPLACED.getCity())
+            .roomType(ROOM_SEARCH_FORM_DTO_REPLACED.getRoomType())
+            .startDate(ROOM_SEARCH_FORM_DTO_REPLACED.getStartDate())
+            .endDate(ROOM_SEARCH_FORM_DTO_REPLACED.getEndDate())
+            .build();
+    private static List<ReservableRoomDTO> RESERVABLE_ROOM_DTO_LIST = List.of(RESERVABLE_ROOM_DTO);
+    private static ReservableRoomViewDTO RESERVABLE_ROOM_VIEW_DTO = new ReservableRoomViewDTO();
+    private static List<ReservableRoomViewDTO> RESERVABLE_ROOM_VIEW_DTO_LIST = List.of(RESERVABLE_ROOM_VIEW_DTO);
     private static HotelModel HOTEL_MODEL = HotelModel.builder().hotelName("Test Hotel").city("Test City").build();
     private static HotelView HOTEL_VIEW = HotelView.builder().hotelName("Test Hotel").city("Test City").build();
     private static List<HotelModel> HOTEL_MODEL_LIST = List.of(HOTEL_MODEL);
     private static List<HotelView> HOTEL_VIEW_LIST = List.of(HOTEL_VIEW);
     private static List<String> LIST_OF_ROOM_TYPES = Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList());
     private static List<String> LIST_OF_CITIES = List.of("Test City");
+
     @MockBean
     private RoomService roomService;
 
@@ -54,26 +86,6 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUser(username = "testUser", roles = "USER")
-    public void testNavigatingToHomePageWithNoRoomSearchFormSubmittedAddsEmptyFormToModelAttributesAndSetsSessionAttributes() throws Exception {
-        when(hotelRepositoryService.getAllHotels()).thenReturn(HOTEL_MODEL_LIST);
-        when(hotelViewTransformer.transformToHotelViews(HOTEL_MODEL_LIST)).thenReturn(HOTEL_VIEW_LIST);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/home"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("homepage"))
-                .andExpect(model().attributeExists("roomSearchFormDTO"))
-                .andExpect(model().attribute("roomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
-                .andExpect(MockMvcResultMatchers.request().sessionAttribute("roomTypes", LIST_OF_ROOM_TYPES))
-                .andExpect(MockMvcResultMatchers.request().sessionAttribute("hotels", HOTEL_VIEW_LIST))
-                .andExpect(MockMvcResultMatchers.request().sessionAttribute("cities", LIST_OF_CITIES));
-
-        verify(hotelRepositoryService, times(2)).getAllHotels();
-        verify(hotelViewTransformer).transformToHotelViews(HOTEL_MODEL_LIST);
-    }
-
-    @Test
-    @WithMockUser(username = "testUser", roles = "USER")
     public void testNavigatingToHomePageWithRoomSearchFormSubmittedAddsEmptyFormToModelAttributesAndSetsSessionAttributes() throws Exception {
         when(hotelRepositoryService.getAllHotels()).thenReturn(HOTEL_MODEL_LIST);
         when(hotelViewTransformer.transformToHotelViews(HOTEL_MODEL_LIST)).thenReturn(HOTEL_VIEW_LIST);
@@ -85,11 +97,78 @@ public class HomeControllerTest {
                 .andExpect(view().name("homepage"))
                 .andExpect(model().attributeExists("roomSearchFormDTO"))
                 .andExpect(model().attribute("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
-                .andExpect(MockMvcResultMatchers.request().sessionAttribute("roomTypes", LIST_OF_ROOM_TYPES))
-                .andExpect(MockMvcResultMatchers.request().sessionAttribute("hotels", HOTEL_VIEW_LIST))
-                .andExpect(MockMvcResultMatchers.request().sessionAttribute("cities", LIST_OF_CITIES));
+                .andExpect(request().sessionAttribute("roomTypes", LIST_OF_ROOM_TYPES))
+                .andExpect(request().sessionAttribute("hotels", HOTEL_VIEW_LIST))
+                .andExpect(request().sessionAttribute("cities", LIST_OF_CITIES));
 
         verify(hotelRepositoryService, times(2)).getAllHotels();
         verify(hotelViewTransformer).transformToHotelViews(HOTEL_MODEL_LIST);
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = "USER")
+    public void testSearchRoomsReturnsToHomePageIfBindingResultHasErrors() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/search-rooms")
+                        .flashAttr("roomSearchFormDTO", EMPTY_ROOM_SEARCH_FORM_DTO)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("homepage"))
+                .andExpect(model().attributeExists("roomSearchFormDTO"))
+                .andExpect(model().attribute("roomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
+                .andExpect(model().attributeHasErrors("roomSearchFormDTO"));
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = "USER")
+    public void testSearchRoomsReturnsToHomePageAndRejectsDatesIfEndDateIsNotAfterStartDate() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/search-rooms")
+                        .flashAttr("roomSearchFormDTO", INVALID_DATE_ROOM_SEARCH_FORM_DTO)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("homepage"))
+                .andExpect(model().attributeHasFieldErrorCode("roomSearchFormDTO", "startDate", "home.room.form.validation.startdate.must.before"))
+                .andExpect(model().attributeHasFieldErrorCode("roomSearchFormDTO", "endDate", "home.room.form.validation.enddate.must.after"));
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = "USER")
+    public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTO() throws Exception {
+        when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
+        when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
+        when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/search-rooms")
+                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO)
+                        .with(csrf()))
+                .andExpect(flash().attribute("successRoomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
+                .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
+                .andExpect(redirectedUrl("/hotelbooking/home"));
+
+        verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED);
+        verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
+        verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = "USER")
+    public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTOWithoutReplacingEmptyStrings() throws Exception {
+        when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
+        when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
+        when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/search-rooms")
+                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL)
+                        .with(csrf()))
+                .andExpect(flash().attribute("successRoomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
+                .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
+                .andExpect(redirectedUrl("/hotelbooking/home"));
+
+        verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL);
+        verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
+        verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);
     }
 }
