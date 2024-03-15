@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -85,6 +86,50 @@ public class AddHotelsControllerTest {
                 .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
                 .andExpect(model().attribute("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(model().attributeHasFieldErrorCode("hotelCreationDTO", "hotelName", "admin.hotel.validation.hotelname.taken"))
+                .andExpect(view().name("addhotels"));
+
+        verify(hotelViewTransformer).transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO);
+        verify(hotelService).createHotel(HOTEL_CREATION_SERVICE_DTO);
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = "ADMIN")
+    public void testCreateNewHotelShouldRejectHotelIfAnyOtherErrorHappenedDuringSavingAndReturnToAddHotelsPageWithGlobalError() throws Exception {
+        when(hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO)).thenReturn(HOTEL_CREATION_SERVICE_DTO);
+        when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenThrow(DataIntegrityViolationException.class); // Example error that might occur during JpaRepository.save
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/admin/create-new-hotel")
+                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeDoesNotExist("successMessage"))
+                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
+                .andExpect(model().attribute("hotelCreationDTO", HOTEL_CREATION_DTO))
+                .andExpect(model().attributeErrorCount("hotelCreationDTO", 1))
+                .andExpect(model().errorCount(1))
+                .andExpect(view().name("addhotels"));
+
+        verify(hotelViewTransformer).transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO);
+        verify(hotelService).createHotel(HOTEL_CREATION_SERVICE_DTO);
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = "ADMIN")
+    public void testCreateNewHotelShouldAddSuccessMessageAttributeAndReturnToAddHotelsPage() throws Exception {
+        when(hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO)).thenReturn(HOTEL_CREATION_SERVICE_DTO);
+        when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/admin/create-new-hotel")
+                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("successMessage"))
+                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
+                .andExpect(model().attribute("hotelCreationDTO", HOTEL_CREATION_DTO))
+                .andExpect(model().attributeErrorCount("hotelCreationDTO", 0))
+                .andExpect(model().errorCount(0))
                 .andExpect(view().name("addhotels"));
 
         verify(hotelViewTransformer).transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO);

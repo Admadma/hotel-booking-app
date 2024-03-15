@@ -38,13 +38,12 @@ public class AddHotelsController {
 
         try {
             hotelService.createHotel(hotelViewTransformer.transformToHotelCreationServiceDTO(hotelCreationDTO));
-            System.out.println("3");
             model.addAttribute("successMessage", "Success");
         } catch (InvalidHotelException ihe){
             result.rejectValue("hotelName", "admin.hotel.validation.hotelname.taken");
             return "addhotels";
         } catch (Exception e){
-            result.addError(new ObjectError("globalError", "Failed to save hotel"));
+            result.reject("admin.hotel.validation.global.error");
             return "addhotels";
         }
 

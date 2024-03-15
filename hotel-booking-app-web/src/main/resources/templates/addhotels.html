@@ -13,7 +13,7 @@
 
 <div class="container" style="width: 28rem; padding-top: 3em;">
     <form class="list-group-item" th:action="@{create-new-hotel}" th:object="${hotelCreationDTO}" method="post">
-        <p th:if="${#fields.hasErrors()}" th:text="#{admin.hotel.validation.global.error}" class="alert alert-danger"/>
+        <p th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}" class="alert alert-danger"/>
         <p th:if="${successMessage}" th:text="#{admin.hotel.validation.global.success}" class="alert alert-success"/>
 
         <div class="input-group mb-3">
