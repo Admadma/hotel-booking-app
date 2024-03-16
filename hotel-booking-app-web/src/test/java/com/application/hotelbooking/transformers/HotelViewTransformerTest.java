@@ -1,6 +1,5 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.Hotel;
 import com.application.hotelbooking.domain.HotelModel;
 import com.application.hotelbooking.domain.HotelView;
 import com.application.hotelbooking.dto.HotelCreationDTO;
