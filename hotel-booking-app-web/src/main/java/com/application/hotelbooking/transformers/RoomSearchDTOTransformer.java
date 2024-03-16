@@ -21,10 +21,6 @@ public class RoomSearchDTOTransformer {
         return modelMapper.map(roomSearchFormDTO, RoomSearchFormServiceDTO.class);
     }
 
-    public ReservableRoomViewDTO transformToRoomSearchResultViewDTO(ReservableRoomDTO reservableRoomDTO){
-        return modelMapper.map(reservableRoomDTO, ReservableRoomViewDTO.class);
-    }
-
     public ReservableRoomDTO transformToRoomSearchResultDTO(ReservableRoomViewDTO reservableRoomViewDTO){
         return modelMapper.map(reservableRoomViewDTO, ReservableRoomDTO.class);
     }
