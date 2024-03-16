@@ -6,6 +6,7 @@ import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -61,7 +62,7 @@ public class AddHotelsControllerTest {
     public void testCreateNewHotelForbiddenForNonAdminUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
+                        .flashAttr("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
                 .andExpect(status().isForbidden());
 
     }

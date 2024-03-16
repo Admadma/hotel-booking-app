@@ -52,7 +52,7 @@ public class AddRoomsController {
             roomService.createRoomFromDTO(roomCreationDTOTransformer.transformToRoomCreationServiceDTO(roomCreationDTO));
             model.addAttribute("successMessage", "Success");
         } catch (Exception e){
-            result.addError(new ObjectError("globalError", "Failed to save room"));
+            result.reject("admin.room.validation.global.error");
             return "addrooms";
         }
         return "addrooms";

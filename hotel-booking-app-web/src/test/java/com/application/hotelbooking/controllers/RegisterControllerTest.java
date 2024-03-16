@@ -26,13 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(RegisterController.class)
 public class RegisterControllerTest {
 
-    public static final List<String> SINGLETON_LIST_OF_USER_ROLE = List.of("USER");
-    private NewUserFormDTO NEW_USER_FORM_DTO = new NewUserFormDTO("Username", "password", "test@email.com");
-    private NewUserFormDTO EMPTY_NEW_USER_FORM_DTO = new NewUserFormDTO();
-    private NewUserFormDTO NEW_USER_FORM_DTO_INVALID_USERNAME = new NewUserFormDTO("", "password", "test@email.com");
-    private NewUserFormDTO NEW_USER_FORM_DTO_INVALID_PASSWORD = new NewUserFormDTO("Username", "", "test@email.com");
-    private NewUserFormDTO NEW_USER_FORM_DTO_EMPTY_EMAIL = new NewUserFormDTO("Username", "password", "");
-    private NewUserFormDTO NEW_USER_FORM_DTO_INVALID_EMAIL = new NewUserFormDTO("Username", "password", "invalid");
+    private static final List<String> SINGLETON_LIST_OF_USER_ROLE = List.of("USER");
+    private static final NewUserFormDTO NEW_USER_FORM_DTO = new NewUserFormDTO("Username", "password", "test@email.com");
+    private static final NewUserFormDTO EMPTY_NEW_USER_FORM_DTO = new NewUserFormDTO();
+    private static final NewUserFormDTO NEW_USER_FORM_DTO_INVALID_USERNAME = new NewUserFormDTO("", "password", "test@email.com");
+    private static final NewUserFormDTO NEW_USER_FORM_DTO_INVALID_PASSWORD = new NewUserFormDTO("Username", "", "test@email.com");
+    private static final NewUserFormDTO NEW_USER_FORM_DTO_EMPTY_EMAIL = new NewUserFormDTO("Username", "password", "");
+    private static final NewUserFormDTO NEW_USER_FORM_DTO_INVALID_EMAIL = new NewUserFormDTO("Username", "password", "invalid");
 
     @MockBean
     private UserService userService;

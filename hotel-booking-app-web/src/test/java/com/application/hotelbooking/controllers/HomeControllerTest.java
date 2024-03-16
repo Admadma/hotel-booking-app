@@ -33,12 +33,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(HomeController.class)
 public class HomeControllerTest {
 
-    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
-    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
-    private static RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
-    private static RoomSearchFormDTO EMPTY_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO();
-    private static RoomSearchFormDTO INVALID_DATE_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(10), LocalDate.now().plusDays(5));
-    private static RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO = RoomSearchFormServiceDTO.builder()
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static final RoomSearchFormDTO EMPTY_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO();
+    private static final RoomSearchFormDTO INVALID_DATE_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(10), LocalDate.now().plusDays(5));
+    private static final RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO = RoomSearchFormServiceDTO.builder()
             .singleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getSingleBeds())
             .doubleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getDoubleBeds())
             .hotelName(ROOM_SEARCH_FORM_DTO_REPLACED.getHotelName())
@@ -47,7 +47,7 @@ public class HomeControllerTest {
             .startDate(ROOM_SEARCH_FORM_DTO_REPLACED.getStartDate())
             .endDate(ROOM_SEARCH_FORM_DTO_REPLACED.getEndDate())
             .build();
-    private static ReservableRoomDTO RESERVABLE_ROOM_DTO = ReservableRoomDTO.builder()
+    private static final ReservableRoomDTO RESERVABLE_ROOM_DTO = ReservableRoomDTO.builder()
             .roomNumber(1)
             .totalPrice(100)
             .singleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getSingleBeds())
@@ -58,15 +58,15 @@ public class HomeControllerTest {
             .startDate(ROOM_SEARCH_FORM_DTO_REPLACED.getStartDate())
             .endDate(ROOM_SEARCH_FORM_DTO_REPLACED.getEndDate())
             .build();
-    private static List<ReservableRoomDTO> RESERVABLE_ROOM_DTO_LIST = List.of(RESERVABLE_ROOM_DTO);
-    private static ReservableRoomViewDTO RESERVABLE_ROOM_VIEW_DTO = new ReservableRoomViewDTO();
-    private static List<ReservableRoomViewDTO> RESERVABLE_ROOM_VIEW_DTO_LIST = List.of(RESERVABLE_ROOM_VIEW_DTO);
-    private static HotelModel HOTEL_MODEL = HotelModel.builder().hotelName("Test Hotel").city("Test City").build();
-    private static HotelView HOTEL_VIEW = HotelView.builder().hotelName("Test Hotel").city("Test City").build();
-    private static List<HotelModel> HOTEL_MODEL_LIST = List.of(HOTEL_MODEL);
-    private static List<HotelView> HOTEL_VIEW_LIST = List.of(HOTEL_VIEW);
-    private static List<String> LIST_OF_ROOM_TYPES = Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList());
-    private static List<String> LIST_OF_CITIES = List.of("Test City");
+    private static final List<ReservableRoomDTO> RESERVABLE_ROOM_DTO_LIST = List.of(RESERVABLE_ROOM_DTO);
+    private static final ReservableRoomViewDTO RESERVABLE_ROOM_VIEW_DTO = new ReservableRoomViewDTO();
+    private static final List<ReservableRoomViewDTO> RESERVABLE_ROOM_VIEW_DTO_LIST = List.of(RESERVABLE_ROOM_VIEW_DTO);
+    private static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName("Test Hotel").city("Test City").build();
+    private static final HotelView HOTEL_VIEW = HotelView.builder().hotelName("Test Hotel").city("Test City").build();
+    private static final List<HotelModel> HOTEL_MODEL_LIST = List.of(HOTEL_MODEL);
+    private static final List<HotelView> HOTEL_VIEW_LIST = List.of(HOTEL_VIEW);
+    private static final List<String> LIST_OF_ROOM_TYPES = Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList());
+    private static final List<String> LIST_OF_CITIES = List.of("Test City");
 
     @MockBean
     private RoomService roomService;
