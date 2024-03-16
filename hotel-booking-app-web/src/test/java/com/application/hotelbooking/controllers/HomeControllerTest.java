@@ -12,7 +12,6 @@ import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -112,7 +111,7 @@ public class HomeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
                 .andExpect(model().attributeExists("roomSearchFormDTO"))
-                .andExpect(model().attribute("roomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
+                .andExpect(model().attribute("roomSearchFormDTO", EMPTY_ROOM_SEARCH_FORM_DTO))
                 .andExpect(model().attributeHasErrors("roomSearchFormDTO"));
     }
 
@@ -136,7 +135,7 @@ public class HomeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
                         .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
-                .andExpect(flash().attribute("successRoomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
+                .andExpect(flash().attribute("successRoomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
                 .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
                 .andExpect(redirectedUrl("/hotelbooking/home"));
 
@@ -154,7 +153,7 @@ public class HomeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
                         .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL))
-                .andExpect(flash().attribute("successRoomSearchFormDTO", Matchers.any(RoomSearchFormDTO.class)))
+                .andExpect(flash().attribute("successRoomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL))
                 .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
                 .andExpect(redirectedUrl("/hotelbooking/home"));
 

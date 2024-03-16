@@ -7,7 +7,6 @@ import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.validators.InternetAddressValidator;
 import jakarta.mail.internet.AddressException;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,6 +28,7 @@ public class RegisterControllerTest {
 
     public static final List<String> SINGLETON_LIST_OF_USER_ROLE = List.of("USER");
     private NewUserFormDTO NEW_USER_FORM_DTO = new NewUserFormDTO("Username", "password", "test@email.com");
+    private NewUserFormDTO EMPTY_NEW_USER_FORM_DTO = new NewUserFormDTO();
     private NewUserFormDTO NEW_USER_FORM_DTO_INVALID_USERNAME = new NewUserFormDTO("", "password", "test@email.com");
     private NewUserFormDTO NEW_USER_FORM_DTO_INVALID_PASSWORD = new NewUserFormDTO("Username", "", "test@email.com");
     private NewUserFormDTO NEW_USER_FORM_DTO_EMPTY_EMAIL = new NewUserFormDTO("Username", "password", "");
@@ -49,7 +49,7 @@ public class RegisterControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
                 .andExpect(model().attributeExists("newUserFormDTO"))
-                .andExpect(model().attribute("newUserFormDTO", Matchers.any(NewUserFormDTO.class)));
+                .andExpect(model().attribute("newUserFormDTO", EMPTY_NEW_USER_FORM_DTO));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class RegisterControllerTest {
                         .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_USERNAME))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
-                .andExpect(model().attribute("newUserFormDTO", Matchers.any(NewUserFormDTO.class)))
+                .andExpect(model().attribute("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_USERNAME))
                 .andExpect(model().attributeHasErrors("newUserFormDTO"));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -67,7 +67,7 @@ public class RegisterControllerTest {
                         .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_PASSWORD))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
-                .andExpect(model().attribute("newUserFormDTO", Matchers.any(NewUserFormDTO.class)))
+                .andExpect(model().attribute("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_PASSWORD))
                 .andExpect(model().attributeHasErrors("newUserFormDTO"));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -75,7 +75,7 @@ public class RegisterControllerTest {
                         .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO_EMPTY_EMAIL))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
-                .andExpect(model().attribute("newUserFormDTO", Matchers.any(NewUserFormDTO.class)))
+                .andExpect(model().attribute("newUserFormDTO", NEW_USER_FORM_DTO_EMPTY_EMAIL))
                 .andExpect(model().attributeHasErrors("newUserFormDTO"));
     }
 

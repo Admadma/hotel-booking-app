@@ -6,7 +6,6 @@ import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AddHotelsControllerTest {
 
     private HotelCreationDTO HOTEL_CREATION_DTO = new HotelCreationDTO("Test Hotel", "Test City");
+    private HotelCreationDTO EMPTY_HOTEL_CREATION_DTO = new HotelCreationDTO();
     private HotelCreationServiceDTO HOTEL_CREATION_SERVICE_DTO = new HotelCreationServiceDTO("Test Hotel", "Test City");
     private HotelCreationDTO HOTEL_SHORT_NAME_HAS_CITY = new HotelCreationDTO("A", "City name");
     private HotelCreationDTO HOTEL_GOOD_NAME_NO_CITY = new HotelCreationDTO("Long name", "");
@@ -46,7 +46,7 @@ public class AddHotelsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("addhotels"))
                 .andExpect(model().attributeExists("hotelCreationDTO"))
-                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)));
+                .andExpect(model().attribute("hotelCreationDTO", EMPTY_HOTEL_CREATION_DTO));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class AddHotelsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(view().name("addhotels"))
-                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
+                .andExpect(model().attribute("hotelCreationDTO", HOTEL_SHORT_NAME_HAS_CITY))
                 .andExpect(model().attributeHasErrors("hotelCreationDTO"));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -84,7 +84,7 @@ public class AddHotelsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(view().name("addhotels"))
-                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
+                .andExpect(model().attribute("hotelCreationDTO", HOTEL_GOOD_NAME_NO_CITY))
                 .andExpect(model().attributeHasErrors("hotelCreationDTO"));
     }
 
@@ -99,7 +99,6 @@ public class AddHotelsControllerTest {
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
-                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
                 .andExpect(model().attribute("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(model().attributeHasFieldErrorCode("hotelCreationDTO", "hotelName", "admin.hotel.validation.hotelname.taken"))
                 .andExpect(view().name("addhotels"));
@@ -119,7 +118,6 @@ public class AddHotelsControllerTest {
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
-                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
                 .andExpect(model().attribute("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(model().attributeErrorCount("hotelCreationDTO", 1))
                 .andExpect(model().errorCount(1))
@@ -140,7 +138,6 @@ public class AddHotelsControllerTest {
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("successMessage"))
-                .andExpect(model().attribute("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
                 .andExpect(model().attribute("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(model().attributeErrorCount("hotelCreationDTO", 0))
                 .andExpect(model().errorCount(0))
