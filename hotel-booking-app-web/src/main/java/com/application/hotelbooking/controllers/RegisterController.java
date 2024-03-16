@@ -1,12 +1,11 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.dto.NewUserFormDTO;
-import com.application.hotelbooking.dto.UserFormDTO;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.validators.InternetAddressValidator;
 import jakarta.mail.internet.AddressException;
-import jakarta.mail.internet.InternetAddress;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +29,9 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private InternetAddressValidator internetAddressValidator;
+
     @RequestMapping(value = "register/create-new-user")
     public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result, HttpServletRequest request){
         if (result.hasErrors()){
@@ -40,8 +41,7 @@ public class RegisterController {
 
         try {
             LOGGER.info("Validating email");
-            InternetAddress internetAddress = new InternetAddress(newUserFormDTO.getEmail());
-            internetAddress.validate();
+            internetAddressValidator.validate(newUserFormDTO.getEmail());
             LOGGER.info("creating...");
             userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
             LOGGER.info("...created");
@@ -59,7 +59,7 @@ public class RegisterController {
             return "register";
         } catch (Exception e){
             LOGGER.error("Failed to add user. Error message: " + e.getMessage());
-            result.addError(new ObjectError("globalError", "Registration failed. Please use different credentials or try again later."));
+            result.reject("registration.generic.global.error");
             return "register";
         }
 
@@ -70,8 +70,6 @@ public class RegisterController {
     @GetMapping("/register")
     public String registration(Model model){
         LOGGER.info("Navigating to registration page");
-        UserFormDTO user = new UserFormDTO();
-        model.addAttribute("user", user);
         model.addAttribute("newUserFormDTO", new NewUserFormDTO());
 
         return "register";

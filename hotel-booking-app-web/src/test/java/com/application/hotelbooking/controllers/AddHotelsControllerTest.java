@@ -90,7 +90,7 @@ public class AddHotelsControllerTest {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void testCreateNewHotelShouldRejectHotelNameAndReturnToAddHotelsPageWithErrorCode() throws Exception {
+    public void testCreateNewHotelShouldRejectTakenHotelNameAndReturnToAddHotelsPageWithErrorCode() throws Exception {
         when(hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO)).thenReturn(HOTEL_CREATION_SERVICE_DTO);
         when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenThrow(InvalidHotelException.class);
 
