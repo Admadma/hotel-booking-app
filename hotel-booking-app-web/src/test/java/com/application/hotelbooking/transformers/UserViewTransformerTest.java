@@ -16,9 +16,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class UserViewTransformerTest {
 
-    public static final UserModel USER_MODEL = new UserModel();
-    public static final Class<UserView> USER_VIEW_CLASS = UserView.class;
-    public static final UserView USER_VIEW = new UserView();
+    private static final UserModel USER_MODEL = new UserModel();
+    private static final Class<UserView> USER_VIEW_CLASS = UserView.class;
+    private static final UserView USER_VIEW = new UserView();
+
     @InjectMocks
     private UserViewTransformer userViewTransformer;
     @Mock

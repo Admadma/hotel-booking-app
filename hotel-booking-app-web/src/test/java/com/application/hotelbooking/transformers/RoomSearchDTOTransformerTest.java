@@ -29,6 +29,7 @@ public class RoomSearchDTOTransformerTest {
     private static final Class<ReservableRoomViewDTO> RESERVABLE_ROOM_VIEW_DTO_CLASS = ReservableRoomViewDTO.class;
     private static final ReservableRoomViewDTO RESERVABLE_ROOM_VIEW_DTO = new ReservableRoomViewDTO();
     private static final List<ReservableRoomViewDTO> RESERVABLE_ROOM_VIEW_DTO_LIST = List.of(RESERVABLE_ROOM_VIEW_DTO);
+
     @InjectMocks
     private RoomSearchDTOTransformer roomSearchDTOTransformer;
     @Mock
