@@ -13,7 +13,7 @@
 
 <div class="container" style="width: 28rem; padding-top: 3em; justify-content: center; background-color: #white;">
     <form th:class="list-group-item" th:action="@{/hotelbooking/register/create-new-user}" th:object="${newUserFormDTO}" method="POST">
-        <p th:if="${#fields.hasErrors()}" th:text="#{registration.generic.global.error}" class="alert alert-danger"/>
+        <p th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}" class="alert alert-danger"/>
         <label for="username" th:text="#{registration.username}"/>
         <input class="form-control" type="text" th:field="*{username}" id="username">
         <p  th:if="${#fields.hasErrors('username')}" th:class="${#fields.hasErrors('username')}? error" th:errors="*{username}" style="color: red;"></p>

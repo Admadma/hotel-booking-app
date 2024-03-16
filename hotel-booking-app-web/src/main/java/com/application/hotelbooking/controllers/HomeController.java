@@ -23,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -59,11 +58,13 @@ public class HomeController {
             LOGGER.info("Error while validating");
             return "homepage";
         }
-        if (roomSearchFormDTO.getEndDate().isBefore(roomSearchFormDTO.getStartDate()) || roomSearchFormDTO.getStartDate().equals(roomSearchFormDTO.getEndDate())){
+
+        if (!roomSearchFormDTO.getEndDate().isAfter(roomSearchFormDTO.getStartDate())){
             result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
             result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
             return "homepage";
         }
+
         transformFieldsToNulls(roomSearchFormDTO);
 
         List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
@@ -80,11 +81,8 @@ public class HomeController {
     public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, HttpServletRequest request){
         LOGGER.info("Navigating to home page");
 
-        if (Objects.isNull(roomSearchFormDTO)) {
-            model.addAttribute("roomSearchFormDTO", new RoomSearchFormDTO());
-        } else {
-            model.addAttribute("roomSearchFormDTO", roomSearchFormDTO);
-        }
+        model.addAttribute("roomSearchFormDTO", roomSearchFormDTO);
+
         request.getSession().setAttribute("roomTypes", Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList()));
         request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelRepositoryService.getAllHotels()));
         request.getSession().setAttribute("cities", hotelRepositoryService.getAllHotels().stream().map(hotelModel -> hotelModel.getCity()).collect(Collectors.toList()));

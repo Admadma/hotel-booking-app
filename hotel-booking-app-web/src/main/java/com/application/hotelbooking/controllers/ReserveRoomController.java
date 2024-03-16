@@ -4,8 +4,6 @@ import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationService;
-import com.application.hotelbooking.services.RoomService;
-import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,18 +26,12 @@ public class ReserveRoomController {
     private ReservationService reservationService;
 
     @Autowired
-    private RoomService roomService;
-
-    @Autowired
-    private RoomRepositoryService roomRepositoryService;
-
-    @Autowired
     private RoomSearchDTOTransformer roomSearchDTOTransformer;
 
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;
 
-    @GetMapping("/reserve")
+    @PostMapping("/reserve")
     public String reserve(@SessionAttribute("reservationPlan") ReservationView reservationView, HttpServletRequest request){
         try {
             reservationService.reserveRoom(reservationViewTransformer.transformToReservationModel(reservationView));
@@ -49,6 +41,7 @@ public class ReserveRoomController {
             return "redirect:/hotelbooking/home?reservationError";
         } catch (Exception e){
             LOGGER.info("Failed to reserve room");
+            LOGGER.info(e.getMessage());
             return "redirect:/hotelbooking/home?reservationError";
         } finally {
             request.getSession().removeAttribute("reservationPlan");
