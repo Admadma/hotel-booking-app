@@ -20,9 +20,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class MyUserDetailsTest {
 
-    public static final RoleView ROLE_VIEW = new RoleView(1L, "USER", null);
-    public static final List<RoleView> ROLE_VIEW_LIST = List.of(ROLE_VIEW);
-    public static final Collection<GrantedAuthority> GRANTED_AUTHORITIES = List.of(new SimpleGrantedAuthority("USER"));
+    private static final RoleView ROLE_VIEW = new RoleView(1L, "USER", null);
+    private static final List<RoleView> ROLE_VIEW_LIST = List.of(ROLE_VIEW);
+    private static final Collection<GrantedAuthority> GRANTED_AUTHORITIES = List.of(new SimpleGrantedAuthority("USER"));
+    private static final String TEST_STRING = "test";
+
     @InjectMocks
     private MyUserDetails myUserDetails;
 
@@ -41,22 +43,22 @@ public class MyUserDetailsTest {
 
     @Test
     public void testGetPasswordShouldReturnPasswordOfUser(){
-        when(userView.getPassword()).thenReturn("asd");
+        when(userView.getPassword()).thenReturn(TEST_STRING);
 
         String resultPassword = myUserDetails.getPassword();
 
         verify(userView).getPassword();
-        Assertions.assertThat(resultPassword).isEqualTo("asd");
+        Assertions.assertThat(resultPassword).isEqualTo(TEST_STRING);
     }
 
     @Test
     public void testGetUsernameShouldReturnUsernameOfUser(){
-        when(userView.getUsername()).thenReturn("asd");
+        when(userView.getUsername()).thenReturn(TEST_STRING);
 
         String resultUsername = myUserDetails.getUsername();
 
         verify(userView).getUsername();
-        Assertions.assertThat(resultUsername).isEqualTo("asd");
+        Assertions.assertThat(resultUsername).isEqualTo(TEST_STRING);
     }
 
     @Test
