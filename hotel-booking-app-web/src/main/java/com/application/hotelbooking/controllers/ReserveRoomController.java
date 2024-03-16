@@ -31,7 +31,7 @@ public class ReserveRoomController {
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;
 
-    @GetMapping("/reserve")
+    @PostMapping("/reserve")
     public String reserve(@SessionAttribute("reservationPlan") ReservationView reservationView, HttpServletRequest request){
         try {
             reservationService.reserveRoom(reservationViewTransformer.transformToReservationModel(reservationView));
@@ -41,6 +41,7 @@ public class ReserveRoomController {
             return "redirect:/hotelbooking/home?reservationError";
         } catch (Exception e){
             LOGGER.info("Failed to reserve room");
+            LOGGER.info(e.getMessage());
             return "redirect:/hotelbooking/home?reservationError";
         } finally {
             request.getSession().removeAttribute("reservationPlan");
