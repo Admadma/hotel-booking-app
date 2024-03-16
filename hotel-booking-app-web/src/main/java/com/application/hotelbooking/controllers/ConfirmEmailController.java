@@ -38,6 +38,10 @@ public class ConfirmEmailController {
         } catch (ExpiredTokenException ete){
             LOGGER.info("Token already expired");
             return "redirect:/hotelbooking/register/confirmemail?tokenAlreadyExpired";
+        } catch (Exception e){
+            LOGGER.info("Error while validating token");
+            LOGGER.info(e.getMessage());
+            return "redirect:/hotelbooking/register/confirmemail?error";
         }
         return "redirect:/hotelbooking/login";
     }
@@ -47,12 +51,16 @@ public class ConfirmEmailController {
         LOGGER.info("send-new-token");
         try {
             resendConfirmationTokenService.resendConfirmationToken(email);
-        } catch (InvalidUserException iue){
+        } catch (InvalidUserException iue) {
             LOGGER.info("There is no user with that email");
             return "redirect:/hotelbooking/confirmemail?invalidUser";
         } catch (EmailAlreadyConfirmedException eac){
             LOGGER.info("Email already confirmed.");
             return "redirect:/hotelbooking/confirmemail?emailAlreadyConfirmed";
+        } catch (Exception e){
+            LOGGER.info("Error while resending confirmation token");
+            LOGGER.info(e.getMessage());
+            return "redirect:/hotelbooking/confirmemail?resendError";
         }
         return "confirmemail";
     }
