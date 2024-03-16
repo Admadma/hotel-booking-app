@@ -15,6 +15,7 @@
     <form th:class="list-group-item" th:action="@{change-password}" th:object="${credentials}" method="POST">
         <h1 class = "text-center" th:text="#{account.form.header.change.password}"/>
         <div th:if="${param.error}" class="alert alert-danger" th:text="#{account.form.error}"/>
+        <div th:if="${param.invalidUserError}" class="alert alert-danger" th:text="#{account.form.invalid.user.error}"/>
         <div th:if="${param.success}" class="alert alert-success"  th:text="#{account.form.success}"/>
 
         <label for="oldPassword" th:text="#{account.form.label.old.password}"/>

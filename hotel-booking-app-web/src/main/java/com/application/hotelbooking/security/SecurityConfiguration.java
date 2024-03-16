@@ -22,6 +22,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/search-rooms/**", "/hotelbooking/register/**", "/error/**").permitAll();
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
                     auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
+                    auth.requestMatchers("/hotelbooking/account/**", "/hotelbooking/change-password/**").hasAnyAuthority("ADMIN", "USER");
                     auth.requestMatchers("/images/*").permitAll();
                     auth.anyRequest().hasAnyAuthority("USER");
                  })

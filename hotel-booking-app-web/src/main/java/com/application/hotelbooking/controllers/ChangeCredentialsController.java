@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -27,7 +28,7 @@ public class ChangeCredentialsController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/change-password")
+    @PostMapping(value = "/change-password")
     public String changePassword(@Valid @ModelAttribute("credentials") ChangeCredentialsDto changeCredentialsDto, BindingResult result, Authentication auth, HttpSession session, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
@@ -38,7 +39,7 @@ public class ChangeCredentialsController {
             userService.changePassword(auth.getName(),changeCredentialsDto.getNewPassword(), changeCredentialsDto.getOldPassword());
         } catch (InvalidUserException iue){
             LOGGER.error("InvalidUserException while changing password.");
-            return "redirect:/hotelbooking/account?error";
+            return "redirect:/hotelbooking/account?invalidUserError";
         } catch (OptimisticLockException ole){
             LOGGER.error("OptimisticLockException while changing password.");
             return "redirect:/hotelbooking/account?error";
@@ -46,6 +47,10 @@ public class ChangeCredentialsController {
             LOGGER.error("CredentialMismatchException while changing password.");
             result.rejectValue("oldPassword", "account.form.old.password.not.found");
             return "account";
+        } catch (Exception e){
+            LOGGER.info("Error while changing password");
+            LOGGER.info(e.getMessage());
+            return "redirect:/hotelbooking/account?error";
         }
         LOGGER.info("Successfully changed password!");
 
