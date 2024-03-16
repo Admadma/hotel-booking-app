@@ -104,9 +104,8 @@ public class AddRoomsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(view().name("addrooms"))
-                .andExpect(model().attributeErrorCount("roomCreationDTO", 5))
                 .andExpect(model().attribute("roomCreationDTO", ROOM_CREATION_DTO_WITH_FIVE_INVALID_FIELDS))
-                .andExpect(model().attributeHasErrors("roomCreationDTO"));
+                .andExpect(model().attributeErrorCount("roomCreationDTO", 5));
     }
 
     @Test

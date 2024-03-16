@@ -36,7 +36,7 @@ public class HomeControllerTest {
     private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
     private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
     private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
-    private static final RoomSearchFormDTO EMPTY_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO();
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_WITH_FOUR_INVALID_FIELDS = new RoomSearchFormDTO(-1, -1, RoomType.FAMILY_ROOM, "", "", null, null);
     private static final RoomSearchFormDTO INVALID_DATE_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(10), LocalDate.now().plusDays(5));
     private static final RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO = RoomSearchFormServiceDTO.builder()
             .singleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getSingleBeds())
@@ -107,11 +107,12 @@ public class HomeControllerTest {
     public void testSearchRoomsReturnsToHomePageIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", EMPTY_ROOM_SEARCH_FORM_DTO))
+                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_WITH_FOUR_INVALID_FIELDS))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
                 .andExpect(model().attributeExists("roomSearchFormDTO"))
-                .andExpect(model().attribute("roomSearchFormDTO", EMPTY_ROOM_SEARCH_FORM_DTO))
+                .andExpect(model().attributeErrorCount("roomSearchFormDTO", 4))
+                .andExpect(model().attribute("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_WITH_FOUR_INVALID_FIELDS))
                 .andExpect(model().attributeHasErrors("roomSearchFormDTO"));
     }
 

@@ -29,9 +29,7 @@ public class RegisterControllerTest {
     private static final List<String> SINGLETON_LIST_OF_USER_ROLE = List.of("USER");
     private static final NewUserFormDTO NEW_USER_FORM_DTO = new NewUserFormDTO("Username", "password", "test@email.com");
     private static final NewUserFormDTO EMPTY_NEW_USER_FORM_DTO = new NewUserFormDTO();
-    private static final NewUserFormDTO NEW_USER_FORM_DTO_INVALID_USERNAME = new NewUserFormDTO("", "password", "test@email.com");
-    private static final NewUserFormDTO NEW_USER_FORM_DTO_INVALID_PASSWORD = new NewUserFormDTO("Username", "", "test@email.com");
-    private static final NewUserFormDTO NEW_USER_FORM_DTO_EMPTY_EMAIL = new NewUserFormDTO("Username", "password", "");
+    private static final NewUserFormDTO NEW_USER_FORM_DTO_WITH_THREE_INVALID_FIELDS = new NewUserFormDTO("", "", "");
     private static final NewUserFormDTO NEW_USER_FORM_DTO_INVALID_EMAIL = new NewUserFormDTO("Username", "password", "invalid");
 
     @MockBean
@@ -56,27 +54,11 @@ public class RegisterControllerTest {
     public void testCreateNewUserShouldReturnToRegisterPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/register/create-new-user")
-                        .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_USERNAME))
+                        .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO_WITH_THREE_INVALID_FIELDS))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register"))
-                .andExpect(model().attribute("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_USERNAME))
-                .andExpect(model().attributeHasErrors("newUserFormDTO"));
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/register/create-new-user")
-                        .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_PASSWORD))
-                .andExpect(status().isOk())
-                .andExpect(view().name("register"))
-                .andExpect(model().attribute("newUserFormDTO", NEW_USER_FORM_DTO_INVALID_PASSWORD))
-                .andExpect(model().attributeHasErrors("newUserFormDTO"));
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/register/create-new-user")
-                        .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO_EMPTY_EMAIL))
-                .andExpect(status().isOk())
-                .andExpect(view().name("register"))
-                .andExpect(model().attribute("newUserFormDTO", NEW_USER_FORM_DTO_EMPTY_EMAIL))
-                .andExpect(model().attributeHasErrors("newUserFormDTO"));
+                .andExpect(model().attribute("newUserFormDTO", NEW_USER_FORM_DTO_WITH_THREE_INVALID_FIELDS))
+                .andExpect(model().attributeErrorCount("newUserFormDTO", 3));
     }
 
     @Test

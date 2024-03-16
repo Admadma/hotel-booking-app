@@ -28,8 +28,7 @@ public class AddHotelsControllerTest {
     private HotelCreationDTO HOTEL_CREATION_DTO = new HotelCreationDTO("Test Hotel", "Test City");
     private HotelCreationDTO EMPTY_HOTEL_CREATION_DTO = new HotelCreationDTO();
     private HotelCreationServiceDTO HOTEL_CREATION_SERVICE_DTO = new HotelCreationServiceDTO("Test Hotel", "Test City");
-    private HotelCreationDTO HOTEL_SHORT_NAME_HAS_CITY = new HotelCreationDTO("A", "City name");
-    private HotelCreationDTO HOTEL_GOOD_NAME_NO_CITY = new HotelCreationDTO("Long name", "");
+    private HotelCreationDTO HOTEL_CREATION_DTO_WITH_TWO_INVALID_FIELDS = new HotelCreationDTO("A", "");
 
     @MockBean
     private HotelService hotelService;
@@ -72,21 +71,12 @@ public class AddHotelsControllerTest {
     public void testCreateNewHotelShouldReturnToAddHotelsPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_SHORT_NAME_HAS_CITY))
+                        .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO_WITH_TWO_INVALID_FIELDS))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
                 .andExpect(view().name("addhotels"))
-                .andExpect(model().attribute("hotelCreationDTO", HOTEL_SHORT_NAME_HAS_CITY))
-                .andExpect(model().attributeHasErrors("hotelCreationDTO"));
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-hotel")
-                        .flashAttr("hotelCreationDTO", HOTEL_GOOD_NAME_NO_CITY))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeDoesNotExist("successMessage"))
-                .andExpect(view().name("addhotels"))
-                .andExpect(model().attribute("hotelCreationDTO", HOTEL_GOOD_NAME_NO_CITY))
-                .andExpect(model().attributeHasErrors("hotelCreationDTO"));
+                .andExpect(model().attribute("hotelCreationDTO", HOTEL_CREATION_DTO_WITH_TWO_INVALID_FIELDS))
+                .andExpect(model().attributeErrorCount("hotelCreationDTO", 2));
     }
 
     @Test
