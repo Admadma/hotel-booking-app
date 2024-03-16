@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class InternetAddressValidator {
 
-    private InternetAddress internetAddress;
+    private InternetAddress internetAddress = new InternetAddress();
 
     public void validate(String address) throws AddressException {
-        internetAddress = new InternetAddress(address);
+        internetAddress.setAddress(address);
         internetAddress.validate();
     }
 }
