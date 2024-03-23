@@ -59,7 +59,7 @@ public class HomeController {
             return "homepage";
         }
 
-        if (!roomSearchFormDTO.getEndDate().isAfter(roomSearchFormDTO.getStartDate())){
+        if (!roomService.isEndDateAfterStartDate(roomSearchFormDTO.getStartDate(), roomSearchFormDTO.getEndDate())){
             result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
             result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
             return "homepage";

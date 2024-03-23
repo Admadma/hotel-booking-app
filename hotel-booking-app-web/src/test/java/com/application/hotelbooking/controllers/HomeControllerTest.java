@@ -33,11 +33,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(HomeController.class)
 public class HomeControllerTest {
 
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, LocalDate.now().plusDays(5), LocalDate.now().plusDays(10));
+    private static final LocalDate LOCAL_DATE_NOW_PLUS_FIVE_DAYS = LocalDate.now().plusDays(5);
+    private static final LocalDate LOCAL_DATE_NOW_PLUS_TEN_DAYS = LocalDate.now().plusDays(10);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_TEN_DAYS);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_TEN_DAYS);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_TEN_DAYS);
     private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_WITH_FOUR_INVALID_FIELDS = new RoomSearchFormDTO(-1, -1, RoomType.FAMILY_ROOM, "", "", null, null);
-    private static final RoomSearchFormDTO INVALID_DATE_ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LocalDate.now().plusDays(10), LocalDate.now().plusDays(5));
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_START_DATE_AFTER_END_DATE = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LOCAL_DATE_NOW_PLUS_TEN_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_START_END_DATE_SAME = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS);
     private static final RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO = RoomSearchFormServiceDTO.builder()
             .singleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getSingleBeds())
             .doubleBeds(ROOM_SEARCH_FORM_DTO_REPLACED.getDoubleBeds())
@@ -117,18 +120,38 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void testSearchRoomsReturnsToHomePageAndRejectsDatesIfEndDateIsNotAfterStartDate() throws Exception {
+    public void testSearchRoomsReturnsToHomePageAndRejectsDatesIfStartDateIsAfterEndDate() throws Exception {
+        when(roomService.isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_TEN_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS)).thenReturn(false);
+
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", INVALID_DATE_ROOM_SEARCH_FORM_DTO))
+                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_START_DATE_AFTER_END_DATE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
                 .andExpect(model().attributeHasFieldErrorCode("roomSearchFormDTO", "startDate", "home.room.form.validation.startdate.must.before"))
                 .andExpect(model().attributeHasFieldErrorCode("roomSearchFormDTO", "endDate", "home.room.form.validation.enddate.must.after"));
+
+        verify(roomService).isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_TEN_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS);
+    }
+
+    @Test
+    public void testSearchRoomsReturnsToHomePageAndRejectsDatesIfStartDateAndEndDateAreTheSame() throws Exception {
+        when(roomService.isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS)).thenReturn(false);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/search-rooms")
+                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_START_END_DATE_SAME))
+                .andExpect(status().isOk())
+                .andExpect(view().name("homepage"))
+                .andExpect(model().attributeHasFieldErrorCode("roomSearchFormDTO", "startDate", "home.room.form.validation.startdate.must.before"))
+                .andExpect(model().attributeHasFieldErrorCode("roomSearchFormDTO", "endDate", "home.room.form.validation.enddate.must.after"));
+
+        verify(roomService).isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS);
     }
 
     @Test
     public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTO() throws Exception {
+        when(roomService.isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate())).thenReturn(true);
         when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
         when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
         when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
@@ -140,6 +163,7 @@ public class HomeControllerTest {
                 .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
                 .andExpect(redirectedUrl("/hotelbooking/home"));
 
+        verify(roomService).isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate());
         verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED);
         verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
         verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);
@@ -147,6 +171,7 @@ public class HomeControllerTest {
 
     @Test
     public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTOWithoutReplacingEmptyStrings() throws Exception {
+        when(roomService.isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate())).thenReturn(true);
         when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
         when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
         when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
@@ -158,6 +183,7 @@ public class HomeControllerTest {
                 .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
                 .andExpect(redirectedUrl("/hotelbooking/home"));
 
+        verify(roomService).isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate());
         verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL);
         verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
         verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);

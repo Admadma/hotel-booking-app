@@ -26,9 +26,11 @@ public class RoomServiceImplTest {
 
     private static final List<Long> ID_ROOMS_WITH_CONDITIONS = List.of(1l, 2l, 3l, 4l, 5l);
     private static final List<Long> ID_AVAILABLE_ROOMS = List.of(1l, 4l);
+    public static final LocalDate LOCAL_DATE_NOW_PLUS_FIVE_DAYS = LocalDate.now().plusDays(5);
+    public static final LocalDate LOCAL_DATE_NOW_PLUS_TEN_DAYS = LocalDate.now().plusDays(10);
     private static final RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO = RoomSearchFormServiceDTO.builder()
-            .startDate(LocalDate.now())
-            .endDate(LocalDate.now().plusDays(5))
+            .startDate(LOCAL_DATE_NOW_PLUS_FIVE_DAYS)
+            .endDate(LOCAL_DATE_NOW_PLUS_TEN_DAYS)
             .build();
 
     private static final HotelModel HOTEL = HotelModel.builder().hotelName("Hotel_1").city("City_1").build();
@@ -76,5 +78,26 @@ public class RoomServiceImplTest {
         Assertions.assertThat(resultReservableRoomDTO.size()).isEqualTo(2);
         Assertions.assertThat(resultReservableRoomDTO.get(0).getRoomNumber()).isEqualTo(1);
         Assertions.assertThat(resultReservableRoomDTO.get(1).getRoomNumber()).isEqualTo(4);
+    }
+
+    @Test
+    public void testIsEndDateAfterStartDateShouldReturnFalseIfStartDateIsAfterEndDate(){
+        boolean result = roomService.isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_TEN_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS);
+
+        Assertions.assertThat(result).isFalse();
+    }
+
+    @Test
+    public void testIsEndDateAfterStartDateShouldReturnFalseIfStartDateAndEndDateAreTheSame(){
+        boolean result = roomService.isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS);
+
+        Assertions.assertThat(result).isFalse();
+    }
+
+    @Test
+    public void testIsEndDateAfterStartDateShouldReturnTrueIfStartDateIsBeforeEndDate(){
+        boolean result = roomService.isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_TEN_DAYS);
+
+        Assertions.assertThat(result).isTrue();
     }
 }

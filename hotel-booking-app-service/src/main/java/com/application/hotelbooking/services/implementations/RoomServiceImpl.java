@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,5 +58,9 @@ public class RoomServiceImpl implements RoomService {
         List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 
         return createRoomSearchResultDTOs(availableRoomsIds, roomSearchFormServiceDTO);
+    }
+
+    public boolean isEndDateAfterStartDate(LocalDate startDate, LocalDate endDate){
+        return endDate.isAfter(startDate);
     }
 }
