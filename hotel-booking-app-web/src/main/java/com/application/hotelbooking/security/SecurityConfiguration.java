@@ -23,12 +23,12 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
                     auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/hotelbooking/account/**", "/hotelbooking/change-password/**").hasAnyAuthority("ADMIN", "USER");
-                    auth.requestMatchers("/images/*").permitAll();
+                    auth.requestMatchers("/images/*", "/hotelbooking/default").permitAll();
                     auth.anyRequest().hasAnyAuthority("USER");
                  })
                 .formLogin(form -> form
                         .loginPage("/hotelbooking/login")
-                        .defaultSuccessUrl("/hotelbooking/home")
+                        .defaultSuccessUrl("/hotelbooking/default")
                         .permitAll())
                 .logout()
                 .logoutUrl("/logout")

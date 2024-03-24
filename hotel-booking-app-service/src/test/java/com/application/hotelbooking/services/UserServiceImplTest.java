@@ -30,10 +30,12 @@ public class UserServiceImplTest {
     public static final String TEST_PASSWORD = "Test_password";
     public static final String INCORRECT_OLD_PASSWORD = "incorrect_old_password";
     public static final String TEST_EMAIL = "Test_email";
-    public static final List<String> USER_ROLES_STRINGS = List.of("USER");
-    public static final List<RoleModel> USER_ROLE_MODELS = List.of(RoleModel.builder().name("USER").build());
-    public static final List<String> ADMIN_ROLES_STRINGS = List.of("ADMIN");
-    public static final List<RoleModel> ADMIN_ROLE_MODELS = List.of(RoleModel.builder().name("ADMIN").build());
+    public static final String USER_ROLE_NAME = "USER";
+    public static final String ADMIN_ROLE_NAME = "ADMIN";
+    public static final List<String> USER_ROLES_STRINGS = List.of(USER_ROLE_NAME);
+    public static final List<RoleModel> USER_ROLE_MODELS = List.of(RoleModel.builder().name(USER_ROLE_NAME).build());
+    public static final List<String> ADMIN_ROLES_STRINGS = List.of(ADMIN_ROLE_NAME);
+    public static final List<RoleModel> ADMIN_ROLE_MODELS = List.of(RoleModel.builder().name(ADMIN_ROLE_NAME).build());
     public static final UserModel USER_USER_MODEL = UserModel.builder()
             .username(TEST_USERNAME)
             .password(TEST_PASSWORD)
@@ -183,5 +185,25 @@ public class UserServiceImplTest {
         verify(userRepositoryService).getUserByEmail(TEST_EMAIL);
         verify(userRepositoryService).save(USER_USER_MODEL_ENABLED);
         Assertions.assertThat(resultUserModel).isEqualTo(USER_USER_MODEL_ENABLED);
+    }
+
+    @Test
+    public void testUserHasRoleShouldReturnFalseIfUserDoesNotHaveGivenRole(){
+        when(userRepositoryService.getUserByName(TEST_USERNAME)).thenReturn(OPTIONAL_USER_MODEL);
+
+        boolean result = userService.userHasRole(TEST_USERNAME, ADMIN_ROLE_NAME);
+
+        verify(userRepositoryService).getUserByName(TEST_USERNAME);
+        Assertions.assertThat(result).isFalse();
+    }
+
+    @Test
+    public void testUserHasRoleShouldReturnTrueIfUserHasGivenRole(){
+        when(userRepositoryService.getUserByName(TEST_USERNAME)).thenReturn(OPTIONAL_USER_MODEL);
+
+        boolean result = userService.userHasRole(TEST_USERNAME, USER_ROLE_NAME);
+
+        verify(userRepositoryService).getUserByName(TEST_USERNAME);
+        Assertions.assertThat(result).isTrue();
     }
 }

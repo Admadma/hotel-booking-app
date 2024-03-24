@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services.implementations;
 
+import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.exceptions.*;
 
@@ -79,5 +80,15 @@ public class UserServiceImpl implements UserService {
         UserModel userModel = userRepositoryService.getUserByEmail(email).get();
         userModel.setEnabled(true);
         return userRepositoryService.save(userModel);
+    }
+
+    public boolean userHasRole(String username, String role){
+        for (RoleModel roleModel : userRepositoryService.getUserByName(username).get().getRoles()) {
+            if (roleModel.getName().equals(role)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
