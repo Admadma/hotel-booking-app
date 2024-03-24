@@ -53,20 +53,16 @@ public class HomeController {
     }
 
     @PostMapping(value = "/search-rooms")
-    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result, HttpServletRequest request, RedirectAttributes redirectAttributes){
+    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.roomSearchFormDTO", result);
-            redirectAttributes.addFlashAttribute("successRoomSearchFormDTO", roomSearchFormDTO);
-            return "redirect:/hotelbooking/home";
+            return "homepage";
         }
 
         if (!roomService.isEndDateAfterStartDate(roomSearchFormDTO.getStartDate(), roomSearchFormDTO.getEndDate())){
             result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
             result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.roomSearchFormDTO", result);
-            redirectAttributes.addFlashAttribute("successRoomSearchFormDTO", roomSearchFormDTO);
-            return "redirect:/hotelbooking/home";
+            return "homepage";
         }
 
         transformFieldsToNulls(roomSearchFormDTO);
@@ -82,13 +78,9 @@ public class HomeController {
 
 
     @GetMapping(value = "/home")
-    public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, RedirectAttributes redirectAttributes, HttpServletRequest request){
+    public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, HttpServletRequest request){
         LOGGER.info("Navigating to home page");
 
-        if (redirectAttributes.containsAttribute("org.springframework.validation.BindingResult.roomSearchFormDTO")) {
-            model.addAttribute("org.springframework.validation.BindingResult.roomSearchFormDTO",
-                    redirectAttributes.getAttribute("org.springframework.validation.BindingResult.roomSearchFormDTO"));
-        }
         model.addAttribute("roomSearchFormDTO", roomSearchFormDTO);
 
         request.getSession().setAttribute("roomTypes", Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList()));
