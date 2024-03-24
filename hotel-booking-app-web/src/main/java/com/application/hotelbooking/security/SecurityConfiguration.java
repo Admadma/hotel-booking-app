@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,16 +22,15 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
                     auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/hotelbooking/account/**", "/hotelbooking/change-password/**").hasAnyAuthority("ADMIN", "USER");
-                    auth.requestMatchers("/images/*", "/hotelbooking/default").permitAll();
+                    auth.requestMatchers("/images/*", "/hotelbooking/default", "/hotelbooking/login/**").permitAll();
                     auth.anyRequest().hasAnyAuthority("USER");
-                 })
+                })
                 .formLogin(form -> form
                         .loginPage("/hotelbooking/login")
                         .defaultSuccessUrl("/hotelbooking/default")
                         .permitAll())
                 .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/hotelbooking/login?logout");
+                .logoutUrl("/logout");
         return http.build();
     }
 
