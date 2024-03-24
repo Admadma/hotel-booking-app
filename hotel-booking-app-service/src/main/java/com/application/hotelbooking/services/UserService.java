@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface UserService {
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     UserModel createUser(String username, String password, String email, List<String> rolesAsStrings) throws UserAlreadyExistsException, EmailAlreadyExistsException;
     void changePassword(String username, String newPassword, String oldPassword) throws OptimisticLockException;
     UserModel enableUser(String email);
