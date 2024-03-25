@@ -17,8 +17,10 @@ public class HotelViewTransformer {
     @Autowired
     private ModelMapper modelMapper;
 
-    public HotelCreationServiceDTO transformToHotelCreationServiceDTO(HotelCreationDTO hotelCreationDTO){
-        return modelMapper.map(hotelCreationDTO, HotelCreationServiceDTO.class);
+    public HotelCreationServiceDTO transformToHotelCreationServiceDTO(HotelCreationDTO hotelCreationDTO, String imageName){
+        HotelCreationServiceDTO hotelCreationServiceDTO = modelMapper.map(hotelCreationDTO, HotelCreationServiceDTO.class);
+        hotelCreationServiceDTO.setImageName(imageName);
+        return hotelCreationServiceDTO;
     }
 
     public List<HotelView> transformToHotelViews(List<HotelModel> hotelModels){

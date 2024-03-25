@@ -1,6 +1,7 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.security.SecurityConfiguration;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,7 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class, FileSystemStorageService.class})
 @WebMvcTest(AdminPageController.class)
 public class AdminPageControllerTest {
 

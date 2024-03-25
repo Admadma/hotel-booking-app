@@ -7,6 +7,7 @@ import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReservationService;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class, FileSystemStorageService.class})
 @WebMvcTest(ReserveRoomController.class)
 public class ReserveRoomControllerTest {
 

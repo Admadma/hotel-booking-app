@@ -12,7 +12,7 @@
 <div th:insert="~{fragments/navbaradmin ::navbar}"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em;">
-    <form class="list-group-item" th:action="@{create-new-hotel}" th:object="${hotelCreationDTO}" method="post">
+    <form class="list-group-item" th:action="@{create-new-hotel}" th:object="${hotelCreationDTO}" method="post" enctype="multipart/form-data">
         <p th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}" class="alert alert-danger"/>
         <p th:if="${successMessage}" th:text="#{admin.hotel.validation.global.success}" class="alert alert-success"/>
 
@@ -26,6 +26,12 @@
             <input class="form-control" type="text" th:field="*{city}" id="city" th:placeholder="#{admin.hotel.form.city}">
         </div>
         <p  th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:errors="*{city}"></p>
+        <div class="input-group mb-3">
+            <label for="multipartFile"></label>
+            <input class="form-control" type="file" th:field="*{multipartFile}" id="multipartFile"/>
+        </div>
+        <p th:if="${error}" th:text="#{admin.hotel.validation.invalid.size}" class="error" style="color: red"/>
+        <p  th:if="${#fields.hasErrors('multipartFile')}" th:class="${#fields.hasErrors('multipartFile')}? error" th:errors="*{multipartFile}"></p>
         <div class="row justify-content-center" style="padding: 1.5em;">
             <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createhotel" th:text="#{admin.button.submit.create.hotel}"/>
         </div>

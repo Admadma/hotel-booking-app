@@ -5,6 +5,7 @@ import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import jakarta.persistence.OptimisticLockException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class, FileSystemStorageService.class})
 @WebMvcTest(ChangeCredentialsController.class)
 public class ChangeCredentialsControllerTest {
 

@@ -6,11 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -34,20 +36,22 @@ public class FileSystemStorageService implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
-            Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(file.getOriginalFilename()))
-                    .normalize().toAbsolutePath();
+
+            String newName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
+            Path destinationFile = this.rootLocation
+                    .resolve(Paths.get(newName))
+                    .normalize()
+                    .toAbsolutePath();
+
             if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-                // This is a security check
                 throw new StorageException("Cannot store file outside current directory.");
             }
+
             try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, destinationFile,
-                        StandardCopyOption.REPLACE_EXISTING);
-                return file.getName();
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                return newName;
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new StorageException("Failed to store file.", e);
         }
     }

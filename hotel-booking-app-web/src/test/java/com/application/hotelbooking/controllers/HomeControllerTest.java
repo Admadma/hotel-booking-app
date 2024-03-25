@@ -9,6 +9,7 @@ import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class, FileSystemStorageService.class})
 @WebMvcTest(HomeController.class)
 public class HomeControllerTest {
 

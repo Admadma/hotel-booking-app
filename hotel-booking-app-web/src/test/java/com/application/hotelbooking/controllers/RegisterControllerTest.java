@@ -5,6 +5,7 @@ import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.validators.InternetAddressValidator;
 import jakarta.mail.internet.AddressException;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class, FileSystemStorageService.class})
 @WebMvcTest(RegisterController.class)
 public class RegisterControllerTest {
 

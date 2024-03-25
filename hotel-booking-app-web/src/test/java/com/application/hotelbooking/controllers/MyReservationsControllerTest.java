@@ -3,6 +3,7 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.domain.*;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReservationService;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import jakarta.persistence.OptimisticLockException;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class, FileSystemStorageService.class})
 @WebMvcTest(MyReservationsController.class)
 public class MyReservationsControllerTest {
 
