@@ -3,6 +3,7 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import({SecurityConfiguration.class, FileSystemStorageService.class})
+@Import(SecurityConfiguration.class)
 @WebMvcTest(DefaultSuccessLoginController.class)
 public class DefaultSuccessLoginControllerTest {
 
@@ -25,6 +26,9 @@ public class DefaultSuccessLoginControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

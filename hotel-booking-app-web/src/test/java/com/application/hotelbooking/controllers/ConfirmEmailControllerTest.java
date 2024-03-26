@@ -8,6 +8,7 @@ import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ResendConfirmationTokenService;
 import com.application.hotelbooking.services.UserEmailTokenConfirmationService;
 import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@Import({SecurityConfiguration.class, FileSystemStorageService.class})
+@Import(SecurityConfiguration.class)
 @WebMvcTest(ConfirmEmailController.class)
 public class ConfirmEmailControllerTest {
 
@@ -32,6 +33,9 @@ public class ConfirmEmailControllerTest {
 
     @MockBean
     private ResendConfirmationTokenService resendConfirmationTokenService;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

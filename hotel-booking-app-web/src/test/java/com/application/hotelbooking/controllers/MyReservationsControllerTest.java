@@ -5,6 +5,7 @@ import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.OptimisticLockException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@Import({SecurityConfiguration.class, FileSystemStorageService.class})
+@Import(SecurityConfiguration.class)
 @WebMvcTest(MyReservationsController.class)
 public class MyReservationsControllerTest {
 
@@ -53,6 +54,9 @@ public class MyReservationsControllerTest {
 
     @MockBean
     private ReservationViewTransformer reservationViewTransformer;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

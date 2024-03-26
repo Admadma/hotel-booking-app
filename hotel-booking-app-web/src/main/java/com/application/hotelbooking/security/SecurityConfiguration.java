@@ -22,7 +22,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
                     auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/hotelbooking/account/**", "/hotelbooking/change-password/**").hasAnyAuthority("ADMIN", "USER");
-                    auth.requestMatchers("/images/*", "/hotelbooking/default", "/hotelbooking/login/**").permitAll();
+                    auth.requestMatchers("/images/*", "/myImages/**", "/hotelbooking/default", "/hotelbooking/login/**").permitAll();
                     auth.anyRequest().hasAnyAuthority("USER");
                 })
                 .formLogin(form -> form

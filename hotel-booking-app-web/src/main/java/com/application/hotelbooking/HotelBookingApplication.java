@@ -4,7 +4,7 @@ import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.services.imagehandling.StorageProperties;
-import com.application.hotelbooking.services.imagehandling.StorageService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -37,11 +37,8 @@ public class HotelBookingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner init(StorageService storageService) {
-		return (args) -> {
-			storageService.deleteAll();
-			storageService.init();
-		};
+	public Dotenv dotenv() {
+		return Dotenv.load();
 	}
 
 ////	//Code used to generate demo data

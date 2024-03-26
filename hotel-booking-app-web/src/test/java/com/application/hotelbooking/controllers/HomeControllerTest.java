@@ -13,6 +13,7 @@ import com.application.hotelbooking.services.imagehandling.FileSystemStorageServ
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,7 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@Import({SecurityConfiguration.class, FileSystemStorageService.class})
+@Import(SecurityConfiguration.class)
 @WebMvcTest(HomeController.class)
 public class HomeControllerTest {
 
@@ -83,6 +84,9 @@ public class HomeControllerTest {
 
     @MockBean
     private HotelViewTransformer hotelViewTransformer;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

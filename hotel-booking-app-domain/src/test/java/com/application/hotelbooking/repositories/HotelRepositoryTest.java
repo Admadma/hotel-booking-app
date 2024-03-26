@@ -12,31 +12,33 @@ import java.util.Optional;
 @DataJpaTest
 public class HotelRepositoryTest {
 
+    private static final Hotel HOTEL_ONE = Hotel.builder()
+            .hotelName("Hotel 1")
+            .city("City 1")
+            .imageName("image.png")
+            .build();
+    private static final Hotel HOTEL_TWO = Hotel.builder()
+            .hotelName("Hotel 2")
+            .city("City 2")
+            .imageName("image.png")
+            .build();
     @Autowired
     private HotelRepository hotelRepository;
 
     @Test
     public void testSaveReturnsSavedHotel(){
-        Hotel hotel = Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build();
-
-        Hotel savedHotel = hotelRepository.save(hotel);
+        Hotel savedHotel = hotelRepository.save(HOTEL_ONE);
 
         Assertions.assertThat(savedHotel).isNotNull();
         Assertions.assertThat(savedHotel.getId()).isNotNull();
-        Assertions.assertThat(savedHotel.getHotelName()).isEqualTo(hotel.getHotelName());
-        Assertions.assertThat(savedHotel.getCity()).isEqualTo(hotel.getCity());
+        Assertions.assertThat(savedHotel.getHotelName()).isEqualTo(HOTEL_ONE.getHotelName());
+        Assertions.assertThat(savedHotel.getCity()).isEqualTo(HOTEL_ONE.getCity());
+        Assertions.assertThat(savedHotel.getImageName()).isEqualTo(HOTEL_ONE.getImageName());
     }
 
     @Test
     public void testFindByIdReturnsOptionalOfHotelWithProvidedId(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-
+        Hotel hotel = hotelRepository.save(HOTEL_ONE);
 
         Optional<Hotel> resultHotel = hotelRepository.findById(hotel.getId());
 
@@ -44,6 +46,7 @@ public class HotelRepositoryTest {
         Assertions.assertThat(resultHotel).isNotEmpty();
         Assertions.assertThat(resultHotel.get().getHotelName()).isEqualTo(hotel.getHotelName());
         Assertions.assertThat(resultHotel.get().getCity()).isEqualTo(hotel.getCity());
+        Assertions.assertThat(resultHotel.get().getImageName()).isEqualTo(hotel.getImageName());
     }
 
     @Test
@@ -57,14 +60,8 @@ public class HotelRepositoryTest {
 
     @Test
     public void testFindAllReturnsAllHotels(){
-        Hotel hotel1 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-        Hotel hotel2 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 2")
-                .city("City 2")
-                .build());
+        Hotel hotel1 = hotelRepository.save(HOTEL_ONE);
+        Hotel hotel2 = hotelRepository.save(HOTEL_TWO);
 
 
         List<Hotel> resultHotels = hotelRepository.findAll();
@@ -85,23 +82,21 @@ public class HotelRepositoryTest {
 
     @Test
     public void testFindHotelByHotelNameReturnsOptionalOfHotelWithProvidedName(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
+        Hotel hotel = hotelRepository.save(HOTEL_ONE);
 
-        Optional<Hotel> resultHotel = hotelRepository.findHotelByHotelName("Hotel 1");
+        Optional<Hotel> resultHotel = hotelRepository.findHotelByHotelName(HOTEL_ONE.getHotelName());
 
         Assertions.assertThat(resultHotel).isNotNull();
         Assertions.assertThat(resultHotel).isNotEmpty();
         Assertions.assertThat(resultHotel.get().getHotelName()).isEqualTo(hotel.getHotelName());
         Assertions.assertThat(resultHotel.get().getCity()).isEqualTo(hotel.getCity());
+        Assertions.assertThat(resultHotel.get().getImageName()).isEqualTo(hotel.getImageName());
     }
 
     @Test
     public void testFindHotelByHotelNameReturnsEmptyOptionalWithNonexistentNameProvided(){
 
-        Optional<Hotel> resultHotel = hotelRepository.findHotelByHotelName("Hotel 1");
+        Optional<Hotel> resultHotel = hotelRepository.findHotelByHotelName(HOTEL_ONE.getHotelName());
 
         Assertions.assertThat(resultHotel).isNotNull();
         Assertions.assertThat(resultHotel).isEmpty();

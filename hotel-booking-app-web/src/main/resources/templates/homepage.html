@@ -74,6 +74,7 @@
         <li th:each="resultDTO, iterStat : ${session.resultDTOS}" class="row justify-content-center" style="margin: 1.5em;">
             <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: lightgray;">
                 <a th:href="@{reserveroom(index=${iterStat.index})}" th:text="${resultDTO}" style="color: black;"/>
+                <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}">
             </div>
         </li>
     </ul>

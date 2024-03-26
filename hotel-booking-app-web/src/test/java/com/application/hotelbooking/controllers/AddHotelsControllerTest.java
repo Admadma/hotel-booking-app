@@ -9,6 +9,7 @@ import com.application.hotelbooking.services.imagehandling.FileSystemStorageServ
 import com.application.hotelbooking.services.imagehandling.StorageException;
 import com.application.hotelbooking.services.imagehandling.StorageService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import({SecurityConfiguration.class, FileSystemStorageService.class})
+@Import(SecurityConfiguration.class)
 @WebMvcTest(AddHotelsController.class)
 public class AddHotelsControllerTest {
 
@@ -49,6 +50,9 @@ public class AddHotelsControllerTest {
 
     @MockBean
     private StorageService storageService;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

@@ -10,4 +10,4 @@ logs/
 *.iml
 *.ipr
 
-images/
+.env

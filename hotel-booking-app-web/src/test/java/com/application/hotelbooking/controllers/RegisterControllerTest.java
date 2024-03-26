@@ -7,6 +7,7 @@ import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.validators.InternetAddressValidator;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.internet.AddressException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@Import({SecurityConfiguration.class, FileSystemStorageService.class})
+@Import(SecurityConfiguration.class)
 @WebMvcTest(RegisterController.class)
 public class RegisterControllerTest {
 
@@ -38,6 +39,9 @@ public class RegisterControllerTest {
 
     @MockBean
     private InternetAddressValidator internetAddressValidator;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;
