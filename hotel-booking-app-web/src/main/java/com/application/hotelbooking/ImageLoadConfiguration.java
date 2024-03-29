@@ -18,7 +18,6 @@ public class ImageLoadConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        System.out.println("file:" + IMAGES_FOLDER_PATH + "/");
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:" + IMAGES_FOLDER_PATH + "/");
     }

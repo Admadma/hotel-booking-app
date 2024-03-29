@@ -40,7 +40,6 @@ public class AddHotelsController {
         }
 
         try {
-            System.out.println(hotelCreationDTO.getMultipartFile().getClass());
             String imageName = storageService.store(hotelCreationDTO.getMultipartFile());
             hotelService.createHotel(hotelViewTransformer.transformToHotelCreationServiceDTO(hotelCreationDTO, imageName));
             model.addAttribute("successMessage", "Success");
