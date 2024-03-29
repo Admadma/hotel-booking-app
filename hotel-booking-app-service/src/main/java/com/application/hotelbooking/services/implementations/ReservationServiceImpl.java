@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public int calculateTotalPrice(LocalDate startDate, LocalDate endDate, int pricePerNight){
-        return pricePerNight * endDate.compareTo(startDate);
+        return pricePerNight * (int) ChronoUnit.DAYS.between(startDate, endDate);
     }
 
     public ReservationModel prepareReservation(ReservableRoomDTO reservableRoomDTO, String userName){
