@@ -35,6 +35,11 @@ public class FileSystemStorageService implements StorageService {
                 throw new StorageException("Failed to store empty file.");
             }
 
+            if (!file.getOriginalFilename().toLowerCase().matches(".*\\.(jpg|jpeg|png)$")) {
+                throw new StorageException("Not an accepted file format");
+
+            }
+
             String newName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
             Path destinationFile = this.rootLocation
                     .resolve(Paths.get(newName))
