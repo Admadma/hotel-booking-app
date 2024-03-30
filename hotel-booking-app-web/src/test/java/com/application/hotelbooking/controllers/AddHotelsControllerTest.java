@@ -67,6 +67,17 @@ public class AddHotelsControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "ADMIN")
+    public void testAddHotelsAddsErrorModelAttributeIfCalledWithFileUploadErrorModelAttribute() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addHotels")
+                        .flashAttr("fileUploadError", "fileUploadError"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("addhotels"))
+                .andExpect(model().attribute("hotelCreationDTO", EMPTY_HOTEL_CREATION_DTO))
+                .andExpect(model().attribute("error", "fileUploadError"));
+    }
+
+    @Test
     @WithMockUser(authorities = "USER")
     public void testNonAdminUserForbiddenToNavigateToAddHotelsPage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addHotels"))
