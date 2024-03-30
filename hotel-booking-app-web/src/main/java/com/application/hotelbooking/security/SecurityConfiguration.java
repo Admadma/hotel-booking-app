@@ -18,7 +18,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/search-rooms/**", "/hotelbooking/register/**", "/error/**").permitAll();
+                    auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/newHome/**", "/hotelbooking/search-rooms/**", "/hotelbooking/register/**", "/error/**").permitAll();
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
                     auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/hotelbooking/account/**", "/hotelbooking/change-password/**").hasAnyAuthority("ADMIN", "USER");
