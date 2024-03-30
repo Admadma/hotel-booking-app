@@ -2,9 +2,10 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.domain.RoomView;
-import com.application.hotelbooking.dto.ReservableHotelDTO;
+import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
+import com.application.hotelbooking.dto.HotelsWithReservableRoomsDTO;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
-import com.application.hotelbooking.dto.ReservableRoomViewDTO;
+import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
@@ -54,45 +55,52 @@ public class NewHomeController {
         }
     }
 
-//    @PostMapping(value = "/search-rooms")
-//    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model){
-//        if (result.hasErrors()){
-//            LOGGER.info("Error while validating");
-//            return "homepage";
-//        }
-//
-//        if (!roomService.isEndDateAfterStartDate(roomSearchFormDTO.getStartDate(), roomSearchFormDTO.getEndDate())){
-//            result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
-//            result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
-//            return "homepage";
-//        }
-//
-//        transformFieldsToNulls(roomSearchFormDTO);
-//
+    @PostMapping(value = "/search-rooms-new")
+    public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model){
+        if (result.hasErrors()){
+            LOGGER.info("Error while validating");
+            return "homepage";
+        }
+
+        if (!roomService.isEndDateAfterStartDate(roomSearchFormDTO.getStartDate(), roomSearchFormDTO.getEndDate())){
+            result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
+            result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
+            return "homepage";
+        }
+
+        transformFieldsToNulls(roomSearchFormDTO);
+
 //        List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
-//        request.getSession().setAttribute("resultDTOS", resultDTOS);
-//        LOGGER.info(resultDTOS.toString());
-//
+        List<HotelWithReservableRoomsServiceDTO> hotelsWithReservableRoomsDTOS = roomService.searchHotelsWithReservableRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO));
+
+        request.getSession().setAttribute("resultDTOS", hotelsWithReservableRoomsDTOS);
+        LOGGER.info("result: " + hotelsWithReservableRoomsDTOS.toString());
+
 //        LOGGER.info("No Error");
 //        redirectAttributes.addFlashAttribute("successRoomSearchFormDTO", roomSearchFormDTO);
-//        return "redirect:/hotelbooking/home";
-//    }
+        return "redirect:/hotelbooking/home";
+    }
 
 
     @GetMapping(value = "/newHome")
     public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, HttpServletRequest request){
         LOGGER.info("Navigating to home page");
 
-        String hotelName = "Hotel_1";
-        String city = "City_1";
-        RoomView roomView = RoomView.builder().singleBeds(1).build();
-        RoomView roomView2 = RoomView.builder().singleBeds(3).build();
-
-
-        List<ReservableHotelDTO> newResultDTOS = List.of(new ReservableHotelDTO(hotelName, city, List.of(roomView)), new ReservableHotelDTO(hotelName, city, List.of(roomView, roomView2)));
-        request.getSession().setAttribute("newResultDTOS", newResultDTOS);
+//        String hotelName = "Hotel_1";
+//        String city = "City_1";
+//        UniqueReservableRoomOfHotelDTO uniqueReservableRoomOfHotelDTO = UniqueReservableRoomOfHotelDTO.builder().singleBeds(1).build();
+//        UniqueReservableRoomOfHotelDTO uniqueReservableRoomOfHotelDTO2 = UniqueReservableRoomOfHotelDTO.builder().singleBeds(3).build();
+//
+////        List<HotelsWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS =roomService.searchHotelsWithReservableRooms();
+//
+//        List<HotelsWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS = List.of(new HotelsWithReservableRoomsDTO(hotelName, city, List.of(uniqueReservableRoomOfHotelDTO)), new HotelsWithReservableRoomsDTO(hotelName, city, List.of(uniqueReservableRoomOfHotelDTO, uniqueReservableRoomOfHotelDTO2)));
+//        request.getSession().setAttribute("hotelsWithReservableRoomsDTOS", hotelsWithReservableRoomsDTOS);
 
         model.addAttribute("roomSearchFormDTO", roomSearchFormDTO);
+
+        request.getSession().setAttribute("roomTypes", Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList()));
+        request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelRepositoryService.getAllHotels()));
+        request.getSession().setAttribute("cities", hotelRepositoryService.getAllHotels().stream().map(hotelModel -> hotelModel.getCity()).collect(Collectors.toList()));
 
         return "newhomepage";
     }
