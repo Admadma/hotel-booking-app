@@ -7,6 +7,8 @@ import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ResendConfirmationTokenService;
 import com.application.hotelbooking.services.UserEmailTokenConfirmationService;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,6 +33,9 @@ public class ConfirmEmailControllerTest {
 
     @MockBean
     private ResendConfirmationTokenService resendConfirmationTokenService;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

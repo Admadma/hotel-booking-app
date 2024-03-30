@@ -28,4 +28,6 @@ public class Hotel {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel")
     private List<Room> rooms;
 
+    private String imageName;
+
 }

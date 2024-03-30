@@ -39,7 +39,7 @@ public class HotelViewTransformerTest {
     public void testTransformToHotelCreationServiceDTOShouldReturnTransformedHotelCreationDTO(){
         when(modelMapper.map(HOTEL_CREATION_DTO, HOTEL_CREATION_SERVICE_DTO_CLASS)).thenReturn(HOTEL_CREATION_SERVICE_DTO);
 
-        HotelCreationServiceDTO resultHotelCreationServiceDTO = hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO);
+        HotelCreationServiceDTO resultHotelCreationServiceDTO = hotelViewTransformer.transformToHotelCreationServiceDTO(HOTEL_CREATION_DTO, "image_name");
 
         verify(modelMapper).map(HOTEL_CREATION_DTO, HOTEL_CREATION_SERVICE_DTO_CLASS);
         Assertions.assertThat(resultHotelCreationServiceDTO).isEqualTo(HOTEL_CREATION_SERVICE_DTO);

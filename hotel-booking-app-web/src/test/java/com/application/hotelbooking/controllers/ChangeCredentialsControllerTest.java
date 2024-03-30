@@ -5,6 +5,7 @@ import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.OptimisticLockException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,12 @@ public class ChangeCredentialsControllerTest {
     private static final ChangeCredentialsDto EMPTY_CHANGE_CREDENTIALS_DTO = new ChangeCredentialsDto();
     private static final ChangeCredentialsDto CHANGE_CREDENTIALS_DTO_WITH_TWO_INVALID_FIELDS = new ChangeCredentialsDto("1", "1");
     public static final String TEST_USER_NAME = "test_user";
+
     @MockBean
-    private UserService userService;;
+    private UserService userService;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

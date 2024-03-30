@@ -17,4 +17,5 @@ public class HotelModel {
     private String hotelName;
     private String city;
     private List<RoomModel> rooms;
+    private String imageName;
 }

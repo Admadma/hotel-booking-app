@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -14,4 +15,5 @@ public class HotelCreationDTO {
     private String hotelName;
     @NotEmpty(message = "{admin.hotel.validation.city.empty}")
     private String city;
+    private MultipartFile multipartFile;
 }

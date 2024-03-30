@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class HotelCreationServiceDTO {
     private String hotelName;
     private String city;
+    private String imageName;
 }

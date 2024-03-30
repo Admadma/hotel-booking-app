@@ -3,10 +3,13 @@ package com.application.hotelbooking;
 import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.repositories.UserRepository;
+import com.application.hotelbooking.services.imagehandling.StorageProperties;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -16,6 +19,7 @@ import java.time.Clock;
 import java.util.Locale;
 
 @SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
 public class HotelBookingApplication {
 
 	public static void main(String[] args) {
@@ -30,6 +34,11 @@ public class HotelBookingApplication {
 	@Bean
 	public Clock clock() {
 		return Clock.systemDefaultZone();
+	}
+
+	@Bean
+	public Dotenv dotenv() {
+		return Dotenv.load();
 	}
 
 ////	//Code used to generate demo data

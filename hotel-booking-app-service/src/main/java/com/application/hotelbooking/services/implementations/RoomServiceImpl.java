@@ -45,6 +45,7 @@ public class RoomServiceImpl implements RoomService {
                 room.getRoomType(),
                 room.getHotel().getHotelName(),
                 room.getHotel().getCity(),
+                room.getHotel().getImageName(),
                 roomSearchFormServiceDTO.getStartDate(),
                 roomSearchFormServiceDTO.getEndDate());
     }

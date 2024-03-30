@@ -9,9 +9,11 @@ import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.RoomService;
+import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -82,6 +84,9 @@ public class HomeControllerTest {
 
     @MockBean
     private HotelViewTransformer hotelViewTransformer;
+
+    @MockBean
+    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

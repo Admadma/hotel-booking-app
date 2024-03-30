@@ -3,6 +3,8 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.dto.HotelCreationDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.services.HotelService;
+import com.application.hotelbooking.services.imagehandling.StorageException;
+import com.application.hotelbooking.services.imagehandling.StorageService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -11,11 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(path = "hotelbooking/admin")
@@ -29,6 +29,9 @@ public class AddHotelsController {
     @Autowired
     private HotelViewTransformer hotelViewTransformer;
 
+    @Autowired
+    private StorageService storageService;
+
     @PostMapping(value = "/create-new-hotel")
     public String saveNewHotel(@Valid @ModelAttribute("hotelCreationDTO") HotelCreationDTO hotelCreationDTO, BindingResult result, Model model){
         if (result.hasErrors()){
@@ -37,8 +40,12 @@ public class AddHotelsController {
         }
 
         try {
-            hotelService.createHotel(hotelViewTransformer.transformToHotelCreationServiceDTO(hotelCreationDTO));
+            String imageName = storageService.store(hotelCreationDTO.getMultipartFile());
+            hotelService.createHotel(hotelViewTransformer.transformToHotelCreationServiceDTO(hotelCreationDTO, imageName));
             model.addAttribute("successMessage", "Success");
+        } catch (StorageException se){
+            result.rejectValue("multipartFile", "admin.hotel.validation.image.save.error");
+            return "addhotels";
         } catch (InvalidHotelException ihe){
             result.rejectValue("hotelName", "admin.hotel.validation.hotelname.taken");
             return "addhotels";
@@ -50,9 +57,21 @@ public class AddHotelsController {
         return "addhotels";
     }
 
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String maxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException exceededException, RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("fileUploadError", "Invalid file size");
+
+        System.out.println("handling");
+        return "redirect:/hotelbooking/admin/addHotels";
+    }
+
     @GetMapping("/addHotels")
-    public String addRooms(Model model){
-        LOGGER.info("Navigating to addRooms page");
+    public String addHotels(Model model, @ModelAttribute("fileUploadError") String fileUploadError){
+        LOGGER.info("Navigating to addHotels page");
+
+        if(!fileUploadError.isBlank()) {
+            model.addAttribute("error", fileUploadError);
+        }
         model.addAttribute("hotelCreationDTO", new HotelCreationDTO());
         return "addhotels";
     }

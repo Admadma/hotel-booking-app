@@ -21,6 +21,7 @@ public class ReservableRoomDTO {
     private RoomType roomType;
     private String hotelName;
     private String city;
+    private String imageName;
     private LocalDate startDate;
     private LocalDate endDate;
 }
