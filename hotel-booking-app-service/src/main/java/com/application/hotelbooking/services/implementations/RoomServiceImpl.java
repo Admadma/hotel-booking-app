@@ -102,20 +102,11 @@ public class RoomServiceImpl implements RoomService {
                             uniqueReservableRoomOfHotelServiceDTOList
                            ));
         }
-
-        // if (list contains roomModel.getHotel){
-        //  if (this hotel doesn't already have a room that equals the currently observed RoomModel){
-        //      add it to that room list of that hotel
-        //   }
-        // else {
-        //   add hotel of roomModel
-        //   add roomModel to that hotel
-        // }
-
     }
 
     private UniqueReservableRoomOfHotelServiceDTO buildUniqueReservableRoomOfHotelServiceDTO(RoomModel roomModel, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
         UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO = UniqueReservableRoomOfHotelServiceDTO.builder()
+                .number(roomModel.getRoomNumber()) // I store the roomnumber so that when selecting a room of a hotel I can quickly search it up by this
                 .singleBeds(roomModel.getSingleBeds())
                 .doubleBeds(roomModel.getDoubleBeds())
                 .totalPrice(reservationService.calculateTotalPrice(

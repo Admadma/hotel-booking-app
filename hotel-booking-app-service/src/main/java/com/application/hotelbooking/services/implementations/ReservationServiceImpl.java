@@ -1,7 +1,10 @@
 package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.domain.RoomModel;
+import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
+import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelServiceDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationConfirmationEmailService;
 import com.application.hotelbooking.services.ReservationService;
@@ -79,6 +82,26 @@ public class ReservationServiceImpl implements ReservationService {
                 .startDate(reservableRoomDTO.getStartDate())
                 .endDate(reservableRoomDTO.getEndDate())
                 .build();
+    }
+
+    public ReservationModel prepareReservationNew(String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS, String userName){
+        HotelWithReservableRoomsServiceDTO hotelWithReservableRoomsServiceDTO = hotelWithReservableRoomsServiceDTOS.stream().filter(hotel -> hotel.getHotelName().equals(hotelName)).findFirst().get();
+
+        for (UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO : hotelWithReservableRoomsServiceDTO.getUniqueReservableRoomOfHotelServiceDTOList()){
+            RoomModel roomModel = roomRepositoryService.findRoomByNumberAndHotelName(uniqueReservableRoomOfHotelServiceDTO.getNumber(), hotelName).get();
+
+            if (isRoomAvailableInTimePeriod(roomModel.getReservations(), uniqueReservableRoomOfHotelServiceDTO.getStartDate(), uniqueReservableRoomOfHotelServiceDTO.getEndDate())){
+                return ReservationModel.builder()
+                .room(roomModel)
+                .user(userRepositoryService.getUserByName(userName).get())
+                .totalPrice(uniqueReservableRoomOfHotelServiceDTO.getTotalPrice())
+                .startDate(uniqueReservableRoomOfHotelServiceDTO.getStartDate())
+                .endDate(uniqueReservableRoomOfHotelServiceDTO.getEndDate())
+                .build();
+            }
+        }
+
+        throw new OutdatedReservationException("No more rooms available with these parameters.");
     }
 
     /**

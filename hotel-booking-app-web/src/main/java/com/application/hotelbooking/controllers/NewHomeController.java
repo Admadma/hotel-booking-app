@@ -1,14 +1,13 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.RoomType;
-import com.application.hotelbooking.domain.RoomView;
+import com.application.hotelbooking.dto.HotelWithReservableRoomsDTO;
 import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
-import com.application.hotelbooking.dto.HotelsWithReservableRoomsDTO;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
-import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
+import com.application.hotelbooking.transformers.HotelsWithReservableRoomsDTOTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -45,6 +44,8 @@ public class NewHomeController {
 
     @Autowired
     private HotelViewTransformer hotelViewTransformer;
+    @Autowired
+    private HotelsWithReservableRoomsDTOTransformer hotelsWithReservableRoomsDTOTransformer;
 
     private void transformFieldsToNulls(RoomSearchFormDTO roomSearchFormDTO){
         if ("".equals(roomSearchFormDTO.getCity())){
@@ -71,14 +72,14 @@ public class NewHomeController {
         transformFieldsToNulls(roomSearchFormDTO);
 
 //        List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
-        List<HotelWithReservableRoomsServiceDTO> hotelsWithReservableRoomsDTOS = roomService.searchHotelsWithReservableRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO));
+        List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS = hotelsWithReservableRoomsDTOTransformer.transformToHotelsWithReservableRoomsDTOs(roomService.searchHotelsWithReservableRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
 
         request.getSession().setAttribute("resultDTOS", hotelsWithReservableRoomsDTOS);
         LOGGER.info("result: " + hotelsWithReservableRoomsDTOS.toString());
 
 //        LOGGER.info("No Error");
 //        redirectAttributes.addFlashAttribute("successRoomSearchFormDTO", roomSearchFormDTO);
-        return "redirect:/hotelbooking/home";
+        return "redirect:/hotelbooking/newHome";
     }
 
 

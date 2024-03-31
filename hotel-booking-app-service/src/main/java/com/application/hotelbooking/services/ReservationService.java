@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services;
 
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ public interface ReservationService {
     List<Long> filterFreeRooms(List<Long> roomIds, LocalDate startDate, LocalDate endDate);
     int calculateTotalPrice(LocalDate startDate, LocalDate endDate, int pricePerNight);
     ReservationModel prepareReservation(ReservableRoomDTO reservableRoomDTO, String userName);
+    ReservationModel prepareReservationNew(String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS, String userName);
     @Transactional
     ReservationModel reserveRoom(ReservationModel reservationModel);
 }

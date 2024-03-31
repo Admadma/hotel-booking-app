@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UniqueReservableRoomOfHotelDTO {
 
-    private int roomNumber;
+    private int number;
     private int singleBeds;
     private int doubleBeds;
     private int totalPrice;
