@@ -8,6 +8,7 @@ import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
+import com.application.hotelbooking.transformers.HotelsWithReservableRoomsDTOTransformer;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -62,6 +63,8 @@ public class ReserveRoomControllerTest {
 
     @MockBean
     private ReservationViewTransformer reservationViewTransformer;
+    @MockBean
+    private HotelsWithReservableRoomsDTOTransformer hotelsWithReservableRoomsDTOTransformer;
 
     @MockBean
     private Dotenv dotenv;
