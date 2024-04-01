@@ -4,6 +4,7 @@ import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.dto.HotelCreationDTO;
 import com.application.hotelbooking.services.CheckInOutService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,28 @@ public class GuestCheckInOutController {
     private ReservationViewTransformer reservationViewTransformer;
 
     @GetMapping(value = "/retrieve-reservation-info")
-    public String saveNewHotel(@RequestParam("reservationId") UUID uuid, Model model){
+    public String saveNewHotel(@RequestParam("reservationId") UUID uuid, HttpServletRequest request){
         LOGGER.info("here");
         LOGGER.info(uuid.toString());
 
         ReservationView reservationView = reservationViewTransformer.transformToReservationView(checkInOutService.getReservationDetails(uuid));
 
-        model.addAttribute("reservation", reservationView);
+        request.getSession().setAttribute("reservation", reservationView);
+
+        return "guestcheckinout";
+    }
+
+    @PostMapping(value = "/check-in")
+    public String checkInGuest(@SessionAttribute("reservation") ReservationView reservationView, HttpServletRequest request){
+        LOGGER.info("check-in");
+
+        try {
+            LOGGER.info("updating reservation");
+            LOGGER.info(reservationView.getUuid().toString());
+            checkInOutService.checkInGuest(reservationView.getUuid());
+        } finally {
+            request.getSession().removeAttribute("reservation");
+        }
 
         return "guestcheckinout";
     }

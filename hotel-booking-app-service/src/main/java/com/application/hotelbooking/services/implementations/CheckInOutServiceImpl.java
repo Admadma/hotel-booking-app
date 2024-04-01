@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.services.CheckInOutService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,5 +17,11 @@ public class CheckInOutServiceImpl implements CheckInOutService {
 
     public ReservationModel getReservationDetails(UUID uuid) {
         return reservationRepositoryService.getReservationByUuid(uuid).get();
+    }
+
+    public ReservationModel checkInGuest(UUID uuid) {
+        ReservationModel reservationModel = getReservationDetails(uuid);
+        reservationModel.setReservationStatus(ReservationStatus.ACTIVE);
+        return reservationRepositoryService.save(reservationModel);
     }
 }
