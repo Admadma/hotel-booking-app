@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -59,6 +60,64 @@ public class RoomServiceImpl implements RoomService {
         List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
 
         return createRoomSearchResultDTOs(availableRoomsIds, roomSearchFormServiceDTO);
+    }
+
+    @Override
+    public List<HotelWithReservableRoomsServiceDTO> searchHotelsWithReservableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
+        List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
+
+        return assignUniqueRoomsToHotels(availableRoomsIds, roomSearchFormServiceDTO);
+    }
+
+    private List<HotelWithReservableRoomsServiceDTO> assignUniqueRoomsToHotels(List<Long> availableRoomsIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        List<HotelWithReservableRoomsServiceDTO> hotelsWithReservableRoomsServiceDTO = new LinkedList<>();
+        for (Long availableRoomsId : availableRoomsIds){
+            RoomModel roomModel = roomRepositoryService.getRoomById(availableRoomsId).get();
+            addToHotelsListIfNotPresentYet(
+                    roomModel,
+                    hotelsWithReservableRoomsServiceDTO,
+                    buildUniqueReservableRoomOfHotelServiceDTO(roomModel, roomSearchFormServiceDTO));
+        }
+        return hotelsWithReservableRoomsServiceDTO;
+    }
+
+    private void addToHotelsListIfNotPresentYet(RoomModel roomModel, List<HotelWithReservableRoomsServiceDTO> hotelsWithReservableRoomsServiceDTO, UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO) {
+        Optional<HotelWithReservableRoomsServiceDTO> optionalHotelWithReservableRoomsServiceDTO = hotelsWithReservableRoomsServiceDTO.stream().filter(hotel -> hotel.getHotelName().equals(roomModel.getHotel().getHotelName())).findAny();
+
+        if (optionalHotelWithReservableRoomsServiceDTO.isPresent()){
+            HotelWithReservableRoomsServiceDTO hotelWithReservableRoomsServiceDTO = optionalHotelWithReservableRoomsServiceDTO.get();
+            if (hotelWithReservableRoomsServiceDTO.getUniqueReservableRoomOfHotelServiceDTOList().stream().filter(room -> room.equals(uniqueReservableRoomOfHotelServiceDTO)).count() == 0){
+                hotelWithReservableRoomsServiceDTO.getUniqueReservableRoomOfHotelServiceDTOList().add(uniqueReservableRoomOfHotelServiceDTO);
+            }
+        } else {
+            List<UniqueReservableRoomOfHotelServiceDTO> uniqueReservableRoomOfHotelServiceDTOList = new LinkedList<>();
+            uniqueReservableRoomOfHotelServiceDTOList.add(uniqueReservableRoomOfHotelServiceDTO);
+
+            hotelsWithReservableRoomsServiceDTO.add(
+                    new HotelWithReservableRoomsServiceDTO(
+                            roomModel.getHotel().getHotelName(),
+                            roomModel.getHotel().getCity(),
+                            roomModel.getHotel().getImageName(),
+                            uniqueReservableRoomOfHotelServiceDTOList
+                           ));
+        }
+    }
+
+    private UniqueReservableRoomOfHotelServiceDTO buildUniqueReservableRoomOfHotelServiceDTO(RoomModel roomModel, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO = UniqueReservableRoomOfHotelServiceDTO.builder()
+                .number(roomModel.getRoomNumber()) // I store the roomnumber so that when selecting a room of a hotel I can quickly search it up by this
+                .singleBeds(roomModel.getSingleBeds())
+                .doubleBeds(roomModel.getDoubleBeds())
+                .totalPrice(reservationService.calculateTotalPrice(
+                        roomSearchFormServiceDTO.getStartDate(),
+                        roomSearchFormServiceDTO.getEndDate(),
+                        roomModel.getPricePerNight()))
+                .roomType(roomModel.getRoomType())
+                .startDate(roomSearchFormServiceDTO.getStartDate())
+                .endDate(roomSearchFormServiceDTO.getEndDate())
+                .build();
+        return uniqueReservableRoomOfHotelServiceDTO;
     }
 
     public boolean isEndDateAfterStartDate(LocalDate startDate, LocalDate endDate){

@@ -1,9 +1,13 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
+import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.dto.HotelWithReservableRoomsDTO;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
+import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationService;
+import com.application.hotelbooking.transformers.HotelsWithReservableRoomsDTOTransformer;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -30,6 +36,8 @@ public class ReserveRoomController {
 
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;
+    @Autowired
+    private HotelsWithReservableRoomsDTOTransformer hotelsWithReservableRoomsDTOTransformer;
 
     @PostMapping("/reserve")
     public String reserve(@SessionAttribute("reservationPlan") ReservationView reservationView, HttpServletRequest request){
@@ -63,6 +71,24 @@ public class ReserveRoomController {
                         roomSearchDTOTransformer.transformToRoomSearchResultDTO(
                                 reservableRoomViewDTOS.get(index)),
                         auth.getName())));
+
+        return "reserveroom";
+    }
+
+    @GetMapping("/reserveroomNew")
+    public String reserveRoomNew(@RequestParam("hotelName") String hotelName,
+                                 @SessionAttribute("resultDTOS") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
+                              HttpServletRequest request,
+                              Authentication auth){
+        LOGGER.info("Navigating to reserveroom page");
+
+        try {
+            request.getSession().setAttribute("reservationPlan", reservationViewTransformer.transformToReservationView(
+                    reservationService.prepareReservationNew(hotelName, hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS), auth.getName())));
+        } catch (OutdatedReservationException ore) {
+            LOGGER.info(ore.getMessage());
+            return "redirect:/hotelbooking/home?reservationError";
+        }
 
         return "reserveroom";
     }
