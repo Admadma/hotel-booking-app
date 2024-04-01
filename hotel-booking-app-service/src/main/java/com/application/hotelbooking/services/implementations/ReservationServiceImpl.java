@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
@@ -81,6 +82,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .totalPrice(reservableRoomDTO.getTotalPrice())
                 .startDate(reservableRoomDTO.getStartDate())
                 .endDate(reservableRoomDTO.getEndDate())
+                .reservationStatus(ReservationStatus.PLANNED)
                 .build();
     }
 
@@ -92,12 +94,13 @@ public class ReservationServiceImpl implements ReservationService {
 
             if (isRoomAvailableInTimePeriod(roomModel.getReservations(), uniqueReservableRoomOfHotelServiceDTO.getStartDate(), uniqueReservableRoomOfHotelServiceDTO.getEndDate())){
                 return ReservationModel.builder()
-                .room(roomModel)
-                .user(userRepositoryService.getUserByName(userName).get())
-                .totalPrice(uniqueReservableRoomOfHotelServiceDTO.getTotalPrice())
-                .startDate(uniqueReservableRoomOfHotelServiceDTO.getStartDate())
-                .endDate(uniqueReservableRoomOfHotelServiceDTO.getEndDate())
-                .build();
+                        .room(roomModel)
+                        .user(userRepositoryService.getUserByName(userName).get())
+                        .totalPrice(uniqueReservableRoomOfHotelServiceDTO.getTotalPrice())
+                        .startDate(uniqueReservableRoomOfHotelServiceDTO.getStartDate())
+                        .endDate(uniqueReservableRoomOfHotelServiceDTO.getEndDate())
+                        .reservationStatus(ReservationStatus.PLANNED)
+                        .build();
             }
         }
 

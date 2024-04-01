@@ -19,4 +19,5 @@ public class ReservationModel {
     private int totalPrice;
     private LocalDate startDate;
     private LocalDate endDate;
+    private ReservationStatus reservationStatus;
 }

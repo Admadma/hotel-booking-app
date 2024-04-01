@@ -19,4 +19,5 @@ public class ReservationView {
     private LocalDate startDate;
     private LocalDate endDate;
     private int totalPrice;
+    private ReservationStatus reservationStatus;
 }
