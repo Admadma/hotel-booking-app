@@ -2,11 +2,13 @@ package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.domain.Reservation;
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.domain.RoleModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +23,14 @@ public class ReservationTransformer {
 
     public ReservationModel transformToReservationModel(Reservation reservation){
         return modelMapper.map(reservation, ReservationModel.class);
+    }
+
+    public Optional<ReservationModel> transformToOptionalReservationModel(Optional<Reservation> reservation){
+        if (reservation.isPresent()){
+            return Optional.of(modelMapper.map(reservation, ReservationModel.class));
+        } else {
+            return Optional.empty();
+        }
     }
 
     public List<ReservationModel> transformToReservationModels(List<Reservation> reservations){

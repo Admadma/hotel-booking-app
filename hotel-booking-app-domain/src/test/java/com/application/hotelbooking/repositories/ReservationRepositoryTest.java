@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @DataJpaTest
 public class ReservationRepositoryTest {
@@ -195,6 +197,53 @@ public class ReservationRepositoryTest {
 
         Assertions.assertThat(resultReservation).isNotNull();
         Assertions.assertThat(resultReservation).isEmpty();
+    }
+
+    @Test
+    public void testFindByUuidShouldReturnReservationWithGivenUUID(){
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+        Hotel hotel = hotelRepository.save(Hotel.builder()
+                .hotelName("Hotel 1")
+                .city("City 1")
+                .build());
+        Room room = roomRepository.save(Room.builder()
+                .roomNumber(1)
+                .hotel(hotel)
+                .roomType(RoomType.SINGLE_ROOM)
+                .build());
+        User user = userRepository.save(User.builder()
+                .username("TEST_USER_NAME")
+                .password("TEST_PASSWORD")
+                .email("TEST_USER_EMAIL")
+                .enabled(true)
+                .locked(false)
+                .build());
+        Reservation reservation1 = reservationRepository.save(Reservation.builder()
+                .uuid(uuid1)
+                .room(room)
+                .user(user)
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(1))
+                .totalPrice(100)
+                .reservationStatus(ReservationStatus.PLANNED)
+                .build());
+        Reservation reservation2 = reservationRepository.save(Reservation.builder()
+                .uuid(uuid2)
+                .room(room)
+                .user(user)
+                .startDate(LocalDate.now().plusDays(10))
+                .endDate(LocalDate.now().plusDays(11))
+                .totalPrice(100)
+                .reservationStatus(ReservationStatus.PLANNED)
+                .build());
+
+
+        Optional<Reservation> resultReservation = reservationRepository.findByUuid(uuid1);
+
+        Assertions.assertThat(resultReservation).isNotNull();
+        Assertions.assertThat(resultReservation).isNotEmpty();
+        Assertions.assertThat(resultReservation.get()).isEqualTo(reservation1);
     }
 
     @Test

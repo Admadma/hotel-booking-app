@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ReservationRepositoryServiceImpl implements ReservationRepositoryService {
@@ -30,6 +32,10 @@ public class ReservationRepositoryServiceImpl implements ReservationRepositorySe
 
     public List<ReservationModel> getReservationsByUserId(Long userId){
         return reservationTransformer.transformToReservationModels(reservationRepository.findAllByUserId(userId));
+    }
+
+    public Optional<ReservationModel> getReservationByUuid(UUID uuid) {
+        return reservationTransformer.transformToOptionalReservationModel(reservationRepository.findByUuid(uuid));
     }
 
     public void delete(Long reservationId) {

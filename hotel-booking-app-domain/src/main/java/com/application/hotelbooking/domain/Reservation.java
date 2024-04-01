@@ -22,7 +22,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Used for identification in the context of the database
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private UUID uuid; // Used for identification in the context of the application
 
     @ManyToOne
