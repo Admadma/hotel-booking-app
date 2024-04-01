@@ -24,4 +24,10 @@ public class CheckInOutServiceImpl implements CheckInOutService {
         reservationModel.setReservationStatus(ReservationStatus.ACTIVE);
         return reservationRepositoryService.save(reservationModel);
     }
+
+    public ReservationModel checkOutGuest(UUID uuid) {
+        ReservationModel reservationModel = getReservationDetails(uuid);
+        reservationModel.setReservationStatus(ReservationStatus.COMPLETED);
+        return reservationRepositoryService.save(reservationModel);
+    }
 }

@@ -53,6 +53,21 @@ public class GuestCheckInOutController {
         return "guestcheckinout";
     }
 
+    @PostMapping(value = "/check-out")
+    public String checkOutGuest(@SessionAttribute("reservation") ReservationView reservationView, HttpServletRequest request){
+        LOGGER.info("check-out");
+
+        try {
+            LOGGER.info("updating reservation");
+            LOGGER.info(reservationView.getUuid().toString());
+            checkInOutService.checkOutGuest(reservationView.getUuid());
+        } finally {
+            request.getSession().removeAttribute("reservation");
+        }
+
+        return "guestcheckinout";
+    }
+
     @GetMapping("/checkInOut")
     public String checkInOut(Model model){
         LOGGER.info("Navigating to check in/out page");
