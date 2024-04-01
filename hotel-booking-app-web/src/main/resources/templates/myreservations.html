@@ -27,6 +27,7 @@
         <th th:text="#{reservation.startDate}"/>
         <th th:text="#{reservation.endDate}"/>
         <th th:text="#{reservation.totalPrice}"/>
+        <th text="status"/>
         <th th:text="#{myreservations.button.cancel}"/>
     </tr>
     </thead>
@@ -43,6 +44,7 @@
         <td><span th:text="${reservation.startDate}"> </span></td>
         <td><span th:text="${reservation.endDate}"> </span></td>
         <td><span th:text="${reservation.totalPrice} + ' HUF'"> </span></td>
+        <td><span th:text="${reservation.reservationStatus}"> </span></td>
         <td><form th:action="@{cancel-reservation}" method="post"><button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" /> </form></td>
     </tr>
     </tbody>

@@ -1,0 +1,5 @@
+<div th:fragment="reservationstatusnames (reservationStatus)" th:switch="${#strings.toString(reservationStatus)}">
+  <td th:case="'PLANNED'" th:text="#{reservation.status.planned}"/>
+  <td th:case="'ACTIVE'" th:text="#{reservation.status.active}"/>
+  <td th:case="'COMPLETED'" th:text="#{reservation.status.completed}"/>
+</div>

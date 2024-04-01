@@ -9,6 +9,8 @@ import java.util.UUID;
 public class UUIDWrapperImpl implements UUIDWrapper {
     @Override
     public UUID getRandomUUID() {
-        return UUID.randomUUID();
+        UUID uuid = UUID.randomUUID();
+        System.out.println("The generated UUID: " + uuid);
+        return uuid;
     }
 }

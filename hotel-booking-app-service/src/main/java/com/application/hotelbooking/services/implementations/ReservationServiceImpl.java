@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
@@ -11,6 +12,7 @@ import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
+import com.application.hotelbooking.wrappers.UUIDWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private ReservationConfirmationEmailService reservationConfirmationEmailService;
+
+    @Autowired
+    private UUIDWrapper uuidWrapper;
 
     public List<ReservationModel> getReservationsOfUser(String username){
         return reservationRepositoryService.getReservationsByUserId(userRepositoryService.getUserByName(username).get().getId());
@@ -81,6 +86,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .totalPrice(reservableRoomDTO.getTotalPrice())
                 .startDate(reservableRoomDTO.getStartDate())
                 .endDate(reservableRoomDTO.getEndDate())
+                .reservationStatus(ReservationStatus.PLANNED)
                 .build();
     }
 
@@ -92,12 +98,14 @@ public class ReservationServiceImpl implements ReservationService {
 
             if (isRoomAvailableInTimePeriod(roomModel.getReservations(), uniqueReservableRoomOfHotelServiceDTO.getStartDate(), uniqueReservableRoomOfHotelServiceDTO.getEndDate())){
                 return ReservationModel.builder()
-                .room(roomModel)
-                .user(userRepositoryService.getUserByName(userName).get())
-                .totalPrice(uniqueReservableRoomOfHotelServiceDTO.getTotalPrice())
-                .startDate(uniqueReservableRoomOfHotelServiceDTO.getStartDate())
-                .endDate(uniqueReservableRoomOfHotelServiceDTO.getEndDate())
-                .build();
+                        .uuid(uuidWrapper.getRandomUUID())
+                        .room(roomModel)
+                        .user(userRepositoryService.getUserByName(userName).get())
+                        .totalPrice(uniqueReservableRoomOfHotelServiceDTO.getTotalPrice())
+                        .startDate(uniqueReservableRoomOfHotelServiceDTO.getStartDate())
+                        .endDate(uniqueReservableRoomOfHotelServiceDTO.getEndDate())
+                        .reservationStatus(ReservationStatus.PLANNED)
+                        .build();
             }
         }
 
