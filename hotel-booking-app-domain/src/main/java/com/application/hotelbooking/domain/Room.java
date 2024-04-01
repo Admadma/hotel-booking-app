@@ -35,7 +35,7 @@ public class Room {
     private List<Reservation> reservations;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_id")
+    @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 
     @Override

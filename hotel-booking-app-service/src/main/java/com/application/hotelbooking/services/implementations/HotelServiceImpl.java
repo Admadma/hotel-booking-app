@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.HotelModel;
+import com.application.hotelbooking.domain.ReviewModel;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
@@ -21,7 +22,7 @@ public class HotelServiceImpl implements HotelService {
 
     public HotelModel createHotel(HotelCreationServiceDTO hotelCreationServiceDTO) {
         if (isHotelNameFree(hotelCreationServiceDTO.getHotelName())){
-            return hotelRepositoryService.save(hotelCreationServiceDTO);
+            return hotelRepositoryService.create(hotelCreationServiceDTO);
         } else {
             throw new InvalidHotelException("That hotelName is already taken");
         }
@@ -38,5 +39,11 @@ public class HotelServiceImpl implements HotelService {
                 .mapToInt(RoomModel::getRoomNumber)
                 .max()
                 .orElse(0);
+    }
+
+    public void updateAverageRating(HotelModel hotelModel){
+        double newRating = hotelModel.getReviews().stream().mapToDouble(ReviewModel::getRating).average().orElse(0);
+        hotelModel.setAverageRating(newRating);
+        hotelRepositoryService.save(hotelModel);
     }
 }

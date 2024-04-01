@@ -51,6 +51,11 @@ public class AddHotelsController {
             return "addhotels";
         } catch (Exception e){
             result.reject("admin.hotel.validation.global.error");
+            LOGGER.info("Error while creating hotel");
+            LOGGER.info(e.getMessage());
+            LOGGER.info(e.toString());
+            LOGGER.info(e.getStackTrace().toString());
+            LOGGER.info(e.getCause().toString());
             return "addhotels";
         }
 
