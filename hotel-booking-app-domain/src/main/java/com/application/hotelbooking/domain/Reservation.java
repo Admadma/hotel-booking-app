@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -19,7 +20,10 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Used for identification in the context of the database
+
+    @Column(nullable = false)
+    private UUID uuid; // Used for identification in the context of the application
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)

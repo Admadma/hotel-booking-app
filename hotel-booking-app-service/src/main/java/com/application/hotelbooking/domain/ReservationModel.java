@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Builder
 @Data
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 public class ReservationModel {
 
     private Long id;
+    private UUID uuid;
     private RoomModel room;
     private UserModel user;
     private int totalPrice;
