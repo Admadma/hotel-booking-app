@@ -10,5 +10,6 @@ public interface HotelRepositoryService {
     Optional<HotelModel> getHotelById(Long hotelId);
     List<HotelModel> getAllHotels();
     Optional<HotelModel> findHotelByHotelName(String hotelName);
-    HotelModel save(HotelCreationServiceDTO hotelCreationServiceDTO);
+    HotelModel create(HotelCreationServiceDTO hotelCreationServiceDTO);
+    HotelModel save(HotelModel hotelModel);
 }

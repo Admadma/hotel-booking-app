@@ -7,4 +7,5 @@ import com.application.hotelbooking.exceptions.InvalidHotelException;
 public interface HotelService {
     HotelModel createHotel(HotelCreationServiceDTO hotelCreationServiceDTO);
     int getLatestRoomNumberOfHotel(Long hotelId);
+    void updateAverageRating(HotelModel hotelModel);
 }

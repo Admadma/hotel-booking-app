@@ -36,13 +36,16 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private List<Review> reviews;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
+                    name = "user_id", referencedColumnName = "id", nullable = false),
             inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
+                    name = "role_id", referencedColumnName = "id", nullable = false))
     private Collection<Role> roles;
 
 

@@ -138,7 +138,7 @@ public class HotelRepositoryServiceImplTest {
         when(hotelRepository.save(hotel)).thenReturn(hotel);
         when(hotelTransformer.transformToHotelModel(hotel)).thenReturn(transformedNoHotel);
 
-        HotelModel savedHotel = hotelRepositoryService.save(hotelCreationServiceDTO);
+        HotelModel savedHotel = hotelRepositoryService.create(hotelCreationServiceDTO);
 
         verify(hotelTransformer).transformToHotel(hotelCreationServiceDTO);
         verify(hotelRepository).save(hotel);

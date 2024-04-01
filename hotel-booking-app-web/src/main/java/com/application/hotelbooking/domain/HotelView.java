@@ -16,4 +16,5 @@ public class HotelView {
     private String hotelName;
     private String city;
     private List<RoomView> rooms;
+    private String imageName;
 }

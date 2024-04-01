@@ -38,12 +38,12 @@ public class HotelServiceImplTest {
     @Test
     public void testCreateHotelShouldCallSaveWhenHotelNameIsFree(){
         when(hotelRepositoryService.findHotelByHotelName(HOTEL_NAME)).thenReturn(EMPTY_HOTEL_MODEL);
-        when(hotelRepositoryService.save(HOTEL_CREATION_SERVICE_DTO)).thenReturn(HOTEL_MODEL);
+        when(hotelRepositoryService.create(HOTEL_CREATION_SERVICE_DTO)).thenReturn(HOTEL_MODEL);
 
         hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO);
 
         verify(hotelRepositoryService).findHotelByHotelName(HOTEL_NAME);
-        verify(hotelRepositoryService).save(HOTEL_CREATION_SERVICE_DTO);
+        verify(hotelRepositoryService).create(HOTEL_CREATION_SERVICE_DTO);
     }
 
     @Test

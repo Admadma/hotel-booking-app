@@ -18,4 +18,6 @@ public class HotelModel {
     private String city;
     private List<RoomModel> rooms;
     private String imageName;
+    private List<ReviewModel> reviews;
+    private Double averageRating;
 }

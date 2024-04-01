@@ -20,6 +20,10 @@ public class HotelTransformer {
         return modelMapper.map(hotelCreationServiceDTO, Hotel.class);
     }
 
+    public Hotel transformToHotel(HotelModel hotelModel){
+        return modelMapper.map(hotelModel, Hotel.class);
+    }
+
     public HotelModel transformToHotelModel(Hotel hotel){
         return modelMapper.map(hotel, HotelModel.class);
     }

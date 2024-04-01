@@ -32,7 +32,11 @@ public class HotelRepositoryServiceImpl implements HotelRepositoryService {
         return hotelTransformer.transformToOptionalHotelModel(hotelRepository.findHotelByHotelName(hotelName));
     }
 
-    public HotelModel save(HotelCreationServiceDTO hotelCreationServiceDTO){
+    public HotelModel create(HotelCreationServiceDTO hotelCreationServiceDTO){
         return hotelTransformer.transformToHotelModel(hotelRepository.save(hotelTransformer.transformToHotel(hotelCreationServiceDTO)));
+    }
+
+    public HotelModel save(HotelModel hotelModel){
+        return hotelTransformer.transformToHotelModel(hotelRepository.save(hotelTransformer.transformToHotel(hotelModel)));
     }
 }

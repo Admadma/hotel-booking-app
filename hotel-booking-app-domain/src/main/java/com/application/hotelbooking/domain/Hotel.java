@@ -28,6 +28,12 @@ public class Hotel {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel")
     private List<Room> rooms;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hotel")
+    private List<Review> reviews;
+
+    @Column(nullable = false, columnDefinition = "double default 0")
+    private Double averageRating;
+
     private String imageName;
 
 }
