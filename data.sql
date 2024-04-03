@@ -124,3 +124,25 @@ INSERT INTO reservations (UUID, room_id, user_id, start_date, end_date, total_pr
     (UUID_TO_BIN(UUID()), 46, 1, '2024-04-02', '2024-04-10', 1000, 'COMPLETED'),
     (UUID_TO_BIN(UUID()), 61, 1, '2024-04-02', '2024-04-10', 1000, 'COMPLETED'),
     (UUID_TO_BIN(UUID()), 76, 1, '2024-04-02', '2024-04-10', 1000, 'COMPLETED');
+
+INSERT INTO reviews (rating, comment, hotel_id, user_id) SELECT (SELECT
+                                                                  	CASE
+                                                                  		WHEN RAND() < 0.6 THEN 5
+                                                                  		WHEN RAND() < 0.7 THEN 4
+                                                                          ELSE FLOOR(1 + RAND() * 3)
+                                                                  	END),
+                                                                 	 'Some comment.',
+                                                                 	  hotels.id,
+                                                                 	  user_ids.user_id FROM hotels
+                                                                 	    CROSS JOIN (SELECT u.id 'user_id'
+                                                                 	        FROM users u
+                                                                 	        join users_roles ur on u.id=ur.user_id
+                                                                 	        join roles r on ur.role_id=r.id
+                                                                 	        where r.name='USER')
+                                                                 	    AS user_ids;
+
+UPDATE hotels JOIN
+	(SELECT h.id 'id', ROUND(avg(r.rating), 1) 'avg_rating_rounded'
+		FROM hotels h JOIN reviews r on h.id=r.hotel_id GROUP BY h.id)
+    AS select_result ON hotels.id = select_result.id
+    SET hotels.average_rating = select_result.avg_rating_rounded;
