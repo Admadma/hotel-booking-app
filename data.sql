@@ -1,3 +1,8 @@
+-- DISCLAIMER
+-- This script is only for demonstration purposes.
+-- It must not be used in live application
+
+
 INSERT INTO roles (name) VALUES ('ADMIN'), ('USER');
 
 -- The password '$2a$10$rMWQL0K1e3XSlxCEO1zKDOfWMqCcIDp7sjEiUI0.uFXp24BK21Afa' is the string 'TestPassword!' encrypted with BCryptPasswordEncoder
