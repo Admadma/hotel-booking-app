@@ -17,20 +17,20 @@
         }
 
         .image-box {
-    width: 300px;
-    height: 200px;
-    overflow: hidden;
-    position: relative;
-}
+            width: 300px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
 
-.scaled-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+        .scaled-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
     </style>
 </head>
 <body style="background-color: #73D89F">
@@ -93,24 +93,22 @@
     </form>
 </div>
 
-<!--<div class="container " style="justify-content: center; border-style: solid; border-color: dimgray; background-color: whitesmoke; padding-top: 1.5em">-->
 <div class="container " style="justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 0.5em 2em;">
     <ul style="list-style-type: none; padding-left: 0px;">
-<!--        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" style="background-color:grey; margin: 1.5em; width: 100%; height: auto; max-width: 100rem; max-height: 100rem;">-->
-<!--        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" style="margin: 1.5em; border-radius: 100px;">-->
-        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" style="border-radius: 15px; overflow: hidden; margin: 1.5em;">
-<!--            <div class="image-box" style="flex: 0 0; margin-right: 20px;">-->
-            <div class="image-box">
-                <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}" class="scaled-image">
+        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center">
+            <div style="display: flex; border-radius: 15px; overflow: hidden; margin: 1.5em; width: 100%">
+                <div class="image-box">
+                    <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}" class="scaled-image">
+                </div>
+                <div style="background-color:whitesmoke; flex: 1; padding-left: 20px;">
+                    <p th:text="${resultDTO.hotelName}" style="font-size: 2em"></p>
+                    <p th:text="${resultDTO.city}" style="font-size: 1.8em"></p>
+                    <p th:text="'Average rating: ' + ${resultDTO.averageRating} + '&#11088;'" style="font-size: 1.6em"></p>
+                </div>
             </div>
-            <div style="background-color:whitesmoke; flex: 1; padding-left: 20px;">
-                <p th:text="${resultDTO.hotelName}" style="font-size: 2em"></p>
-                <p th:text="${resultDTO.city}" style="font-size: 1.8em"></p>
-                <p th:text="'Average rating: ' + ${resultDTO.averageRating} + '&#11088;'" style="font-size: 1.6em"></p>
-            </div>
-            <div class="dropdown-content">
+            <div class="dropdown-content" style="margin: 1.5em;">
                 <ul style="list-style-type: none; padding-left: 0px;">
-                <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">
+                    <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">
                         <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: cornsilk;">
                             <span th:text="${uniqueReservableRoomOfHotelDTO.singleBeds}"></span>
                             <span th:text="${resultDTO}"></span>
@@ -122,98 +120,5 @@
         </li>
     </ul>
 </div>
-
-
-
-<!--<div class="container " style="justify-content: center; border-style: solid; border-color: dimgray;">-->
-<!--    <ul style="list-style-type: none; padding-left: 0px;">-->
-<!--        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" style="margin: 1.5em; width: 100%; height: auto; max-width: 100rem; max-height: 100rem;">-->
-<!--            <div style="flex: 0 0 100px; margin-right: 20px";>-->
-<!--                <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}" style="width: 100%; height: auto;">-->
-<!--            </div>-->
-<!--            <div style="flex: 1;">-->
-<!--                <p th:text="${resultDTO}"></p>-->
-<!--&lt;!&ndash;                <div class="dropdown-content">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <ul>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">&ndash;&gt;-->
-<!--&lt;!&ndash;                            <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: cornsilk;">&ndash;&gt;-->
-<!--&lt;!&ndash;                                <span th:text="${uniqueReservableRoomOfHotelDTO.singleBeds}"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                                <span th:text="${resultDTO}"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                                &lt;!&ndash;                                <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName}, number=${uniqueReservableRoom.number}, startDate=${uniqueReservableRoom.startDate}, endDate=${uniqueReservableRoom.endDate})}" th:text="${uniqueReservableRoom}" style="color: black;"/>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;                                <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName})}" th:text="${uniqueReservableRoomOfHotelDTO}" style="color: black;"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </li>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </ul>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--            </div>-->
-
-<!--&lt;!&ndash;            <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: lightgray;">&ndash;&gt;-->
-<!--&lt;!&ndash;                <span th:text="${resultDTO}"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}">&ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="dropdown-content">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <ul>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">&ndash;&gt;-->
-<!--&lt;!&ndash;                            <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: cornsilk;">&ndash;&gt;-->
-<!--&lt;!&ndash;                                <span th:text="${uniqueReservableRoomOfHotelDTO.singleBeds}"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                                <span th:text="${resultDTO}"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;                                <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName}, number=${uniqueReservableRoom.number}, startDate=${uniqueReservableRoom.startDate}, endDate=${uniqueReservableRoom.endDate})}" th:text="${uniqueReservableRoom}" style="color: black;"/>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;                                <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName})}" th:text="${uniqueReservableRoomOfHotelDTO}" style="color: black;"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </li>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </ul>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
-
-<!--<div class="container " style="justify-content: center; border-style: solid; border-color: dimgray;">-->
-<!--    <ul style="list-style-type: none; padding-left: 0px;">-->
-<!--        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" style="margin: 1.5em; width: 100%; height: auto; max-width: 100rem; max-height: 100rem;">-->
-<!--            <div style="flex: 0 0 100px; margin-right: 20px";>-->
-<!--                <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}" style="width: 100%; height: auto; max-width: 100rem; max-height: 100rem;">-->
-<!--            </div>-->
-<!--            <div style="flex: 1;">-->
-<!--                <p th:text="${resultDTO}"></p>-->
-<!--                <div class="dropdown-content">-->
-<!--                    <ul>-->
-<!--                        <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">-->
-<!--                            <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: cornsilk;">-->
-<!--                                <span th:text="${uniqueReservableRoomOfHotelDTO.singleBeds}"></span>-->
-<!--                                <span th:text="${resultDTO}"></span>-->
-<!--                                <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName})}" th:text="${uniqueReservableRoomOfHotelDTO}" style="color: black;"/>-->
-<!--                            </div>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
-
-<!--<div class="container " style="justify-content: center; border-style: solid; border-color: dimgray;">-->
-<!--    <ul style="list-style-type: none; padding-left: 0px;">-->
-<!--        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" style="background-color:grey; margin: 1.5em; width: 100%; height: auto; max-width: 100rem; max-height: 100rem;">-->
-<!--            <div style="flex: 0 0 width: 200px; margin-right: 20px; height: 200px; overflow: hidden;">-->
-<!--                <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
-<!--            </div>-->
-<!--            <div style="flex: 1;">-->
-<!--                <p th:text="${resultDTO}"></p>-->
-<!--            </div>-->
-<!--            <div class="dropdown-content">-->
-<!--                <ul>-->
-<!--                    <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">-->
-<!--                        <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: cornsilk;">-->
-<!--                            <span th:text="${uniqueReservableRoomOfHotelDTO.singleBeds}"></span>-->
-<!--                            <span th:text="${resultDTO}"></span>-->
-<!--                            <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName})}" th:text="${uniqueReservableRoomOfHotelDTO}" style="color: black;"/>-->
-<!--                        </div>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
-
 </body>
 </html>
