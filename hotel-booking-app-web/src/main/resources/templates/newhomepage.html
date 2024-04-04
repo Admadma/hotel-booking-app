@@ -36,7 +36,7 @@
 <body style="background-color: #73D89F">
 <div th:insert="~{fragments/navbar ::navbar}"/>
 
-<div class="container" style="width: 56rem; padding-top: 3em; justify-content: center; background-color:Gainsboro;">
+<div class="container" style="width: 56rem; padding-top: 3em; border-radius: 20px justify-content: center; background-color:Gainsboro;">
     <div th:if="${param.reservationError}" class="alert alert-danger" th:text="#{home.reservation.error}"/>
     <form th:action="@{search-rooms-new}" th:object="${roomSearchFormDTO}" method="post">
         <div class="form-row">
@@ -103,17 +103,27 @@
                 <div style="background-color:whitesmoke; flex: 1; padding-left: 20px;">
                     <p th:text="${resultDTO.hotelName}" style="font-size: 2em"></p>
                     <p th:text="${resultDTO.city}" style="font-size: 1.8em"></p>
-                    <p th:text="'Average rating: ' + ${resultDTO.averageRating} + '&#11088;'" style="font-size: 1.6em"></p>
+                    <p th:text="#{home.room.form.average.rating} + ': ' + ${resultDTO.averageRating} + '&#11088;'" style="font-size: 1.6em"></p>
                 </div>
             </div>
             <div class="dropdown-content" style="margin: .5em; width: 90%">
                 <ul style="list-style-type: none; padding-left: 0px;">
                     <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">
                         <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName})}" style="text-decoration: none; color: inherit;">
-                        <div class="col-md-12" style="margin-bottom: .5em; border-radius: 15px; background-color: cornsilk;">
-                            <span th:text="${uniqueReservableRoomOfHotelDTO.singleBeds}"></span>
-                            <span th:text="${uniqueReservableRoomOfHotelDTO}"></span>
-                        </div>
+                            <div class="col-md-12" style="margin-bottom: .5em; border-radius: 15px; background-color: cornsilk; font-size: 1.8em">
+                                <div style="text-align: center;">
+                                    <span th:insert="~{fragments/roomtypenames ::roomtypenames(${uniqueReservableRoomOfHotelDTO.roomType})}"></span>
+                                </div>
+                                <div style="display: flex; border-radius: 15px; overflow: hidden; margin-top: 1.5em; padding: 0em 1.5em;; width: 100%;">
+                                    <div>
+                                        <p th:text="#{home.room.form.singlebeds} + ': ' + ${uniqueReservableRoomOfHotelDTO.singleBeds}"></p>
+                                        <p th:text="#{home.room.form.doublebeds} + ': ' + ${uniqueReservableRoomOfHotelDTO.doubleBeds}"></p>
+                                    </div>
+                                    <div style="flex: 1; padding-left: 20px; text-align: right; justify-content: center; margin-top: 2em;">
+                                        <p th:text="#{home.room.form.totalprice} + ': ' + ${uniqueReservableRoomOfHotelDTO.totalPrice} + ' HUF'" ></p>
+                                    </div>
+                                </div>
+                            </div>
                         </a>
                     </li>
                 </ul>
