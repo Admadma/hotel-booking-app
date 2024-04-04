@@ -13,5 +13,6 @@ public class HotelWithReservableRoomsDTO {
     private String hotelName;
     private String city;
     private String imageName;
+    private Double averageRating;
     private List<UniqueReservableRoomOfHotelDTO> uniqueReservableRoomOfHotelDTOList;
 }
