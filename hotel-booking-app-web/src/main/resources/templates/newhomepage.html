@@ -93,10 +93,10 @@
     </form>
 </div>
 
-<div class="container " style="justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 0.5em 2em;">
-    <ul style="list-style-type: none; padding-left: 0px;">
-        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center">
-            <div style="display: flex; border-radius: 15px; overflow: hidden; margin: 1.5em; width: 100%">
+<div class="container " style="justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em;">
+    <ul style="list-style-type: none; justify-content: center; padding: 0em 2em;">
+        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" >
+            <div style="display: flex; border-radius: 15px; overflow: hidden; margin-top: 1.5em; width: 100%;">
                 <div class="image-box">
                     <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}" class="scaled-image">
                 </div>
@@ -106,14 +106,15 @@
                     <p th:text="'Average rating: ' + ${resultDTO.averageRating} + '&#11088;'" style="font-size: 1.6em"></p>
                 </div>
             </div>
-            <div class="dropdown-content" style="margin: 1.5em;">
+            <div class="dropdown-content" style="margin: .5em; width: 90%">
                 <ul style="list-style-type: none; padding-left: 0px;">
                     <li th:each="uniqueReservableRoomOfHotelDTO : ${resultDTO.uniqueReservableRoomOfHotelDTOList}">
-                        <div class="col-md-12" style="border-style: solid; border-color: dimgray; background-color: cornsilk;">
+                        <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName})}" style="text-decoration: none; color: inherit;">
+                        <div class="col-md-12" style="margin-bottom: .5em; border-radius: 15px; background-color: cornsilk;">
                             <span th:text="${uniqueReservableRoomOfHotelDTO.singleBeds}"></span>
-                            <span th:text="${resultDTO}"></span>
-                            <a th:href="@{reserveroomNew(hotelName=${resultDTO.hotelName})}" th:text="${uniqueReservableRoomOfHotelDTO}" style="color: black;"/>
+                            <span th:text="${uniqueReservableRoomOfHotelDTO}"></span>
                         </div>
+                        </a>
                     </li>
                 </ul>
             </div>
