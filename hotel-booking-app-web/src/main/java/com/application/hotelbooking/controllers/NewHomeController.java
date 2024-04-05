@@ -65,13 +65,13 @@ public class NewHomeController {
         roomSearchFormDTO.setEndDate(LocalDate.now().plusDays(5));
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
-            return "homepage";
+            return "newhomepage";
         }
 
         if (!roomService.isEndDateAfterStartDate(roomSearchFormDTO.getStartDate(), roomSearchFormDTO.getEndDate())){
             result.rejectValue("startDate", "home.room.form.validation.startdate.must.before");
             result.rejectValue("endDate", "home.room.form.validation.enddate.must.after");
-            return "homepage";
+            return "newhomepage";
         }
 
         transformFieldsToNulls(roomSearchFormDTO);

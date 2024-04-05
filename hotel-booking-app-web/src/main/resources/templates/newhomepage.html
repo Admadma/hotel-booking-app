@@ -36,23 +36,21 @@
 <body style="background-color: #73D89F">
 <div th:insert="~{fragments/navbar ::navbar}"/>
 
-<div class="container" style="width: 56rem; padding-top: 3em; border-radius: 20px justify-content: center; background-color:Gainsboro;">
+<div class="container" style="width: 56rem; padding-top: 1.5em; margin-top: 1.5em; border-radius: 20px;  justify-content: center; background-color:Gainsboro;">
     <div th:if="${param.reservationError}" class="alert alert-danger" th:text="#{home.reservation.error}"/>
     <form th:action="@{search-rooms-new}" th:object="${roomSearchFormDTO}" method="post">
-        <div class="form-row">
-            <div class="form-group col-md-3">
+        <div class="form-row" style="justify-content: center;">
+            <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="singleBeds" th:text="#{home.room.form.singlebeds}"/>
-                <input type="number" th:field="*{singleBeds}" id="singleBeds" name="singleBeds"/>
+                <input type="number" th:field="*{singleBeds}" id="singleBeds" name="singleBeds" class="form-control"/>
                 <p th:if="${#fields.hasErrors('singleBeds')}" th:class="${#fields.hasErrors('singleBeds')}? error" th:errors="*{singleBeds}" style="color: red;"></p>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="doubleBeds" th:text="#{home.room.form.doublebeds}"/>
-                <input type="number" th:field="*{doubleBeds}" id="doubleBeds" name="doubleBeds">
+                <input type="number" th:field="*{doubleBeds}" id="doubleBeds" name="doubleBeds" class="form-control">
                 <p th:if="${#fields.hasErrors('doubleBeds')}" th:class="${#fields.hasErrors('doubleBeds')}? error" th:errors="*{doubleBeds}" style="color: red;"></p>
             </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="roomType" th:text="#{home.room.form.roomtype}"/>
                 <select th:field="*{roomType}" class="form-control" id="roomType">
                     <option value="" th:text="#{home.dropdown.select.roomtype}"/>
@@ -60,7 +58,9 @@
                 </select>
                 <p th:if="${#fields.hasErrors('roomType')}" th:class="${#fields.hasErrors('roomType')}? error" th:text="#{home.room.form.validation.invalid.roomtype}" style="color: red;"></p>
             </div>
-            <div class="form-group col-md-3">
+        </div>
+        <div class="form-row" style="justify-content: center;">
+            <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="city" th:text="#{home.room.form.city}"/>
                 <select th:field="*{city}" class="form-control" id="city">
                     <option value="" th:text="#{home.dropdown.select.city}"/>
@@ -68,7 +68,7 @@
                 </select>
                 <p th:if="${#fields.hasErrors('city')}" th:class="${#fields.hasErrors('city')}? error" th:text="#{home.room.form.validation.invalid.city}" style="color: red;"></p>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="hotelName" th:text="#{home.room.form.hotelname}"/>
                 <select th:field="*{hotelName}" class="form-control" id="hotelName">
                     <option value="" th:text="#{home.dropdown.select.hotel}"/>
@@ -77,19 +77,21 @@
                 <p th:if="${#fields.hasErrors('hotelName')}" th:class="${#fields.hasErrors('hotelName')}? error" th:text="#{home.room.form.validation.invalid.hotel}" style="color: red;"></p>
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-3" >
+        <div class="form-row" style="justify-content: center;">
+            <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="startDate" th:text="#{home.room.form.startdate}"/>
                 <input class="form-control" id="startDate" type="date" th:field="*{startDate}" name="startDate"/>
                 <p th:if="${#fields.hasErrors('startDate')}" th:class="${#fields.hasErrors('startDate')}? error" th:errors="*{startDate}" style="color: red;"></p>
             </div>
-            <div class="form-group col-md-3" >
+            <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="endDate" th:text="#{home.room.form.enddate}"/>
                 <input class="form-control" id="endDate" type="date" th:field="*{endDate}" name="endDate"/>
                 <p th:if="${#fields.hasErrors('endDate')}" th:class="${#fields.hasErrors('endDate')}? error" th:errors="*{endDate}" style="color: red;"></p>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Search rooms</button>
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <button type="submit" th:text="#{home.room.form.search.rooms}" class="btn btn-primary" style="font-size: 2em; background-color: #FADA5E; color: #333333; border: none; margin: 1em 0em;"/>
+        </div>
     </form>
 </div>
 
