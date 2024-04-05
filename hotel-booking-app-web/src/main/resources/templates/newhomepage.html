@@ -93,6 +93,8 @@
     </form>
 </div>
 
+<div th:if="${session.noMatchingResults}" th:text="#{home.room.form.no.results}" style="font-size: 2em; color: FireBrick; justify-content: center; text-align: center; border-radius: 20px; background-color: LightSalmon; margin: 1em 4em; padding: .5em;" />
+
 <div class="container " style="justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em;">
     <ul style="list-style-type: none; justify-content: center; padding: 1.5em 2em;">
         <li th:each="resultDTO, iterStat : ${session.resultDTOS}" class="dropdown row justify-content-center" th:style="${iterStat.last ? '' : 'margin-bottom: 20px;'}">
