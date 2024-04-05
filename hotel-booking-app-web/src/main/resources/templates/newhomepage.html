@@ -94,9 +94,9 @@
 </div>
 
 <div class="container " style="justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em;">
-    <ul style="list-style-type: none; justify-content: center; padding: 0em 2em;">
-        <li th:each="resultDTO : ${session.resultDTOS}" class="dropdown row justify-content-center" >
-            <div style="display: flex; border-radius: 15px; overflow: hidden; margin-top: 1.5em; width: 100%;">
+    <ul style="list-style-type: none; justify-content: center; padding: 1.5em 2em;">
+        <li th:each="resultDTO, iterStat : ${session.resultDTOS}" class="dropdown row justify-content-center" th:style="${iterStat.last ? '' : 'margin-bottom: 20px;'}">
+            <div style="display: flex; border-radius: 15px; overflow: hidden; width: 100%;">
                 <div class="image-box">
                     <img th:src="@{/images/__${resultDTO.imageName}__}" alt="${resultDTO.imageName}" class="scaled-image">
                 </div>
