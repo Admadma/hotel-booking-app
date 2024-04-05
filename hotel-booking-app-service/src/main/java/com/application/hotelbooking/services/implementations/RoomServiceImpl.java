@@ -99,6 +99,7 @@ public class RoomServiceImpl implements RoomService {
                             roomModel.getHotel().getHotelName(),
                             roomModel.getHotel().getCity(),
                             roomModel.getHotel().getImageName(),
+                            roomModel.getHotel().getAverageRating(),
                             uniqueReservableRoomOfHotelServiceDTOList
                            ));
         }

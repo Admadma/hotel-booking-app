@@ -1,11 +1,12 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.dto.HotelWithReservableRoomsDTO;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
-import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
+import com.application.hotelbooking.transformers.HotelsWithReservableRoomsDTOTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,6 +45,8 @@ public class HomeController {
 
     @Autowired
     private HotelViewTransformer hotelViewTransformer;
+    @Autowired
+    private HotelsWithReservableRoomsDTOTransformer hotelsWithReservableRoomsDTOTransformer;
 
     private void transformFieldsToNulls(RoomSearchFormDTO roomSearchFormDTO){
         if ("".equals(roomSearchFormDTO.getCity())){
@@ -66,13 +71,16 @@ public class HomeController {
         }
 
         transformFieldsToNulls(roomSearchFormDTO);
+        List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS = hotelsWithReservableRoomsDTOTransformer.transformToHotelsWithReservableRoomsDTOs(roomService.searchHotelsWithReservableRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
 
-        List<ReservableRoomViewDTO> resultDTOS = roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(roomService.searchRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
-        request.getSession().setAttribute("resultDTOS", resultDTOS);
-        LOGGER.info(resultDTOS.toString());
+        if (hotelsWithReservableRoomsDTOS.size() > 0) {
+            request.getSession().setAttribute("hotelsRoomsResultDTOs", hotelsWithReservableRoomsDTOS);
+            request.getSession().removeAttribute("noMatchingResults");
+            return "redirect:/hotelbooking/home";
+        }
 
-        LOGGER.info("No Error");
-        redirectAttributes.addFlashAttribute("successRoomSearchFormDTO", roomSearchFormDTO);
+        request.getSession().removeAttribute("hotelsRoomsResultDTOs");
+        request.getSession().setAttribute("noMatchingResults", true);
         return "redirect:/hotelbooking/home";
     }
 
@@ -86,6 +94,14 @@ public class HomeController {
         request.getSession().setAttribute("roomTypes", Arrays.stream(RoomType.values()).map(roomType -> roomType.name()).collect(Collectors.toList()));
         request.getSession().setAttribute("hotels", hotelViewTransformer.transformToHotelViews(hotelRepositoryService.getAllHotels()));
         request.getSession().setAttribute("cities", hotelRepositoryService.getAllHotels().stream().map(hotelModel -> hotelModel.getCity()).collect(Collectors.toList()));
+
+        // List all the different rooms to the user within a set date interval
+        if (Objects.isNull(request.getSession().getAttribute("hotelsRoomsResultDTOs"))) {
+            roomSearchFormDTO.setStartDate(LocalDate.now().plusDays(7));
+            roomSearchFormDTO.setEndDate(LocalDate.now().plusDays(14));
+            List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS = hotelsWithReservableRoomsDTOTransformer.transformToHotelsWithReservableRoomsDTOs(roomService.searchHotelsWithReservableRooms(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(roomSearchFormDTO)));
+            request.getSession().setAttribute("hotelsRoomsResultDTOs", hotelsWithReservableRoomsDTOS);
+        }
 
         return "homepage";
     }
