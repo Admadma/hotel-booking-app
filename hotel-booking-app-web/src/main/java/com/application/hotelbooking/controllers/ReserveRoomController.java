@@ -53,31 +53,15 @@ public class ReserveRoomController {
             return "redirect:/hotelbooking/home?reservationError";
         } finally {
             request.getSession().removeAttribute("reservationPlan");
-            request.getSession().removeAttribute("resultDTOS");
+            request.getSession().removeAttribute("hotelsRoomsResultDTOs");
         }
 
         return "redirect:/hotelbooking/myreservations?reservationSuccess";
     }
 
-    @GetMapping("/reserveroom")
-    public String reserveRoom(@RequestParam("index") int index,
-                              @SessionAttribute("resultDTOS") List<ReservableRoomViewDTO> reservableRoomViewDTOS,
-                              HttpServletRequest request,
-                              Authentication auth){
-        LOGGER.info("Navigating to reserveroom page");
-
-        request.getSession().setAttribute("reservationPlan", reservationViewTransformer.transformToReservationView(
-                reservationService.prepareReservation(
-                        roomSearchDTOTransformer.transformToRoomSearchResultDTO(
-                                reservableRoomViewDTOS.get(index)),
-                        auth.getName())));
-
-        return "reserveroom";
-    }
-
     @GetMapping("/reserveroomNew")
     public String reserveRoomNew(@RequestParam("hotelName") String hotelName,
-                                 @SessionAttribute("resultDTOS") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
+                                 @SessionAttribute("hotelsRoomsResultDTOs") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
                               HttpServletRequest request,
                               Authentication auth){
         LOGGER.info("Navigating to reserveroom page");
