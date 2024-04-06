@@ -59,8 +59,8 @@ public class ReserveRoomController {
         return "redirect:/hotelbooking/myreservations?reservationSuccess";
     }
 
-    @GetMapping("/reserveroomNew")
-    public String reserveRoomNew(@RequestParam("hotelName") String hotelName,
+    @GetMapping("/reserveroom")
+    public String reserveRoom(@RequestParam("hotelName") String hotelName,
                                  @SessionAttribute("hotelsRoomsResultDTOs") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
                               HttpServletRequest request,
                               Authentication auth){
