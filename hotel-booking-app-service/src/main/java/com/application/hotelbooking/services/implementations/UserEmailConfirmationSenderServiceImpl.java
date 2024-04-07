@@ -26,8 +26,6 @@ public class UserEmailConfirmationSenderServiceImpl implements UserEmailConfirma
     @Autowired
     public UserEmailConfirmationSenderServiceImpl(Dotenv dotenv) {
         this.TOKEN_CONFIRMATION_BASE_LINK = dotenv.get("TOKEN_CONFIRMATION_BASE_LINK");
-        System.out.println("The email is..");
-        System.out.println(TOKEN_CONFIRMATION_BASE_LINK);
     }
 
     @Autowired
