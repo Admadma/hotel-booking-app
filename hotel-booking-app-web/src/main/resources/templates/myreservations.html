@@ -7,53 +7,856 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <title th:text="#{title.myreservations}" />
+    <style>
+        .table td, .table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+    </style>
 </head>
 <body style="background-color: #73D89F">
 <div th:insert="~{fragments/navbar ::navbar}"/>
 
-<div class ="container">
-    <div class = "row justify-content-center">
+<div class="container-fluid" style="position:absolute; overflow: visible; width: auto; left: 50%; transform: translateX(-50%); justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">
+    <div class = "row justify-content-center" style="margin-bottom: 1em;">
         <h1 th:text="#{myreservations.myReservations}"/>
     </div>
     <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>
     <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>
-<table class = "table table-striped table-bordered text-center">
-    <thead class = "table-dark">
-    <tr>
-        <th th:text="#{reservation.roomType}"/>
-        <th th:text="#{reservation.hotelName}"/>
-        <th th:text="#{reservation.city}"/>
-        <th th:text="#{reservation.roomNumber}"/>
-        <th th:text="#{reservation.startDate}"/>
-        <th th:text="#{reservation.endDate}"/>
-        <th th:text="#{reservation.totalPrice}"/>
-        <th text="status"/>
-        <th th:text="#{myreservations.button.cancel}"/>
-        <th text="review"/>
-    </tr>
-    </thead>
-    <div class="text-center">
-    <tbody>
-    <tr th:if="${reservations.empty}">
-        <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>
-    </tr>
-    <tr th:each="reservation : ${reservations}">
-        <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>
-        <td><span th:text="${reservation.room.hotel.hotelName}"> </span></td>
-        <td><span th:text="${reservation.room.hotel.city}"> </span></td>
-        <td><span th:text="${reservation.room.roomNumber}"> </span></td>
-        <td><span th:text="${reservation.startDate}"> </span></td>
-        <td><span th:text="${reservation.endDate}"> </span></td>
-        <td><span th:text="${reservation.totalPrice} + ' HUF'"> </span></td>
-        <td><span th:text="${reservation.reservationStatus}"> </span></td>
-        <td><form th:action="@{cancel-reservation}" method="post"><button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" /> </form></td>
-        <td><form th:action="@{makeReview}" method="get"><button class="btn btn-danger" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.cancel}" /> </form></td>
-    </tr>
-    </tbody>
-    </div>
-</table>
-
+    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 80em; justify-content: center; vertical-align: middle; text-align: center;">
+        <thead class = "table-dark">
+        <tr>
+            <th />
+            <th th:text="#{reservation.hotelName}"/>
+            <th th:text="#{reservation.city}"/>
+            <th th:text="#{reservation.roomType}"/>
+            <th th:text="#{reservation.roomNumber}"/>
+            <th th:text="#{reservation.startDate}"/>
+            <th th:text="#{reservation.endDate}"/>
+            <th th:text="#{reservation.totalPrice}"/>
+            <th th:text="#{reservation.reservationStatus}"/>
+            <th />
+        </tr>
+        </thead>
+        <div class="text-center">
+            <tbody>
+            <tr th:if="${reservations.empty}">
+                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>
+            </tr>
+            <tr th:each="reservation : ${reservations}">
+                <td style="position: relative; width: 225px; height: 150px;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </td>
+                <td th:text="${reservation.room.hotel.hotelName}"></td>
+                <td th:text="${reservation.room.hotel.city}" />
+                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>
+                <td th:text="${reservation.room.roomNumber}" />
+                <td th:text="${reservation.startDate}" />
+                <td th:text="${reservation.endDate}" />
+                <td th:text="${reservation.totalPrice} + ' HUF'" />
+                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>
+                <td>
+                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">
+                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />
+                    </form>
+                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">
+                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
 </div>
+
+
+<!--<div class="container" style="overflow: visible; width: auto; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 10em; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+
+
+<!--<div class="container" style="position:absolute; overflow: visible; width: auto; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 10em; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+<!--&lt;!&ndash;<div class="container" style="position:absolute; overflow: visible; width: 1500px; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="container" style="position:absolute; overflow: visible; width: 200em; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="container" style="position:absolute; overflow: visible; width: 200rem; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">&ndash;&gt;-->
+
+
+
+<!---->
+<!---->
+
+<!--<div class="container" style="position:absolute; background-color: Gainsboro;">-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 10em; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+<!--<div class="container" style="position:absolute; overflow: visible; width: auto; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 200em; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+
+<!--<div class="container" style="position:absolute; overflow: visible; display: inline-block; display: inline-block; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 200em; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+
+<!--<div class="container-fluid" style="position: absolute; overflow: visible; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 100em; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+
+
+<!--<div class="container" style="position:absolute; overflow: visible; width: auto; display: inline-block; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 200px; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+<!--<div class="container" style="position:absolute; overflow: visible; width: auto; display: inline-block; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 2000px; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+
+<!---->
+<!---->
+
+
+<!--<div class="container" style="position:absolute; overflow: visible; width: auto; display: inline-block; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 20000px; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+<!--<div class="container" style="position:absolute; overflow: visible; display: inline-block; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 1500px; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+<!--<div class="container" style="position:absolute; overflow: visible; width: auto; max-width: 100%; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 1500px; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+<!--<div class="container" style="position:absolute; overflow: visible; display: inline-block; max-width: 100%; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 1500px; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
+<!--<div class="container" style="position:absolute; overflow: visible; display: inline-block; max-width: 100%; justify-content: center; border-radius: 20px; background-color: Gainsboro; margin-top: 1.5em; padding: 1.5em; font-size: 1.2rem;">-->
+<!--&lt;!&ndash;<div class="container" style="background-color: Gainsboro;">&ndash;&gt;-->
+<!--    <div class = "row justify-content-center">-->
+<!--        <h1 th:text="#{myreservations.myReservations}"/>-->
+<!--    </div>-->
+<!--    <div th:if="${param.error}" class="alert alert-danger"  th:text="#{myreservations.failedToCancel}"/>-->
+<!--    <div th:if="${param.reservationSuccess}" class="alert alert-success" th:text="#{myreservations.reservationSuccess}"/>-->
+<!--&lt;!&ndash;    <div style="width: 200em">asd</div>&ndash;&gt;-->
+<!--    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; width: 1500px; justify-content: center;">-->
+<!--&lt;!&ndash;    <table class = "table table-striped table-bordered text-center" style="border-radius: 20px; border-collapse: collapse; justify-content: center;">&ndash;&gt;-->
+<!--        <thead class = "table-dark">-->
+<!--        <tr>-->
+<!--            <th />-->
+<!--            <th th:text="#{reservation.hotelName}"/>-->
+<!--            <th th:text="#{reservation.roomType}"/>-->
+<!--            <th th:text="#{reservation.city}"/>-->
+<!--            <th th:text="#{reservation.roomNumber}"/>-->
+<!--            <th th:text="#{reservation.startDate}"/>-->
+<!--            <th th:text="#{reservation.endDate}"/>-->
+<!--            <th th:text="#{reservation.totalPrice}"/>-->
+<!--            <th th:text="#{reservation.reservationStatus}"/>-->
+<!--            <th />-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <div class="text-center">-->
+<!--            <tbody>-->
+<!--            <tr th:if="${reservations.empty}">-->
+<!--                <td colspan="8" th:text="#{myreservations.noReservationsYet}"/>-->
+<!--            </tr>-->
+<!--            <tr th:each="reservation : ${reservations}">-->
+<!--                <td style="position: relative; width: 300px; height: 200px;">-->
+<!--                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">-->
+<!--                        <img th:src="@{/images/__${reservation.room.hotel.imageName}__}" alt="${reservation.room.hotel.imageName}" style="width: 100%; height: 100%; object-fit: cover;">-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td th:text="${reservation.room.hotel.hotelName}"></td>-->
+<!--                <td th:insert="~{fragments/roomtypenames ::roomtypenames(${reservation.room.roomType})}" hidden="true"></td>-->
+<!--                <td th:text="${reservation.room.hotel.city}" />-->
+<!--                <td th:text="${reservation.room.roomNumber}" />-->
+<!--                <td th:text="${reservation.startDate}" />-->
+<!--                <td th:text="${reservation.endDate}" />-->
+<!--                <td th:text="${reservation.totalPrice} + ' HUF'" />-->
+<!--                <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>-->
+<!--                <td>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{cancel-reservation}" method="post">-->
+<!--                        <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />-->
+<!--                    </form>-->
+<!--                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{makeReview}" method="get">-->
+<!--                        <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />-->
+<!--                    </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </div>-->
+<!--    </table>-->
+<!--</div>-->
 
 
 </body>
