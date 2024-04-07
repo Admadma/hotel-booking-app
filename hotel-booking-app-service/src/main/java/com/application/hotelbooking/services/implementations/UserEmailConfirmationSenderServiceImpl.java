@@ -21,11 +21,11 @@ import java.util.UUID;
 public class UserEmailConfirmationSenderServiceImpl implements UserEmailConfirmationSenderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEmailConfirmationSenderServiceImpl.class);
-    private final String TOKEN_CONFIRMATION_BASE_LINK;
+    private final String TOKEN_CONFIRMATION_LINK;
 
     @Autowired
     public UserEmailConfirmationSenderServiceImpl(Dotenv dotenv) {
-        this.TOKEN_CONFIRMATION_BASE_LINK = dotenv.get("TOKEN_CONFIRMATION_BASE_LINK");
+        this.TOKEN_CONFIRMATION_LINK = dotenv.get("APPLICATION_BASE_URL") + "hotelbooking/register/confirmemail/confirm-token?confirmationToken=";
     }
 
     @Autowired
@@ -49,7 +49,7 @@ public class UserEmailConfirmationSenderServiceImpl implements UserEmailConfirma
         confirmationTokenRepositoryService.saveConfirmationToken(confirmationTokenModel);
 
         Locale locale = LocaleContextHolder.getLocale();
-        String link = TOKEN_CONFIRMATION_BASE_LINK + token;
+        String link = TOKEN_CONFIRMATION_LINK + token;
         String body = getBody(locale, link);
         emailSenderService.sendEmail(user.getEmail(),
                 messageSource.getMessage("email.confirmation.link.subject", null, locale),
