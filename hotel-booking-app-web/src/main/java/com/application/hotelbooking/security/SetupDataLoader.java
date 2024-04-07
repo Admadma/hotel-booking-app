@@ -3,6 +3,7 @@ package com.application.hotelbooking.security;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,16 @@ import java.util.List;
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SetupDataLoader.class);
+    private final String ADMIN_USERNAME;
+    private final String ADMIN_PASSWORD;
+    private final String APPLICATION_EMAIL;
+
+    @Autowired
+    public SetupDataLoader(Dotenv dotenv) {
+        this.ADMIN_USERNAME = dotenv.get("ADMIN_USERNAME");
+        this.ADMIN_PASSWORD = dotenv.get("ADMIN_PASSWORD");
+        this.APPLICATION_EMAIL = dotenv.get("APPLICATION_EMAIL");
+    }
 
     boolean alreadySetup = false;
 
@@ -35,10 +46,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             return;
         roleService.createRoleIfNotFound("ADMIN");
         roleService.createRoleIfNotFound("USER");
-        //TODO: Load admin credentials from properties file or environment variable
 
         try {
-            userService.createUser("admin", "adminadmin", "hotelbookingservice01@gmail.com", List.of("ADMIN"));
+            userService.createUser(ADMIN_USERNAME, ADMIN_PASSWORD, APPLICATION_EMAIL, List.of("ADMIN"));
         } catch (UserAlreadyExistsException uae){
             LOGGER.info("Admin user already exists");
         }
