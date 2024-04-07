@@ -2,10 +2,10 @@ package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.ConfirmationTokenModel;
 import com.application.hotelbooking.domain.UserModel;
-import com.application.hotelbooking.services.UserService;
 import com.application.hotelbooking.services.repositoryservices.ConfirmationTokenRepositoryService;
 import com.application.hotelbooking.services.EmailSenderService;
 import com.application.hotelbooking.services.UserEmailConfirmationSenderService;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,15 @@ import java.util.UUID;
 public class UserEmailConfirmationSenderServiceImpl implements UserEmailConfirmationSenderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEmailConfirmationSenderServiceImpl.class);
-    public static final String BASE_LINK = "http://localhost:8080/hotelbooking/register/confirmemail/confirm-token?confirmationToken=";
+    private final String TOKEN_CONFIRMATION_BASE_LINK;
+
+    @Autowired
+    public UserEmailConfirmationSenderServiceImpl(Dotenv dotenv) {
+        this.TOKEN_CONFIRMATION_BASE_LINK = dotenv.get("TOKEN_CONFIRMATION_BASE_LINK");
+        System.out.println("The email is..");
+        System.out.println(TOKEN_CONFIRMATION_BASE_LINK);
+    }
+
     @Autowired
     private ConfirmationTokenRepositoryService confirmationTokenRepositoryService;
     @Autowired
@@ -43,7 +51,7 @@ public class UserEmailConfirmationSenderServiceImpl implements UserEmailConfirma
         confirmationTokenRepositoryService.saveConfirmationToken(confirmationTokenModel);
 
         Locale locale = LocaleContextHolder.getLocale();
-        String link = BASE_LINK + token;
+        String link = TOKEN_CONFIRMATION_BASE_LINK + token;
         String body = getBody(locale, link);
         emailSenderService.sendEmail(user.getEmail(),
                 messageSource.getMessage("email.confirmation.link.subject", null, locale),
