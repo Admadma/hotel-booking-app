@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -40,6 +42,11 @@ public class HotelBookingApplication {
 	public Dotenv dotenv() {
 		return Dotenv.load();
 	}
+
+//	@Bean
+//	public JavaMailSender javaMailSender(){
+//		return new JavaMailSenderImpl();
+//	}
 
 ////	//Code used to generate demo data
 //	@Bean

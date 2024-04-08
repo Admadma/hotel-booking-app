@@ -1,0 +1,29 @@
+version: '3'
+
+volumes:
+  my-datavolume:
+
+services:
+  docker-mysql:
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=Verystrongpw1
+      - MYSQL_DATABASE=hotel_db
+      - MYSQL_USER=springuser
+      - MYSQL_PASSWORD=ThePassword
+    volumes:
+      - my-datavolume:/var/lib/mysql
+    ports:
+      - 3307:3306
+
+  app:
+    image: my_app:latest
+    restart: on-failure:10
+    volumes:
+      - ./logs:/logs
+    ports:
+       - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/hotel_db?autoReconnect=true&useSSL=false
+    depends_on:
+       - docker-mysql
