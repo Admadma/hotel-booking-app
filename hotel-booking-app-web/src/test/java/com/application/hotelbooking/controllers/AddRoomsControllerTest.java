@@ -8,12 +8,9 @@ import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.RoomCreationService;
-import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
-import com.application.hotelbooking.services.imagehandling.StorageService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.RoomCreationDTOTransformer;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +56,6 @@ public class AddRoomsControllerTest {
 
     @MockBean
     private HotelViewTransformer hotelViewTransformer;
-
-    @MockBean
-    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

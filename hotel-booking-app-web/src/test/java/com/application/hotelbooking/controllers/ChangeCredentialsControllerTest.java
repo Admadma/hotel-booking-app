@@ -5,7 +5,6 @@ import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.OptimisticLockException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class ChangeCredentialsControllerTest {
 
     @MockBean
     private UserService userService;
-
-    @MockBean
-    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

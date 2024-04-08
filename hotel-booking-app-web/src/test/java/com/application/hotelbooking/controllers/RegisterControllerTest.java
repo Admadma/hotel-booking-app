@@ -5,9 +5,7 @@ import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
-import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.validators.InternetAddressValidator;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.internet.AddressException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +37,6 @@ public class RegisterControllerTest {
 
     @MockBean
     private InternetAddressValidator internetAddressValidator;
-
-    @MockBean
-    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;
