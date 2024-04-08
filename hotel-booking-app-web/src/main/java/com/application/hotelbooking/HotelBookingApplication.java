@@ -3,7 +3,6 @@ package com.application.hotelbooking;
 import com.application.hotelbooking.domain.User;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.repositories.UserRepository;
-import com.application.hotelbooking.services.imagehandling.StorageProperties;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
@@ -19,7 +18,6 @@ import java.time.Clock;
 import java.util.Locale;
 
 @SpringBootApplication
-@EnableConfigurationProperties(StorageProperties.class)
 public class HotelBookingApplication {
 
 	public static void main(String[] args) {

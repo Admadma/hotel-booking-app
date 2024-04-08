@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import com.application.hotelbooking.wrappers.FilesWrapper;
 import com.application.hotelbooking.wrappers.UUIDWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,13 +24,12 @@ public class FileSystemStorageService implements StorageService {
     private FilesWrapper filesWrapper;
 
     @Autowired
-    public FileSystemStorageService(StorageProperties properties, UUIDWrapper uuidWrapper, FilesWrapper filesWrapper) {
-
-        if(properties.getLocation().trim().length() == 0){
+    public FileSystemStorageService(@Value("${IMAGES_FOLDER_PATH}") String imagesFolderPath, UUIDWrapper uuidWrapper, FilesWrapper filesWrapper) {
+        if(imagesFolderPath.trim().length() == 0){
             throw new StorageException("File upload location can not be Empty.");
         }
 
-        this.rootLocation = Paths.get(properties.getLocation());
+        this.rootLocation = Paths.get(imagesFolderPath);
         this.uuidWrapper = uuidWrapper;
         this.filesWrapper = filesWrapper;
     }

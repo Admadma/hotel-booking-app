@@ -11,8 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class MimeMessageFactory {
 
-    @Value("${APPLICATION_EMAIL}")
-    private String APPLICATION_EMAIL;
+    private final String APPLICATION_EMAIL;
+
+    public MimeMessageFactory(@Value("${APPLICATION_EMAIL}") String applicationEmail) {
+        this.APPLICATION_EMAIL = applicationEmail;
+    }
 
     @Autowired
     private JavaMailSender mailSender;
