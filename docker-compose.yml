@@ -20,10 +20,12 @@ services:
     image: hotel-booking-app:latest
     restart: on-failure:10
     volumes:
-      - ./logs:/logs
+      - ./logs:/app/logs
     ports:
        - 8080:8080
+    env_file:
+      - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/hotel_db?autoReconnect=true&useSSL=false
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/hotel_db?allowPublicKeyRetrieval=True&autoReconnect=true&useSSL=false
     depends_on:
        - docker-mysql
