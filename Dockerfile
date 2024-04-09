@@ -2,10 +2,6 @@ FROM openjdk:19-alpine
 
 WORKDIR /app
 
-COPY .env .
-
-COPY application.properties .
-
 COPY data.sql .
 
 COPY hotel-booking-app-web/target/hotel-booking-app-web-0.0.1-SNAPSHOT.jar hotel-booking-app.jar
