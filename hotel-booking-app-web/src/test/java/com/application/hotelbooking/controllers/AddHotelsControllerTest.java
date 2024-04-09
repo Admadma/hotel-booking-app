@@ -8,7 +8,6 @@ import com.application.hotelbooking.services.HotelService;
 import com.application.hotelbooking.services.imagehandling.StorageException;
 import com.application.hotelbooking.services.imagehandling.StorageService;
 import com.application.hotelbooking.transformers.HotelViewTransformer;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +48,6 @@ public class AddHotelsControllerTest {
 
     @MockBean
     private StorageService storageService;
-
-    @MockBean
-    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

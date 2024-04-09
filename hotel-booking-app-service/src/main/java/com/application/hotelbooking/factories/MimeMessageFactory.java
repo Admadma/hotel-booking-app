@@ -1,9 +1,9 @@
 package com.application.hotelbooking.factories;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -13,9 +13,8 @@ public class MimeMessageFactory {
 
     private final String APPLICATION_EMAIL;
 
-    @Autowired
-    public MimeMessageFactory(Dotenv dotenv) {
-        this.APPLICATION_EMAIL = dotenv.get("APPLICATION_EMAIL");
+    public MimeMessageFactory(@Value("${APPLICATION_EMAIL}") String applicationEmail) {
+        this.APPLICATION_EMAIL = applicationEmail;
     }
 
     @Autowired
