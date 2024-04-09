@@ -3,15 +3,12 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.domain.*;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.dto.ReservableRoomViewDTO;
-import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReservationService;
-import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
 import com.application.hotelbooking.transformers.HotelsWithReservableRoomsDTOTransformer;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -55,19 +52,15 @@ public class ReserveRoomControllerTest {
             .build();
     private static final String TEST_USER_NAME = "testUser";
     private static final ReservationModel RESERVATION_MODEL = new ReservationModel();
+
     @MockBean
     private ReservationService reservationService;
-
     @MockBean
     private RoomSearchDTOTransformer roomSearchDTOTransformer;
-
     @MockBean
     private ReservationViewTransformer reservationViewTransformer;
     @MockBean
     private HotelsWithReservableRoomsDTOTransformer hotelsWithReservableRoomsDTOTransformer;
-
-    @MockBean
-    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;

@@ -3,9 +3,9 @@ package com.application.hotelbooking.security;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import com.application.hotelbooking.services.RoleService;
 import com.application.hotelbooking.services.UserService;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -24,10 +24,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final String APPLICATION_EMAIL;
 
     @Autowired
-    public SetupDataLoader(Dotenv dotenv) {
-        this.ADMIN_USERNAME = dotenv.get("ADMIN_USERNAME");
-        this.ADMIN_PASSWORD = dotenv.get("ADMIN_PASSWORD");
-        this.APPLICATION_EMAIL = dotenv.get("APPLICATION_EMAIL");
+    public SetupDataLoader(@Value("${ADMIN_USERNAME}") String adminUsername,
+                           @Value("${ADMIN_PASSWORD}") String adminPassword,
+                           @Value("${APPLICATION_EMAIL}") String applicationEmail) {
+        this.ADMIN_USERNAME = adminUsername;
+        this.ADMIN_PASSWORD = adminPassword;
+        this.APPLICATION_EMAIL = applicationEmail;
     }
 
     boolean alreadySetup = false;

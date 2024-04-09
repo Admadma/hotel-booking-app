@@ -5,10 +5,10 @@ import com.application.hotelbooking.domain.UserModel;
 import com.application.hotelbooking.services.repositoryservices.ConfirmationTokenRepositoryService;
 import com.application.hotelbooking.services.EmailSenderService;
 import com.application.hotelbooking.services.UserEmailConfirmationSenderService;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,9 +23,8 @@ public class UserEmailConfirmationSenderServiceImpl implements UserEmailConfirma
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEmailConfirmationSenderServiceImpl.class);
     private final String TOKEN_CONFIRMATION_LINK;
 
-    @Autowired
-    public UserEmailConfirmationSenderServiceImpl(Dotenv dotenv) {
-        this.TOKEN_CONFIRMATION_LINK = dotenv.get("APPLICATION_BASE_URL") + "hotelbooking/register/confirmemail/confirm-token?confirmationToken=";
+    public UserEmailConfirmationSenderServiceImpl(@Value("${APPLICATION_BASE_URL}") String applicationBaseURL) {
+        this.TOKEN_CONFIRMATION_LINK = applicationBaseURL + "hotelbooking/register/confirmemail/confirm-token?confirmationToken=";
     }
 
     @Autowired

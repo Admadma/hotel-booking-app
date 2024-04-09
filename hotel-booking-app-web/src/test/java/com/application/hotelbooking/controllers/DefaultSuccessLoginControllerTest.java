@@ -2,8 +2,6 @@ package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.UserService;
-import com.application.hotelbooking.services.imagehandling.FileSystemStorageService;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,9 +24,6 @@ public class DefaultSuccessLoginControllerTest {
 
     @MockBean
     private UserService userService;
-
-    @MockBean
-    private Dotenv dotenv;
 
     @Autowired
     private MockMvc mockMvc;
