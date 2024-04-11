@@ -21,6 +21,7 @@ services:
     restart: on-failure:10
     volumes:
       - ./logs:/app/logs
+      - my-datavolume:/app/images
     ports:
        - 8080:8080
     env_file:
