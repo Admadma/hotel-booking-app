@@ -17,7 +17,7 @@ services:
       - 3307:3306
 
   app:
-    image: hotel-booking-app:latest
+    build: .
     restart: on-failure:10
     volumes:
       - ./logs:/app/logs
