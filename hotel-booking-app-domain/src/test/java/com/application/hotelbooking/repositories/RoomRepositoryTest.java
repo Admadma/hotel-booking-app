@@ -4,6 +4,7 @@ import com.application.hotelbooking.domain.Hotel;
 import com.application.hotelbooking.domain.Room;
 import com.application.hotelbooking.domain.RoomType;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,17 +15,40 @@ import java.util.Optional;
 @DataJpaTest
 public class RoomRepositoryTest {
 
+    private static final Hotel HOTEL_ONE = Hotel.builder()
+            .hotelName("Hotel 1")
+            .city("City 1")
+            .imageName("image.png")
+            .averageRating(0.0)
+            .build();
+    private static final Hotel HOTEL_TWO = Hotel.builder()
+            .hotelName("Hotel 2")
+            .city("City 2")
+            .imageName("image.png")
+            .averageRating(0.0)
+            .build();
+
+    private Hotel SAVED_HOTEL_ONE;
+    private Hotel SAVED_HOTEL_TWO;
+
     @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
     private HotelRepository hotelRepository;
 
+    @BeforeEach
+    void setUp() {
+        SAVED_HOTEL_ONE = hotelRepository.save(HOTEL_ONE);
+        SAVED_HOTEL_TWO = hotelRepository.save(HOTEL_TWO);
+    }
+
     @Test
     public void testSaveReturnsSavedRoom(){
         Room room = Room.builder()
                 .roomNumber(1)
                 .roomType(RoomType.SINGLE_ROOM)
+                .hotel(SAVED_HOTEL_ONE)
                 .build();
 
         Room savedRoom = roomRepository.save(room);
@@ -36,13 +60,9 @@ public class RoomRepositoryTest {
     }
     @Test
     public void testFindByIdReturnsOptionalOfRoomWithProvidedId(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
         Room room = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 
@@ -65,27 +85,19 @@ public class RoomRepositoryTest {
 
     @Test
     public void testFindRoomByRoomNumberAndHotelHotelNameShouldReturnOptionalOfDesiredRoom(){
-        Hotel hotel1 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-        Hotel hotel2 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 2")
-                .city("City 2")
-                .build());
         Room room1 = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
         Room room2 = roomRepository.save(Room.builder()
                 .roomNumber(2)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
         Room room3 = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel2)
+                .hotel(SAVED_HOTEL_TWO)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 
@@ -106,27 +118,19 @@ public class RoomRepositoryTest {
 
     @Test
     public void testFindRoomsWithConditionsShouldReturnAllRoomIdsIfNoConditionsProvided(){
-        Hotel hotel1 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-        Hotel hotel2 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 2")
-                .city("City 2")
-                .build());
         Room room1 = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
         Room room2 = roomRepository.save(Room.builder()
                 .roomNumber(2)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
         Room room3 = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel2)
+                .hotel(SAVED_HOTEL_TWO)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 
@@ -138,109 +142,85 @@ public class RoomRepositoryTest {
 
     @Test
     public void testFindRoomsWithConditionsShouldReturnRoomIdsWhenOneConditionIsProvided(){
-        Hotel hotel1 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-        Hotel hotel2 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 2")
-                .city("City 2")
-                .build());
         Room room1 = roomRepository.save(Room.builder()
                 .roomNumber(1)
                 .singleBeds(2)
                 .doubleBeds(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.FAMILY_ROOM)
                 .build());
         Room room2 = roomRepository.save(Room.builder()
                 .roomNumber(2)
                 .singleBeds(1)
                 .doubleBeds(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.FAMILY_ROOM)
                 .build());
         Room room3 = roomRepository.save(Room.builder()
                 .roomNumber(1)
                 .singleBeds(2)
                 .doubleBeds(1)
-                .hotel(hotel2)
+                .hotel(SAVED_HOTEL_TWO)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 
         List<Long> resultRooms = roomRepository.findRoomsWithConditions(null, null, null, null, "City 1");
 
         Assertions.assertThat(resultRooms).isNotNull();
-        Assertions.assertThat(List.of(room1.getId(), room2.getId())).isEqualTo(resultRooms);
+        Assertions.assertThat(resultRooms).isEqualTo(List.of(room1.getId(), room2.getId()));
     }
 
     @Test
     public void testFindRoomsWithConditionsShouldReturnRoomIdsWhenAllConditionsProvided(){
-        Hotel hotel1 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-        Hotel hotel2 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 2")
-                .city("City 2")
-                .build());
         Room room1 = roomRepository.save(Room.builder()
                 .roomNumber(1)
                 .singleBeds(2)
                 .doubleBeds(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.FAMILY_ROOM)
                 .build());
         Room room2 = roomRepository.save(Room.builder()
                 .roomNumber(2)
                 .singleBeds(1)
                 .doubleBeds(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.FAMILY_ROOM)
                 .build());
         Room room3 = roomRepository.save(Room.builder()
                 .roomNumber(1)
                 .singleBeds(2)
                 .doubleBeds(1)
-                .hotel(hotel2)
+                .hotel(SAVED_HOTEL_TWO)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 
         List<Long> resultRooms = roomRepository.findRoomsWithConditions(2, 1, RoomType.FAMILY_ROOM, "Hotel 1", "City 1");
 
         Assertions.assertThat(resultRooms).isNotNull();
-        Assertions.assertThat(List.of(room1.getId())).isEqualTo(resultRooms);
+        Assertions.assertThat(resultRooms).isEqualTo(List.of(room1.getId()));
     }
 
     @Test
     public void testFindRoomsWithConditionsShouldReturnEmptyListIfNothingMatchesAllConditions(){
-        Hotel hotel1 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
-        Hotel hotel2 = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 2")
-                .city("City 2")
-                .build());
         Room room1 = roomRepository.save(Room.builder()
                 .roomNumber(1)
                 .singleBeds(2)
                 .doubleBeds(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.FAMILY_ROOM)
                 .build());
         Room room2 = roomRepository.save(Room.builder()
                 .roomNumber(2)
                 .singleBeds(1)
                 .doubleBeds(1)
-                .hotel(hotel1)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.FAMILY_ROOM)
                 .build());
         Room room3 = roomRepository.save(Room.builder()
                 .roomNumber(1)
                 .singleBeds(2)
                 .doubleBeds(1)
-                .hotel(hotel2)
+                .hotel(SAVED_HOTEL_TWO)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 

@@ -16,12 +16,17 @@ public class HotelRepositoryTest {
             .hotelName("Hotel 1")
             .city("City 1")
             .imageName("image.png")
+            .averageRating(0.0)
             .build();
     private static final Hotel HOTEL_TWO = Hotel.builder()
             .hotelName("Hotel 2")
             .city("City 2")
             .imageName("image.png")
+            .averageRating(0.0)
             .build();
+
+    private Hotel SAVED_HOTEL_ONE;
+
     @Autowired
     private HotelRepository hotelRepository;
 
@@ -34,6 +39,7 @@ public class HotelRepositoryTest {
         Assertions.assertThat(savedHotel.getHotelName()).isEqualTo(HOTEL_ONE.getHotelName());
         Assertions.assertThat(savedHotel.getCity()).isEqualTo(HOTEL_ONE.getCity());
         Assertions.assertThat(savedHotel.getImageName()).isEqualTo(HOTEL_ONE.getImageName());
+        Assertions.assertThat(savedHotel.getAverageRating()).isEqualTo(HOTEL_ONE.getAverageRating());
     }
 
     @Test
@@ -47,6 +53,7 @@ public class HotelRepositoryTest {
         Assertions.assertThat(resultHotel.get().getHotelName()).isEqualTo(hotel.getHotelName());
         Assertions.assertThat(resultHotel.get().getCity()).isEqualTo(hotel.getCity());
         Assertions.assertThat(resultHotel.get().getImageName()).isEqualTo(hotel.getImageName());
+        Assertions.assertThat(resultHotel.get().getAverageRating()).isEqualTo(hotel.getAverageRating());
     }
 
     @Test
@@ -91,6 +98,7 @@ public class HotelRepositoryTest {
         Assertions.assertThat(resultHotel.get().getHotelName()).isEqualTo(hotel.getHotelName());
         Assertions.assertThat(resultHotel.get().getCity()).isEqualTo(hotel.getCity());
         Assertions.assertThat(resultHotel.get().getImageName()).isEqualTo(hotel.getImageName());
+        Assertions.assertThat(resultHotel.get().getAverageRating()).isEqualTo(hotel.getAverageRating());
     }
 
     @Test

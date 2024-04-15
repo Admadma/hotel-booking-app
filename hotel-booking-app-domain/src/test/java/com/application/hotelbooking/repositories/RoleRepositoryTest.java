@@ -2,6 +2,7 @@ package com.application.hotelbooking.repositories;
 
 import com.application.hotelbooking.domain.*;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,38 +14,65 @@ import java.util.Optional;
 
 @DataJpaTest
 public class RoleRepositoryTest {
+    private static final String ROLE_ONE_NAME = "TEST_ROLE_ONE";
+    private static final String ROLE_TWO_NAME = "TEST_ROLE_TWO";
+    private static final String ROLE_THREE_NAME = "TEST_ROLE_THREE";
+
+    private static final User USER_ONE = User.builder()
+            .username("user_1")
+            .password("password_1")
+            .email("email_1")
+            .locked(false)
+            .enabled(true)
+            .build();
+    private static final User USER_TWO = User.builder()
+            .username("user_2")
+            .password("password_1")
+            .email("email_2")
+            .locked(false)
+            .enabled(true)
+            .build();
+
+    private User SAVED_USER_ONE;
+    private User SAVED_USER_TWO;
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        SAVED_USER_ONE = userRepository.save(USER_ONE);
+        SAVED_USER_TWO = userRepository.save(USER_TWO);
+    }
 
     @Test
     public void testSaveReturnsSavedRole(){
-        User testUser1 = User.builder()
-                .username("user_1")
-                .build();
-        User testUser2 = User.builder()
-                .username("user_2")
-                .build();
         Role role = Role.builder()
-                .name("TEST_USER")
-                .users(Arrays.asList(testUser1, testUser2))
+                .name(ROLE_ONE_NAME)
+                .users(Arrays.asList(SAVED_USER_ONE, SAVED_USER_TWO))
                 .build();
 
         Role savedRole = roleRepository.save(role);
 
         Assertions.assertThat(savedRole).isNotNull();
         Assertions.assertThat(savedRole.getId()).isNotNull();
-        Assertions.assertThat(savedRole.getName()).isEqualTo(role.getName());
-        Assertions.assertThat(savedRole.getUsers()).isEqualTo(role.getUsers());
+        Assertions.assertThat(savedRole.getName()).isEqualTo(ROLE_ONE_NAME);
+        Assertions.assertThat(savedRole.getUsers().size()).isEqualTo(2);
+        Assertions.assertThat(savedRole.getUsers().contains(SAVED_USER_ONE)).isEqualTo(true);
+        Assertions.assertThat(savedRole.getUsers().contains(SAVED_USER_TWO)).isEqualTo(true);
     }
 
     @Test
     public void testFindAllReturnsAllRoles(){
         Role role1 = roleRepository.save(Role.builder()
-                .name("TEST_USER")
+                .name(ROLE_ONE_NAME)
+                .users(Arrays.asList(SAVED_USER_ONE))
                 .build());
         Role role2 = roleRepository.save(Role.builder()
-                .name("TEST_USER")
+                .name(ROLE_TWO_NAME)
+                .users(Arrays.asList(SAVED_USER_TWO))
                 .build());
 
         List<Role> resultRoles = roleRepository.findAll();
@@ -66,10 +94,11 @@ public class RoleRepositoryTest {
     @Test
     public void testFindRoleByNameReturnsOptionalOfRoleWithProvidedName(){
         Role role = roleRepository.save(Role.builder()
-                .name("TEST_USER")
+                .name(ROLE_ONE_NAME)
+                .users(Arrays.asList(SAVED_USER_ONE, SAVED_USER_TWO))
                 .build());
 
-        Optional<Role> resultRole = roleRepository.findRoleByName("TEST_USER");
+        Optional<Role> resultRole = roleRepository.findRoleByName(ROLE_ONE_NAME);
 
         Assertions.assertThat(resultRole).isNotNull();
         Assertions.assertThat(resultRole).isNotEmpty();
@@ -79,7 +108,7 @@ public class RoleRepositoryTest {
     @Test
     public void testFindRoleByNameReturnsEmptyOptionalWithNonexistentNameProvided(){
 
-        Optional<Role> resultRole = roleRepository.findRoleByName("TEST_USER");
+        Optional<Role> resultRole = roleRepository.findRoleByName(ROLE_ONE_NAME);
 
         Assertions.assertThat(resultRole).isNotNull();
         Assertions.assertThat(resultRole).isEmpty();
@@ -88,17 +117,19 @@ public class RoleRepositoryTest {
     @Test
     public void testFindByRoleNameInShouldReturnCollectionOfRolesWhereRoleNameInList(){
         Role role1 = roleRepository.save(Role.builder()
-                .name("TEST_ROLE_1")
+                .name(ROLE_ONE_NAME)
+                .users(Arrays.asList(SAVED_USER_ONE))
                 .build());
         Role role2 = roleRepository.save(Role.builder()
-                .name("TEST_ROLE_2")
+                .name(ROLE_TWO_NAME)
+                .users(Arrays.asList(SAVED_USER_TWO))
                 .build());
         Role role3 = roleRepository.save(Role.builder()
-                .name("TEST_ROLE_3")
+                .name(ROLE_THREE_NAME)
+                .users(Arrays.asList(SAVED_USER_ONE, SAVED_USER_TWO))
                 .build());
 
-        Collection<Role> resultRoles = roleRepository.findByNameIn(List.of("TEST_ROLE_1", "TEST_ROLE_3"));
-
+        Collection<Role> resultRoles = roleRepository.findByNameIn(List.of(ROLE_ONE_NAME, ROLE_THREE_NAME));
 
         Assertions.assertThat(resultRoles).isNotNull();
         Assertions.assertThat(resultRoles).isNotEmpty();

@@ -2,6 +2,7 @@ package com.application.hotelbooking.repositories;
 
 import com.application.hotelbooking.domain.*;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,6 +14,30 @@ import java.util.UUID;
 
 @DataJpaTest
 public class ReservationRepositoryTest {
+
+    private static final Hotel HOTEL_ONE = Hotel.builder()
+            .hotelName("Hotel 1")
+            .city("City 1")
+            .imageName("image.png")
+            .averageRating(0.0)
+            .build();
+    private static final User USER = User.builder()
+            .username("TEST_USER_NAME")
+            .password("TEST_PASSWORD")
+            .email("TEST_USER_EMAIL")
+            .enabled(true)
+            .locked(false)
+            .build();
+
+    private static final UUID UUID_ONE = UUID.randomUUID();
+    private static final UUID UUID_TWO = UUID.randomUUID();
+    private static final LocalDate START_DATE_ONE = LocalDate.of(2024, 3, 1);
+    private static final LocalDate END_DATE_ONE = LocalDate.of(2024, 3, 2);
+    private static final LocalDate START_DATE_TWO = LocalDate.of(2024, 3, 11);
+    private static final LocalDate END_DATE_TWO = LocalDate.of(2024, 3, 12);
+
+    private Hotel SAVED_HOTEL_ONE;
+    private User SAVED_USER;
 
     @Autowired
     private ReservationRepository reservationRepository;
@@ -26,32 +51,28 @@ public class ReservationRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    @BeforeEach
+    void setUp() {
+        SAVED_HOTEL_ONE = hotelRepository.save(HOTEL_ONE);
+        SAVED_USER = userRepository.save(USER);
+    }
+
     @Test
     public void testSaveReturnsSavedReservation(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
         Room room = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
-        User user = userRepository.save(User.builder()
-                .username("TEST_USER_NAME")
-                .password("TEST_PASSWORD")
-                .email("TEST_USER_EMAIL")
-                .enabled(true)
-                .locked(false)
-                .build());
         Reservation reservation = Reservation.builder()
+                .uuid(UUID_ONE)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusDays(1))
+                .user(SAVED_USER)
+                .startDate(START_DATE_ONE)
+                .endDate(END_DATE_ONE)
                 .totalPrice(100)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build();
-
 
         Reservation savedReservation = reservationRepository.save(reservation);
 
@@ -62,37 +83,29 @@ public class ReservationRepositoryTest {
 
     @Test
     public void testFindAllByRoomIdReturnsAllReservationsOnGivenRoom(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
         Room room = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
-        User user = userRepository.save(User.builder()
-                .username("TEST_USER_NAME")
-                .password("TEST_PASSWORD")
-                .email("TEST_USER_EMAIL")
-                .enabled(true)
-                .locked(false)
-                .build());
         Reservation reservation1 = reservationRepository.save(Reservation.builder()
+                .uuid(UUID_ONE)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusDays(1))
+                .user(SAVED_USER)
+                .startDate(START_DATE_ONE)
+                .endDate(END_DATE_ONE)
                 .totalPrice(100)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
         Reservation reservation2 = reservationRepository.save(Reservation.builder()
+                .uuid(UUID_TWO)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now().plusDays(10))
-                .endDate(LocalDate.now().plusDays(11))
+                .user(SAVED_USER)
+                .startDate(START_DATE_TWO)
+                .endDate(END_DATE_TWO)
                 .totalPrice(100)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
-
 
         List<Reservation> resultReservation = reservationRepository.findAllByRoomId(room.getId());
 
@@ -103,13 +116,9 @@ public class ReservationRepositoryTest {
 
     @Test
     public void testFindAllByRoomIdReturnsEmptyListIfRoomHasNoReservations(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
         Room room = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
 
@@ -129,39 +138,31 @@ public class ReservationRepositoryTest {
 
     @Test
     public void testFindAllByUserReturnsAllReservationsOfGivenUser(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
         Room room = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
-        User user = userRepository.save(User.builder()
-                .username("TEST_USER_NAME")
-                .password("TEST_PASSWORD")
-                .email("TEST_USER_EMAIL")
-                .enabled(true)
-                .locked(false)
-                .build());
         Reservation reservation1 = reservationRepository.save(Reservation.builder()
+                .uuid(UUID_ONE)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusDays(1))
+                .user(SAVED_USER)
+                .startDate(START_DATE_ONE)
+                .endDate(END_DATE_ONE)
                 .totalPrice(100)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
         Reservation reservation2 = reservationRepository.save(Reservation.builder()
+                .uuid(UUID_TWO)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now().plusDays(10))
-                .endDate(LocalDate.now().plusDays(11))
+                .user(SAVED_USER)
+                .startDate(START_DATE_TWO)
+                .endDate(END_DATE_TWO)
                 .totalPrice(100)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
 
-
-        List<Reservation> resultReservation = reservationRepository.findAllByUserId(user.getId());
+        List<Reservation> resultReservation = reservationRepository.findAllByUserId(SAVED_USER.getId());
 
         Assertions.assertThat(resultReservation).isNotNull();
         Assertions.assertThat(resultReservation).isNotEmpty();
@@ -170,28 +171,14 @@ public class ReservationRepositoryTest {
 
     @Test
     public void testFindAllByUserReturnsEmptyListIfUserHasNoReservations(){
-        User user = userRepository.save(User.builder()
-                .username("TEST_USER_NAME")
-                .password("TEST_PASSWORD")
-                .email("TEST_USER_EMAIL")
-                .enabled(true)
-                .locked(false)
-                .build());
 
-        List<Reservation> resultReservation = reservationRepository.findAllByUserId(user.getId());
+        List<Reservation> resultReservation = reservationRepository.findAllByUserId(SAVED_USER.getId());
 
         Assertions.assertThat(resultReservation).isNotNull();
         Assertions.assertThat(resultReservation).isEmpty();
     }
     @Test
     public void testFindAllByUserReturnsEmptyListIfUserDoesNotExist(){
-        User user = User.builder()
-                .username("TEST_USER_NAME")
-                .password("TEST_PASSWORD")
-                .email("TEST_USER_EMAIL")
-                .enabled(true)
-                .locked(false)
-                .build();
 
         List<Reservation> resultReservation = reservationRepository.findAllByUserId(1l);
 
@@ -201,45 +188,31 @@ public class ReservationRepositoryTest {
 
     @Test
     public void testFindByUuidShouldReturnReservationWithGivenUUID(){
-        UUID uuid1 = UUID.randomUUID();
-        UUID uuid2 = UUID.randomUUID();
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
         Room room = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
-        User user = userRepository.save(User.builder()
-                .username("TEST_USER_NAME")
-                .password("TEST_PASSWORD")
-                .email("TEST_USER_EMAIL")
-                .enabled(true)
-                .locked(false)
-                .build());
         Reservation reservation1 = reservationRepository.save(Reservation.builder()
-                .uuid(uuid1)
+                .uuid(UUID_ONE)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusDays(1))
+                .user(SAVED_USER)
+                .startDate(START_DATE_ONE)
+                .endDate(END_DATE_ONE)
                 .totalPrice(100)
-                .reservationStatus(ReservationStatus.PLANNED)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
         Reservation reservation2 = reservationRepository.save(Reservation.builder()
-                .uuid(uuid2)
+                .uuid(UUID_TWO)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now().plusDays(10))
-                .endDate(LocalDate.now().plusDays(11))
+                .user(SAVED_USER)
+                .startDate(START_DATE_TWO)
+                .endDate(END_DATE_TWO)
                 .totalPrice(100)
-                .reservationStatus(ReservationStatus.PLANNED)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
 
-
-        Optional<Reservation> resultReservation = reservationRepository.findByUuid(uuid1);
+        Optional<Reservation> resultReservation = reservationRepository.findByUuid(UUID_ONE);
 
         Assertions.assertThat(resultReservation).isNotNull();
         Assertions.assertThat(resultReservation).isNotEmpty();
@@ -248,35 +221,28 @@ public class ReservationRepositoryTest {
 
     @Test
     public void testDeleteByIdShouldDeleteGivenReservation(){
-        Hotel hotel = hotelRepository.save(Hotel.builder()
-                .hotelName("Hotel 1")
-                .city("City 1")
-                .build());
         Room room = roomRepository.save(Room.builder()
                 .roomNumber(1)
-                .hotel(hotel)
+                .hotel(SAVED_HOTEL_ONE)
                 .roomType(RoomType.SINGLE_ROOM)
                 .build());
-        User user = userRepository.save(User.builder()
-                .username("TEST_USER_NAME")
-                .password("TEST_PASSWORD")
-                .email("TEST_USER_EMAIL")
-                .enabled(true)
-                .locked(false)
-                .build());
         Reservation reservation1 = reservationRepository.save(Reservation.builder()
+                .uuid(UUID_ONE)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusDays(1))
+                .user(SAVED_USER)
+                .startDate(START_DATE_ONE)
+                .endDate(END_DATE_ONE)
                 .totalPrice(100)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
         Reservation reservation2 = reservationRepository.save(Reservation.builder()
+                .uuid(UUID_TWO)
                 .room(room)
-                .user(user)
-                .startDate(LocalDate.now().plusDays(10))
-                .endDate(LocalDate.now().plusDays(11))
+                .user(SAVED_USER)
+                .startDate(START_DATE_TWO)
+                .endDate(END_DATE_TWO)
                 .totalPrice(100)
+                .reservationStatus(ReservationStatus.COMPLETED)
                 .build());
 
         reservationRepository.deleteById(reservation1.getId());
