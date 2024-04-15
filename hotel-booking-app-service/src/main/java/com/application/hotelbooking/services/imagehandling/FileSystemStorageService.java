@@ -19,19 +19,19 @@ public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
 
+    @Autowired
     private UUIDWrapper uuidWrapper;
 
+    @Autowired
     private FilesWrapper filesWrapper;
 
     @Autowired
-    public FileSystemStorageService(@Value("${IMAGES_FOLDER_PATH}") String imagesFolderPath, UUIDWrapper uuidWrapper, FilesWrapper filesWrapper) {
+    public FileSystemStorageService(@Value("${IMAGES_FOLDER_PATH}") String imagesFolderPath) {
         if(imagesFolderPath.trim().length() == 0){
             throw new StorageException("File upload location can not be Empty.");
         }
 
         this.rootLocation = Paths.get(imagesFolderPath);
-        this.uuidWrapper = uuidWrapper;
-        this.filesWrapper = filesWrapper;
     }
 
     @Override
