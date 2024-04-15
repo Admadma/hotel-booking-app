@@ -102,7 +102,7 @@
         <li th:each="hotelsRoomsResultDTO, iterStat : ${session.hotelsRoomsResultDTOs}" class="dropdown row justify-content-center" th:style="${iterStat.last ? '' : 'margin-bottom: 20px;'}">
             <div style="display: flex; border-radius: 15px; overflow: hidden; width: 100%;">
                 <div class="image-box">
-                    <img th:src="@{/images/__${hotelsRoomsResultDTO.imageName}__}" alt="${hotelsRoomsResultDTO.imageName}" class="scaled-image">
+                    <img th:src="@{/images/__${hotelsRoomsResultDTO.imageName}__}" class="scaled-image">
                 </div>
                 <div style="background-color:whitesmoke; flex: 1; padding-left: 20px;">
                     <p th:text="${hotelsRoomsResultDTO.hotelName}" style="font-size: 2em"></p>

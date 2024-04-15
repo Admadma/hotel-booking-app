@@ -2,6 +2,7 @@ version: '3'
 
 volumes:
   my-datavolume:
+  files-volume:
 
 services:
   docker-mysql:
@@ -21,7 +22,7 @@ services:
     restart: on-failure:10
     volumes:
       - ./logs:/app/logs
-      - my-datavolume:/app/images
+      - files-volume:/app/images
     ports:
        - 8080:8080
     env_file:

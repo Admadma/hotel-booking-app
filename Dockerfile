@@ -12,7 +12,15 @@ WORKDIR /app
 
 RUN mkdir images
 
-COPY --from=build /app/data.sql .
+RUN mkdir demo_images
+
+COPY images ./demo_images
+
+COPY copy_files.sh .
+
+RUN chmod +x copy_files.sh
+
+COPY data.sql .
 
 COPY --from=build /app/hotel-booking-app-web/target/hotel-booking-app-web-0.0.1-SNAPSHOT.jar hotel-booking-app.jar
 
