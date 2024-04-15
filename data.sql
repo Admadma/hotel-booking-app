@@ -22,13 +22,13 @@ INSERT INTO users_roles (user_id, role_id)
 INSERT INTO confirmation_tokens (token, user_id, created_at, expires_at)
     SELECT '71a0a0d5-b57f-444c-bf9b-883256e5a323', u.id, '2024-04-02 12:38:50.077802', '2024-04-02 13:08:50.077802' FROM users u;
 
-INSERT INTO hotels (hotel_name, city, image_name) VALUES
-    ('Hotel 1', 'City 1', 'hotel_image_1.png'),
-    ('Hotel 2', 'City 1', 'hotel_image_2.png'),
-    ('Hotel 3', 'City 2', 'hotel_image_3.png'),
-    ('Hotel 4', 'City 2', 'hotel_image_4.png'),
-    ('Hotel 5', 'City 3', 'hotel_image_5.png'),
-    ('Hotel 6', 'City 4', 'hotel_image_6.png');
+INSERT INTO hotels (hotel_name, city, image_name, average_rating) VALUES
+    ('Hotel 1', 'City 1', 'hotel_image_1.png', 0.0),
+    ('Hotel 2', 'City 1', 'hotel_image_2.png', 0.0),
+    ('Hotel 3', 'City 2', 'hotel_image_3.png', 0.0),
+    ('Hotel 4', 'City 2', 'hotel_image_4.png', 0.0),
+    ('Hotel 5', 'City 3', 'hotel_image_5.png', 0.0),
+    ('Hotel 6', 'City 4', 'hotel_image_6.png', 0.0);
 
 INSERT INTO rooms (room_number, single_beds, double_beds, price_per_night, room_type, version, hotel_id) VALUES
     (1, 1, 0, 100, 'SINGLE_ROOM', 1, 1),
