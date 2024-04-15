@@ -7,11 +7,13 @@ volumes:
 services:
   docker-mysql:
     image: mysql:8
+    env_file:
+      - .env
     environment:
-      - MYSQL_ROOT_PASSWORD=Verystrongpw1
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=hotel_db
-      - MYSQL_USER=springuser
-      - MYSQL_PASSWORD=ThePassword
+      - MYSQL_USER=${DATASOURCE_USERNAME}
+      - MYSQL_PASSWORD=${DATASOURCE_PASSWORD}
     volumes:
       - my-datavolume:/var/lib/mysql
     ports:
