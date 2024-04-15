@@ -66,7 +66,7 @@ public class ReservationConfirmationEmailServiceImpl implements ReservationConfi
                 "            <td>" + reservationModel.getTotalPrice() + " HUF</td>\n" +
                 "        </tr>\n" +
                 "        <tr>\n" +
-                "            <td>" + "your reservation ID" + "</td>\n" +
+                "            <td>" + messageSource.getMessage("email.reservation.id", null, locale) + "</td>\n" +
                 "            <td>" + reservationModel.getUuid() + "</td>\n" +
                 "        </tr>\n" +
                 "    </table>";

@@ -11,6 +11,7 @@ import org.springframework.context.MessageSource;
 
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -20,31 +21,34 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class ReservationConfirmationEmailServiceImplTest {
 
+    private static final UUID RESERVATION_UUID = UUID.randomUUID();
     private static final String EMAIL = "test_email";
     private static final String RESERVATION_SUBJECT_CODE = "email.reservation.confirmed.subject";
     private static final String RESERVATION_SUBJECT = "test_subject_successful_reservation";
     private static final String RESERVATION_MESSAGE_CODE = "email.reservation.message";
     private static final String RESERVATION_MESSAGE = "test_body_successful_reservation";
     private static final String RESERVATION_ROOM_NUMBER_CODE = "email.reservation.roomNumber";
-    private static final String RESERVATION_ROOM_NUMBER = "Room number:";
+    private static final String RESERVATION_ROOM_NUMBER = "Room number";
     private static final String RESERVATION_HOTEL_NAME_CODE = "email.reservation.hotelName";
-    private static final String RESERVATION_HOTEL_NAME = "Hotel name:";
+    private static final String RESERVATION_HOTEL_NAME = "Hotel name";
     private static final String RESERVATION_CITY_CODE = "email.reservation.city";
-    private static final String RESERVATION_CITY = "City:";
+    private static final String RESERVATION_CITY = "City";
     private static final String RESERVATION_ROOM_TYPE_CODE = "email.reservation.roomType";
-    private static final String RESERVATION_ROOM_TYPE = "Room type:";
+    private static final String RESERVATION_ROOM_TYPE = "Room type";
     private static final String RESERVED_ROOM_TYPE_CODE = "roomname.family_room";
     private static final String RESERVED_ROOM_TYPE = "Family room";
     private static final String RESERVATION_SINGLE_BEDS_CODE = "email.reservation.singleBeds";
-    private static final String RESERVATION_SINGLE_BEDS = "Single beds:";
+    private static final String RESERVATION_SINGLE_BEDS = "Single beds";
     private static final String RESERVATION_DOUBLE_BEDS_CODE = "email.reservation.doubleBeds";
-    private static final String RESERVATION_DOUBLE_BEDS = "Double beds:";
+    private static final String RESERVATION_DOUBLE_BEDS = "Double beds";
     private static final String RESERVATION_START_DATE_CODE = "email.reservation.startDate";
-    private static final String RESERVATION_START_DATE= "Start date:";
+    private static final String RESERVATION_START_DATE= "Start date";
     private static final String RESERVATION_END_DATE_CODE = "email.reservation.endDate";
-    private static final String RESERVATION_END_DATE= "End date:";
+    private static final String RESERVATION_END_DATE= "End date";
     private static final String RESERVATION_TOTAL_PRICE_CODE = "email.reservation.totalPrice";
-    private static final String RESERVATION_TOTAL_PRICE= "Total price:";
+    private static final String RESERVATION_TOTAL_PRICE= "Total price";
+    private static final String RESERVATION_ID_CODE = "email.reservation.id";
+    private static final String RESERVATION_ID= "Reservation ID";
     private static final UserModel USER_MODEL = UserModel.builder()
             .email(EMAIL)
             .build();
@@ -60,6 +64,7 @@ public class ReservationConfirmationEmailServiceImplTest {
             .roomType(RoomType.FAMILY_ROOM)
             .build();
     private static final ReservationModel RESERVATION_MODEL = ReservationModel.builder()
+            .uuid(RESERVATION_UUID)
             .room(ROOM_MODEL)
             .startDate(LocalDate.now())
             .endDate(LocalDate.now().plusDays(5))
@@ -104,6 +109,10 @@ public class ReservationConfirmationEmailServiceImplTest {
             "            <td>" + RESERVATION_TOTAL_PRICE + "</td>\n" +
             "            <td>" + RESERVATION_MODEL.getTotalPrice() + " HUF</td>\n" +
             "        </tr>\n" +
+            "        <tr>\n" +
+            "            <td>" + RESERVATION_ID + "</td>\n" +
+            "            <td>" + RESERVATION_MODEL.getUuid() + "</td>\n" +
+            "        </tr>\n" +
             "    </table>";;
 
     @InjectMocks
@@ -130,6 +139,7 @@ public class ReservationConfirmationEmailServiceImplTest {
         when(messageSource.getMessage(eq(RESERVATION_START_DATE_CODE), eq(null), any(Locale.class))).thenReturn(RESERVATION_START_DATE);
         when(messageSource.getMessage(eq(RESERVATION_END_DATE_CODE), eq(null), any(Locale.class))).thenReturn(RESERVATION_END_DATE);
         when(messageSource.getMessage(eq(RESERVATION_TOTAL_PRICE_CODE), eq(null), any(Locale.class))).thenReturn(RESERVATION_TOTAL_PRICE);
+        when(messageSource.getMessage(eq(RESERVATION_ID_CODE), eq(null), any(Locale.class))).thenReturn(RESERVATION_ID);
         doNothing().when(emailSenderService).sendEmail(EMAIL, RESERVATION_SUBJECT, FULL_BODY);
 
         reservationConfirmationEmailService.sendReservationConfirmationEmail(RESERVATION_MODEL);
@@ -146,6 +156,7 @@ public class ReservationConfirmationEmailServiceImplTest {
         verify(messageSource).getMessage(eq(RESERVATION_START_DATE_CODE), eq(null), any(Locale.class));
         verify(messageSource).getMessage(eq(RESERVATION_END_DATE_CODE), eq(null), any(Locale.class));
         verify(messageSource).getMessage(eq(RESERVATION_TOTAL_PRICE_CODE), eq(null), any(Locale.class));
+        verify(messageSource).getMessage(eq(RESERVATION_ID_CODE), eq(null), any(Locale.class));
         verify(emailSenderService).sendEmail(EMAIL, RESERVATION_SUBJECT, FULL_BODY);
     }
 }
