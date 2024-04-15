@@ -32,7 +32,7 @@ public class UserEmailConfirmationSenderServiceImplTest {
     private static final ConfirmationTokenModel CONFIRMATION_TOKEN_MODEL = ConfirmationTokenModel.builder().user(USER_MODEL_ENABLED).expiresAt(LocalDateTime.now().plusDays(10)).build();
 
     @InjectMocks
-    private UserEmailConfirmationSenderServiceImpl userEmailConfirmationSenderServiceImpl;
+    private UserEmailConfirmationSenderServiceImpl userEmailConfirmationSenderServiceImpl = new UserEmailConfirmationSenderServiceImpl("test");
 
     @Mock
     private ConfirmationTokenRepositoryService confirmationTokenRepositoryService;
