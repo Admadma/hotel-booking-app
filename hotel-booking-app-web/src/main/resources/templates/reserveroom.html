@@ -12,29 +12,25 @@
 <div th:insert="~{fragments/navbar ::navbar}"/>
 
 <div class="container rounded" style="width: 42rem; margin-top: 3rem; font-size: 1.5rem; background-color: #FFFFFF">
-    <div class="row justify-content-between" style="background-color: #EEEEEE">
-        <div class="col-6" th:text="#{reservation.roomNumber}"/>
-        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.room.roomNumber}"/>
-    </div>
     <div class="row justify-content-between">
         <div class="col-6" th:text="#{reservation.hotelName}"/>
-        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.room.hotel.hotelName}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.hotelName}"/>
     </div>
     <div class="row justify-content-between" style="background-color: #EEEEEE">
         <div class="col-6" th:text="#{reservation.city}"/>
-        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.room.hotel.city}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.city}"/>
     </div>
     <div class="row justify-content-between">
         <div class="col-6" th:text="#{reservation.roomType}"/>
-        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:insert="~{fragments/roomtypenames ::roomtypenames(${session.reservationPlan.room.roomType})}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:insert="~{fragments/roomtypenames ::roomtypenames(${session.reservationPlan.roomType})}"/>
     </div>
     <div class="row justify-content-between" style="background-color: #EEEEEE">
         <div class="col-6" th:text="#{reservation.singleBeds}"/>
-        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.room.singleBeds}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.singleBeds}"/>
     </div>
     <div class="row justify-content-between">
         <div class="col-6" th:text="#{reservation.doubleBeds}"/>
-        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.room.doubleBeds}"/>
+        <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservationPlan.doubleBeds}"/>
     </div>
     <div class="row justify-content-between" style="background-color: #EEEEEE">
         <div class="col-6" th:text="#{reservation.startDate}"/>

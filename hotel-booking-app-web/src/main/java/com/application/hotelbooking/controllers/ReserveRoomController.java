@@ -1,15 +1,10 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.ReservationView;
-import com.application.hotelbooking.domain.RoomType;
-import com.application.hotelbooking.dto.HotelWithReservableRoomsDTO;
-import com.application.hotelbooking.dto.ReservableRoomViewDTO;
-import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelDTO;
+import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.transformers.HotelsWithReservableRoomsDTOTransformer;
-import com.application.hotelbooking.transformers.ReservationViewTransformer;
-import com.application.hotelbooking.transformers.RoomSearchDTOTransformer;
+import com.application.hotelbooking.transformers.ReservationPlanTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -30,19 +23,15 @@ public class ReserveRoomController {
 
     @Autowired
     private ReservationService reservationService;
-
     @Autowired
-    private RoomSearchDTOTransformer roomSearchDTOTransformer;
-
-    @Autowired
-    private ReservationViewTransformer reservationViewTransformer;
+    private ReservationPlanTransformer reservationPlanTransformer;
     @Autowired
     private HotelsWithReservableRoomsDTOTransformer hotelsWithReservableRoomsDTOTransformer;
 
     @PostMapping("/reserve")
-    public String reserve(@SessionAttribute("reservationPlan") ReservationView reservationView, HttpServletRequest request){
+    public String reserve(@SessionAttribute("reservationPlan") ReservationPlanDTO reservationPlanDTO, HttpServletRequest request, Authentication auth){
         try {
-            reservationService.reserveRoom(reservationViewTransformer.transformToReservationModel(reservationView));
+            reservationService.reserveRoom(reservationPlanTransformer.transformToReservationPlanServiceDTO(reservationPlanDTO), auth.getName());
             LOGGER.info("Reserved room");
         } catch (OutdatedReservationException ore){
             LOGGER.info(ore.getMessage());
@@ -61,14 +50,21 @@ public class ReserveRoomController {
 
     @GetMapping("/reserveroom")
     public String reserveRoom(@RequestParam("hotelName") String hotelName,
-                                 @SessionAttribute("hotelsRoomsResultDTOs") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
-                              HttpServletRequest request,
-                              Authentication auth){
+                              @RequestParam("number") int roomNumber,
+                              @SessionAttribute("hotelsRoomsResultDTOs") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
+                              HttpServletRequest request){
         LOGGER.info("Navigating to reserveroom page");
 
         try {
-            request.getSession().setAttribute("reservationPlan", reservationViewTransformer.transformToReservationView(
-                    reservationService.prepareReservationNew(hotelName, hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS), auth.getName())));
+            request.getSession().setAttribute("reservationPlan",
+                    reservationPlanTransformer.transformToReservationPlanDTO(
+                            reservationService.createReservationPlan(
+                                    roomNumber,
+                                    hotelName,
+                                    hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS)
+                            )
+                    )
+            );
         } catch (OutdatedReservationException ore) {
             LOGGER.info(ore.getMessage());
             return "redirect:/hotelbooking/home?reservationError";

@@ -62,17 +62,20 @@ public class RoomServiceImplTest {
     @Mock
     private ReservationService reservationService;
 
+    @Mock
+    private AvailableRoomsFilterService availableRoomsFilterService;
+
     @Test
     public void testSearchRoomsShouldOnlyReturnRoomsThatMatchSearchConditionsAndAvailableInGivenTimePeriod(){
         when(roomRepositoryService.getRoomsWithConditions(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(ID_ROOMS_WITH_CONDITIONS);
-        when(reservationService.filterFreeRooms(ID_ROOMS_WITH_CONDITIONS, ROOM_SEARCH_FORM_SERVICE_DTO.getStartDate(), ROOM_SEARCH_FORM_SERVICE_DTO.getEndDate())).thenReturn(ID_AVAILABLE_ROOMS);
+        when(availableRoomsFilterService.filterFreeRooms(ID_ROOMS_WITH_CONDITIONS, ROOM_SEARCH_FORM_SERVICE_DTO.getStartDate(), ROOM_SEARCH_FORM_SERVICE_DTO.getEndDate())).thenReturn(ID_AVAILABLE_ROOMS);
         when(roomRepositoryService.getRoomById(1l)).thenReturn(AVAILABLE_ROOM_1);
         when(roomRepositoryService.getRoomById(4l)).thenReturn(AVAILABLE_ROOM_2);
 
         List<ReservableRoomDTO> resultReservableRoomDTO = roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
 
         verify(roomRepositoryService).getRoomsWithConditions(ROOM_SEARCH_FORM_SERVICE_DTO);
-        verify(reservationService).filterFreeRooms(ID_ROOMS_WITH_CONDITIONS, ROOM_SEARCH_FORM_SERVICE_DTO.getStartDate(), ROOM_SEARCH_FORM_SERVICE_DTO.getEndDate());
+        verify(availableRoomsFilterService).filterFreeRooms(ID_ROOMS_WITH_CONDITIONS, ROOM_SEARCH_FORM_SERVICE_DTO.getStartDate(), ROOM_SEARCH_FORM_SERVICE_DTO.getEndDate());
         verify(roomRepositoryService).getRoomById(1l);
         verify(roomRepositoryService).getRoomById(4l);
         Assertions.assertThat(resultReservableRoomDTO.size()).isEqualTo(2);

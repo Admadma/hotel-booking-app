@@ -19,6 +19,7 @@ public class UniqueReservableRoomOfHotelServiceDTO {
     private int number;
     private int singleBeds;
     private int doubleBeds;
+    private int pricePerNight;
     private int totalPrice;
     private RoomType roomType;
     private LocalDate startDate;
@@ -29,11 +30,11 @@ public class UniqueReservableRoomOfHotelServiceDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UniqueReservableRoomOfHotelServiceDTO that = (UniqueReservableRoomOfHotelServiceDTO) o;
-        return singleBeds == that.singleBeds && doubleBeds == that.doubleBeds && totalPrice == that.totalPrice && roomType == that.roomType && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate);
+        return singleBeds == that.singleBeds && doubleBeds == that.doubleBeds && pricePerNight == that.pricePerNight && totalPrice == that.totalPrice && roomType == that.roomType && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(singleBeds, doubleBeds, totalPrice, roomType, startDate, endDate);
+        return Objects.hash(singleBeds, doubleBeds, pricePerNight, totalPrice, roomType, startDate, endDate);
     }
 }

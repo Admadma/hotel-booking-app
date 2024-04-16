@@ -46,7 +46,7 @@ public class FileSystemStorageServiceTest {
     private static final String ERROR_MESSAGE_FILE_FORMAT = "Not an accepted file format.";
 
     @InjectMocks
-    private FileSystemStorageService fileSystemStorageService = new FileSystemStorageService("rootlocation");
+    private FileSystemStorageService fileSystemStorageService = new FileSystemStorageService(ROOT_LOCATION);
 
     @Mock
     private UUIDWrapper uuidWrapper;
@@ -57,14 +57,14 @@ public class FileSystemStorageServiceTest {
     @Test
     public void testConstructorShouldThrowExceptionIfImagesFolderPathIsEmpty(){
 
-        Assertions.assertThatThrownBy(() -> new FileSystemStorageService(""))
+        Assertions.assertThatThrownBy(() -> new FileSystemStorageService(EMPTY_STRING))
                 .isInstanceOf(StorageException.class);
     }
 
     @Test
     public void testConstructorShouldNotThrowExceptionIfImagesFolderPathIsNotEmpty(){
 
-        assertDoesNotThrow(() -> new FileSystemStorageService("rootlocation"));
+        assertDoesNotThrow(() -> new FileSystemStorageService(ROOT_LOCATION));
     }
 
     @Test

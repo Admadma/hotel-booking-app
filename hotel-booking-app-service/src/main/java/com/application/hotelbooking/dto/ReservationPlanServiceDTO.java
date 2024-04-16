@@ -8,19 +8,19 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UniqueReservableRoomOfHotelDTO {
+public class ReservationPlanServiceDTO {
 
-    private int number;
+    private String hotelName;
+    private String city;
+    private RoomType roomType;
     private int singleBeds;
     private int doubleBeds;
-    private int pricePerNight;
-    private int totalPrice;
-    private RoomType roomType;
     private LocalDate startDate;
     private LocalDate endDate;
+    private int pricePerNight;
+    private int totalPrice;
 }
