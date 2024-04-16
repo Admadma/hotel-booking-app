@@ -5,6 +5,7 @@ import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
+import com.application.hotelbooking.services.AvailableRoomsFilterService;
 import com.application.hotelbooking.services.ReservationConfirmationEmailService;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -30,6 +30,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private ReservationRepositoryService reservationRepositoryService;
+
+    @Autowired
+    private AvailableRoomsFilterService availableRoomsFilterService;
 
     @Autowired
     private RoomRepositoryService roomRepositoryService;
@@ -47,30 +50,6 @@ public class ReservationServiceImpl implements ReservationService {
     public void cancelReservation(Long reservationId){
         // Future logic for refunding transaction would go here
         reservationRepositoryService.delete(reservationId);
-    }
-
-    private boolean isRoomAvailableInTimePeriod(List<ReservationModel> reservations, LocalDate selectedStartDate, LocalDate selectedEndDate){
-        for (ReservationModel reservation : reservations) {
-            if (!(reservation.getStartDate().plusDays(1).isAfter(selectedEndDate) || reservation.getEndDate().minusDays(1).isBefore(selectedStartDate))) {
-                // I check each reservation of this room. If it has a single conflict then I can't reserve this in the selected time period.
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public List<Long> filterFreeRooms(List<Long> roomIds, LocalDate startDate, LocalDate endDate){
-        List<Long> freeRooms = new LinkedList<>();
-        List<ReservationModel> reservations;
-
-        for (Long roomId : roomIds) {
-            reservations = reservationRepositoryService.getReservationsByRoomId(roomId);
-            if (reservations.isEmpty() || isRoomAvailableInTimePeriod(reservations, startDate, endDate)){
-                freeRooms.add(roomId);
-            }
-        }
-
-        return freeRooms;
     }
 
     public int calculateTotalPrice(LocalDate startDate, LocalDate endDate, int pricePerNight){
@@ -114,7 +93,7 @@ public class ReservationServiceImpl implements ReservationService {
                  reservationPlanServiceDTO.getHotelName(),
                  reservationPlanServiceDTO.getCity());
 
-        List<Long> availableRoomsIds = filterFreeRooms(roomIds, reservationPlanServiceDTO.getStartDate(), reservationPlanServiceDTO.getEndDate());
+        List<Long> availableRoomsIds = availableRoomsFilterService.filterFreeRooms(roomIds, reservationPlanServiceDTO.getStartDate(), reservationPlanServiceDTO.getEndDate());
         for (Long availableRoomsId : availableRoomsIds) {
             RoomModel roomModel = roomRepositoryService.getRoomById(availableRoomsId).get();
             if (roomModel.getPricePerNight() == reservationPlanServiceDTO.getPricePerNight()) {

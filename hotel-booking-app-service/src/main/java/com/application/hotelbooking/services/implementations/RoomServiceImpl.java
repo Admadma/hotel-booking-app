@@ -2,6 +2,7 @@ package com.application.hotelbooking.services.implementations;
 
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.*;
+import com.application.hotelbooking.services.AvailableRoomsFilterService;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.services.RoomService;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
@@ -25,6 +26,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private AvailableRoomsFilterService availableRoomsFilterService;
 
     private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
         List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
@@ -52,7 +56,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     private List<Long> filterAvailableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO, List<Long> roomIds) {
-        return reservationService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate());
+        return availableRoomsFilterService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate());
     }
 
     public List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
