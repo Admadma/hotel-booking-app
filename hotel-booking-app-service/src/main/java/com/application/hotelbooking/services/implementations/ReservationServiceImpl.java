@@ -3,10 +3,7 @@ package com.application.hotelbooking.services.implementations;
 import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.domain.RoomModel;
-import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
-import com.application.hotelbooking.dto.ReservableRoomDTO;
-import com.application.hotelbooking.dto.ReservationPlanServiceDTO;
-import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelServiceDTO;
+import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationConfirmationEmailService;
 import com.application.hotelbooking.services.ReservationService;
@@ -91,6 +88,18 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
     }
 
+    public ReservationModel prepareReservationNew(ReservationPlanServiceDTO reservationPlanServiceDTO, RoomModel roomModel, String userName){
+        return ReservationModel.builder()
+                .uuid(uuidWrapper.getRandomUUID())
+                .room(roomModel)
+                .user(userRepositoryService.getUserByName(userName).get())
+                .totalPrice(reservationPlanServiceDTO.getTotalPrice())
+                .startDate(reservationPlanServiceDTO.getStartDate())
+                .endDate(reservationPlanServiceDTO.getEndDate())
+                .reservationStatus(ReservationStatus.PLANNED)
+                .build();
+    }
+
     public ReservationModel prepareReservationNew(String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS, String userName){
         HotelWithReservableRoomsServiceDTO hotelWithReservableRoomsServiceDTO = hotelWithReservableRoomsServiceDTOS.stream().filter(hotel -> hotel.getHotelName().equals(hotelName)).findFirst().get();
 
@@ -146,6 +155,26 @@ public class ReservationServiceImpl implements ReservationService {
         } else {
             throw new OutdatedReservationException("This reservation is no longer valid because the room has been updated");
         }
+    }
+
+    public ReservationModel reserveRoomNew(ReservationPlanServiceDTO reservationPlanServiceDTO, String userName) {
+        List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(reservationPlanServiceDTO.getSingleBeds(),
+                 reservationPlanServiceDTO.getDoubleBeds(),
+                 reservationPlanServiceDTO.getRoomType(),
+                 reservationPlanServiceDTO.getHotelName(),
+                 reservationPlanServiceDTO.getCity());
+
+        List<Long> availableRoomsIds = filterFreeRooms(roomIds, reservationPlanServiceDTO.getStartDate(), reservationPlanServiceDTO.getEndDate());
+        for (Long availableRoomsId : availableRoomsIds) {
+            RoomModel roomModel = roomRepositoryService.getRoomById(availableRoomsId).get();
+            if (roomModel.getPricePerNight() == reservationPlanServiceDTO.getPricePerNight()) {
+                ReservationModel reservation = reservationRepositoryService.save(prepareReservationNew(reservationPlanServiceDTO, roomModel, userName));
+                roomRepositoryService.incrementRoomVersion(reservation.getRoom());
+                reservationConfirmationEmailService.sendReservationConfirmationEmail(reservation);
+                return reservation;
+            }
+        }
+        throw new OutdatedReservationException("No more available rooms found of this type");
     }
 
     private boolean isRoomVersionUnchanged(ReservationModel reservationModel) {

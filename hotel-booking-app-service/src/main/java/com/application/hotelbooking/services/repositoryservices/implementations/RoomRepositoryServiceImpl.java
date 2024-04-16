@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices.implementations;
 
+import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
@@ -48,6 +49,14 @@ public class RoomRepositoryServiceImpl implements RoomRepositoryService {
                 roomSearchFormServiceDTO.getRoomType(),
                 roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity());
+    }
+
+    public List<Long> getRoomsWithConditions(int singleBeds, int doubleBeds, RoomType roomType, String hotelName, String city) {
+        return roomRepository.findRoomsWithConditions(singleBeds,
+                doubleBeds,
+                roomType,
+                hotelName,
+                city);
     }
 }
 

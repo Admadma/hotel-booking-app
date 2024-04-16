@@ -19,4 +19,6 @@ public interface ReservationService {
     ReservationPlanServiceDTO fixedPrepareReservationNew(int roomNumber, String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS);
     @Transactional
     ReservationModel reserveRoom(ReservationModel reservationModel);
+    @Transactional
+    ReservationModel reserveRoomNew(ReservationPlanServiceDTO reservationPlanServiceDTO, String userName);
 }

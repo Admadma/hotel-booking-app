@@ -1,6 +1,7 @@
 package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.domain.RoomModel;
+import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 
@@ -13,4 +14,5 @@ public interface RoomRepositoryService {
     RoomModel saveRoom(RoomCreationServiceDTO roomCreationServiceDTO);
     void incrementRoomVersion(RoomModel roomModel);
     List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO);
+    List<Long> getRoomsWithConditions(int singleBeds, int doubleBeds, RoomType roomType, String hotelName, String city);
 }
