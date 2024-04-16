@@ -117,7 +117,7 @@ public class RoomServiceImplTest {
     }
 
     @Test
-    public void testSearchHotelsWithReservableRooms(){
+    public void testSearchHotelsWithReservableRoomsShouldSearchForAvailableRoomsMatchingTheSearchConditionAndReturnTheUniqueOnesGroupedByHotel(){
         when(roomRepositoryService.getRoomsWithConditions(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(ID_ROOMS_WITH_CONDITIONS);
         when(availableRoomsFilterService.filterFreeRooms(ID_ROOMS_WITH_CONDITIONS, ROOM_SEARCH_FORM_SERVICE_DTO.getStartDate(), ROOM_SEARCH_FORM_SERVICE_DTO.getEndDate())).thenReturn(ID_AVAILABLE_ROOMS);
         when(roomRepositoryService.getRoomById(1l)).thenReturn(AVAILABLE_ROOM_1_HOTEL_1);
