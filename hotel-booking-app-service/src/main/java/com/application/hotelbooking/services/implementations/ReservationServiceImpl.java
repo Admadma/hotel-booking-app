@@ -5,6 +5,7 @@ import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
+import com.application.hotelbooking.dto.ReservationPlanServiceDTO;
 import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelServiceDTO;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.ReservationConfirmationEmailService;
@@ -110,6 +111,23 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         throw new OutdatedReservationException("No more rooms available with these parameters.");
+    }
+
+    public ReservationPlanServiceDTO fixedPrepareReservationNew(int roomNumber, String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS){
+        HotelWithReservableRoomsServiceDTO hotel = hotelWithReservableRoomsServiceDTOS.stream().filter(hotelWithReservableRoomsServiceDTO -> hotelWithReservableRoomsServiceDTO.getHotelName().equals(hotelName)).findFirst().get();
+        UniqueReservableRoomOfHotelServiceDTO room = hotel.getUniqueReservableRoomOfHotelServiceDTOList().stream().filter(uniqueReservableRoomOfHotelServiceDTO -> uniqueReservableRoomOfHotelServiceDTO.getNumber() == roomNumber).findFirst().get();
+
+        return ReservationPlanServiceDTO.builder()
+                .hotelName(hotel.getHotelName())
+                .city(hotel.getCity())
+                .roomType(room.getRoomType())
+                .singleBeds(room.getSingleBeds())
+                .doubleBeds(room.getDoubleBeds())
+                .startDate(room.getStartDate())
+                .endDate(room.getEndDate())
+                .pricePerNight(room.getPricePerNight())
+                .totalPrice(room.getTotalPrice())
+                .build();
     }
 
     /**

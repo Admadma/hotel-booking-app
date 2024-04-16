@@ -62,7 +62,6 @@ public class RoomServiceImpl implements RoomService {
         return createRoomSearchResultDTOs(availableRoomsIds, roomSearchFormServiceDTO);
     }
 
-    @Override
     public List<HotelWithReservableRoomsServiceDTO> searchHotelsWithReservableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
         List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
         List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);

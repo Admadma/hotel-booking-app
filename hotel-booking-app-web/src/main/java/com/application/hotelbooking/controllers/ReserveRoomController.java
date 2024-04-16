@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "hotelbooking")
@@ -61,18 +63,41 @@ public class ReserveRoomController {
 
     @GetMapping("/reserveroom")
     public String reserveRoom(@RequestParam("hotelName") String hotelName,
-                                 @SessionAttribute("hotelsRoomsResultDTOs") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
+                              @RequestParam("number") int roomNumber,
+                              @SessionAttribute("hotelsRoomsResultDTOs") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,
                               HttpServletRequest request,
                               Authentication auth){
         LOGGER.info("Navigating to reserveroom page");
+        System.out.println("Clicked on roomnumber");
+        System.out.println(roomNumber);
 
+//        hotelsWithReservableRoomsDTOS.stream().flatMap(hotelWithReservableRoomsDTO -> hotelWithReservableRoomsDTO.getUniqueReservableRoomOfHotelDTOList()). .filter(hotelWithReservableRoomsDTO -> hotelWithReservableRoomsDTO.getHotelName().equals(hotelName))
+        System.out.println(hotelsWithReservableRoomsDTOS.stream().flatMap(hotelWithReservableRoomsDTO -> hotelWithReservableRoomsDTO.getUniqueReservableRoomOfHotelDTOList().stream()).collect(Collectors.toList()));;
+
+//        hotelsWithReservableRoomsDTOS.stream().flatMap(hotelWithReservableRoomsDTO -> hotelWithReservableRoomsDTO.getUniqueReservableRoomOfHotelDTOList().stream().map(uniqueReservableRoomOfHotelDTOs -> new HotelWithReservableRoomsDTO(hotelWithReservableRoomsDTO.getHotelName(),hotelWithReservableRoomsDTO.getCity(), hotelWithReservableRoomsDTO.getImageName(), hotelWithReservableRoomsDTO.getAverageRating(), uniqueReservableRoomOfHotelDTO))). .filter(hotelWithReservableRoomsDTO -> hotelWithReservableRoomsDTO.getHotelName().equals(hotelName))
+//
+//        hotelsWithReservableRoomsDTOS.stream().filter(hotelWithReservableRoomsDTO -> hotelWithReservableRoomsDTO.getHotelName().equals(hotelName)).findFirst().get().getUniqueReservableRoomOfHotelDTOList().stream().filter(uniqueReservableRoomOfHotelDTO -> uniqueReservableRoomOfHotelDTO.getNumber() == roomNumber).
+        // take the hotel name and room number -> search for this exact room -> return its details to the user on confirmReservation page -> if it was taken, then return another similar one
+
+        //TODO: transform to view
         try {
-            request.getSession().setAttribute("reservationPlan", reservationViewTransformer.transformToReservationView(
-                    reservationService.prepareReservationNew(hotelName, hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS), auth.getName())));
+            request.getSession().setAttribute("reservationPlan",
+                    reservationService.fixedPrepareReservationNew(roomNumber, hotelName, hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS)));
         } catch (OutdatedReservationException ore) {
             LOGGER.info(ore.getMessage());
             return "redirect:/hotelbooking/home?reservationError";
         }
+
+//        System.out.println("reservation plan:");
+//        System.out.println(reservationService.fixedPrepareReservationNew(roomNumber, hotelName, hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS)));
+//
+//        try {
+//            request.getSession().setAttribute("reservationPlan", reservationViewTransformer.transformToReservationView(
+//                    reservationService.prepareReservationNew(hotelName, hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS), auth.getName())));
+//        } catch (OutdatedReservationException ore) {
+//            LOGGER.info(ore.getMessage());
+//            return "redirect:/hotelbooking/home?reservationError";
+//        }
 
         return "reserveroom";
     }
