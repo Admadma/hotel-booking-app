@@ -30,59 +30,24 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     private AvailableRoomsFilterService availableRoomsFilterService;
 
-    private List<ReservableRoomDTO> createRoomSearchResultDTOs(List<Long> roomIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-        List<ReservableRoomDTO> reservableRoomDTOS = new LinkedList<>();
-        for (Long roomId : roomIds) {
-            RoomModel room = roomRepositoryService.getRoomById(roomId).get();
-            reservableRoomDTOS.add(createReservableRoomDTO(room, roomSearchFormServiceDTO));
-        }
-        return reservableRoomDTOS;
-    }
-
-    private ReservableRoomDTO createReservableRoomDTO(RoomModel room, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
-        return new ReservableRoomDTO(room.getRoomNumber(),
-                room.getSingleBeds(),
-                room.getDoubleBeds(),
-                reservationService.calculateTotalPrice(
-                        roomSearchFormServiceDTO.getStartDate(),
-                        roomSearchFormServiceDTO.getEndDate(),
-                        room.getPricePerNight()),
-                room.getRoomType(),
-                room.getHotel().getHotelName(),
-                room.getHotel().getCity(),
-                room.getHotel().getImageName(),
-                roomSearchFormServiceDTO.getStartDate(),
-                roomSearchFormServiceDTO.getEndDate());
-    }
-
     private List<Long> filterAvailableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO, List<Long> roomIds) {
         return availableRoomsFilterService.filterFreeRooms(roomIds, roomSearchFormServiceDTO.getStartDate(), roomSearchFormServiceDTO.getEndDate());
     }
 
-    public List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO){
-        List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
-        List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
-
-        return createRoomSearchResultDTOs(availableRoomsIds, roomSearchFormServiceDTO);
-    }
-
-    public List<HotelWithReservableRoomsServiceDTO> searchHotelsWithReservableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
-        List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
-        List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
-
-        return assignUniqueRoomsToHotels(availableRoomsIds, roomSearchFormServiceDTO);
-    }
-
-    private List<HotelWithReservableRoomsServiceDTO> assignUniqueRoomsToHotels(List<Long> availableRoomsIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
-        List<HotelWithReservableRoomsServiceDTO> hotelsWithReservableRoomsServiceDTO = new LinkedList<>();
-        for (Long availableRoomsId : availableRoomsIds){
-            RoomModel roomModel = roomRepositoryService.getRoomById(availableRoomsId).get();
-            addToHotelsListIfNotPresentYet(
-                    roomModel,
-                    hotelsWithReservableRoomsServiceDTO,
-                    buildUniqueReservableRoomOfHotelServiceDTO(roomModel, roomSearchFormServiceDTO));
-        }
-        return hotelsWithReservableRoomsServiceDTO;
+    private UniqueReservableRoomOfHotelServiceDTO buildUniqueReservableRoomOfHotelServiceDTO(RoomModel roomModel, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO = UniqueReservableRoomOfHotelServiceDTO.builder()
+                .number(roomModel.getRoomNumber()) // Despite the UniqueReservableRoomOfHotelServiceDTO not containing actual rooms, but their common attributes, I still use the roomNumber of the first room added to the list in order to easily look up the room attributes later.
+                .singleBeds(roomModel.getSingleBeds())
+                .doubleBeds(roomModel.getDoubleBeds())
+                .totalPrice(reservationService.calculateTotalPrice(
+                        roomSearchFormServiceDTO.getStartDate(),
+                        roomSearchFormServiceDTO.getEndDate(),
+                        roomModel.getPricePerNight()))
+                .roomType(roomModel.getRoomType())
+                .startDate(roomSearchFormServiceDTO.getStartDate())
+                .endDate(roomSearchFormServiceDTO.getEndDate())
+                .build();
+        return uniqueReservableRoomOfHotelServiceDTO;
     }
 
     private void addToHotelsListIfNotPresentYet(RoomModel roomModel, List<HotelWithReservableRoomsServiceDTO> hotelsWithReservableRoomsServiceDTO, UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO) {
@@ -104,24 +69,27 @@ public class RoomServiceImpl implements RoomService {
                             roomModel.getHotel().getImageName(),
                             roomModel.getHotel().getAverageRating(),
                             uniqueReservableRoomOfHotelServiceDTOList
-                           ));
+                    ));
         }
     }
 
-    private UniqueReservableRoomOfHotelServiceDTO buildUniqueReservableRoomOfHotelServiceDTO(RoomModel roomModel, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
-        UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO = UniqueReservableRoomOfHotelServiceDTO.builder()
-                .number(roomModel.getRoomNumber()) // I store the roomnumber so that when selecting a room of a hotel I can quickly search it up by this
-                .singleBeds(roomModel.getSingleBeds())
-                .doubleBeds(roomModel.getDoubleBeds())
-                .totalPrice(reservationService.calculateTotalPrice(
-                        roomSearchFormServiceDTO.getStartDate(),
-                        roomSearchFormServiceDTO.getEndDate(),
-                        roomModel.getPricePerNight()))
-                .roomType(roomModel.getRoomType())
-                .startDate(roomSearchFormServiceDTO.getStartDate())
-                .endDate(roomSearchFormServiceDTO.getEndDate())
-                .build();
-        return uniqueReservableRoomOfHotelServiceDTO;
+    private List<HotelWithReservableRoomsServiceDTO> assignUniqueRoomsToHotels(List<Long> availableRoomsIds, RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        List<HotelWithReservableRoomsServiceDTO> hotelsWithReservableRoomsServiceDTO = new LinkedList<>();
+        for (Long availableRoomsId : availableRoomsIds){
+            RoomModel roomModel = roomRepositoryService.getRoomById(availableRoomsId).get();
+            addToHotelsListIfNotPresentYet(
+                    roomModel,
+                    hotelsWithReservableRoomsServiceDTO,
+                    buildUniqueReservableRoomOfHotelServiceDTO(roomModel, roomSearchFormServiceDTO));
+        }
+        return hotelsWithReservableRoomsServiceDTO;
+    }
+
+    public List<HotelWithReservableRoomsServiceDTO> searchHotelsWithReservableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
+        List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
+        List<Long> availableRoomsIds = filterAvailableRooms(roomSearchFormServiceDTO, roomIds);
+
+        return assignUniqueRoomsToHotels(availableRoomsIds, roomSearchFormServiceDTO);
     }
 
     public boolean isEndDateAfterStartDate(LocalDate startDate, LocalDate endDate){

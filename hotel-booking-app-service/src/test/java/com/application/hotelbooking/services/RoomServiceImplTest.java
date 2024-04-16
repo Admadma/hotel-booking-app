@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 public class RoomServiceImplTest {
 
     private static final List<Long> ID_ROOMS_WITH_CONDITIONS = List.of(1l, 2l, 3l, 4l, 5l);
-    private static final List<Long> ID_AVAILABLE_ROOMS_ONE_TWO = List.of(1l, 2l);
     private static final List<Long> ID_AVAILABLE_ROOMS = List.of(1l, 2l, 3l, 4l);
     public static final LocalDate LOCAL_DATE_NOW_PLUS_FIVE_DAYS = LocalDate.now().plusDays(5);
     public static final LocalDate LOCAL_DATE_NOW_PLUS_TEN_DAYS = LocalDate.now().plusDays(10);
@@ -84,8 +83,6 @@ public class RoomServiceImplTest {
             .hotel(HOTEL_TWO)
             .build());
 
-
-
     @InjectMocks
     private RoomServiceImpl roomService;
 
@@ -97,24 +94,6 @@ public class RoomServiceImplTest {
 
     @Mock
     private AvailableRoomsFilterService availableRoomsFilterService;
-
-    @Test
-    public void testSearchRoomsShouldOnlyReturnRoomsThatMatchSearchConditionsAndAvailableInGivenTimePeriod(){
-        when(roomRepositoryService.getRoomsWithConditions(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(ID_ROOMS_WITH_CONDITIONS);
-        when(availableRoomsFilterService.filterFreeRooms(ID_ROOMS_WITH_CONDITIONS, ROOM_SEARCH_FORM_SERVICE_DTO.getStartDate(), ROOM_SEARCH_FORM_SERVICE_DTO.getEndDate())).thenReturn(ID_AVAILABLE_ROOMS_ONE_TWO);
-        when(roomRepositoryService.getRoomById(1l)).thenReturn(AVAILABLE_ROOM_1_HOTEL_1);
-        when(roomRepositoryService.getRoomById(2l)).thenReturn(AVAILABLE_ROOM_2_HOTEL_1);
-
-        List<ReservableRoomDTO> resultReservableRoomDTO = roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
-
-        verify(roomRepositoryService).getRoomsWithConditions(ROOM_SEARCH_FORM_SERVICE_DTO);
-        verify(availableRoomsFilterService).filterFreeRooms(ID_ROOMS_WITH_CONDITIONS, ROOM_SEARCH_FORM_SERVICE_DTO.getStartDate(), ROOM_SEARCH_FORM_SERVICE_DTO.getEndDate());
-        verify(roomRepositoryService).getRoomById(1l);
-        verify(roomRepositoryService).getRoomById(2l);
-        Assertions.assertThat(resultReservableRoomDTO.size()).isEqualTo(2);
-        Assertions.assertThat(resultReservableRoomDTO.get(0).getRoomNumber()).isEqualTo(1);
-        Assertions.assertThat(resultReservableRoomDTO.get(1).getRoomNumber()).isEqualTo(2);
-    }
 
     @Test
     public void testIsEndDateAfterStartDateShouldReturnFalseIfStartDateIsAfterEndDate(){
