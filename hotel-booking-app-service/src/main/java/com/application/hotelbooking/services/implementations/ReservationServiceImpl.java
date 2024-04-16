@@ -56,19 +56,6 @@ public class ReservationServiceImpl implements ReservationService {
         return pricePerNight * (int) ChronoUnit.DAYS.between(startDate, endDate);
     }
 
-
-    public ReservationModel prepareReservation(ReservationPlanServiceDTO reservationPlanServiceDTO, RoomModel roomModel, String userName){
-        return ReservationModel.builder()
-                .uuid(uuidWrapper.getRandomUUID())
-                .room(roomModel)
-                .user(userRepositoryService.getUserByName(userName).get())
-                .totalPrice(reservationPlanServiceDTO.getTotalPrice())
-                .startDate(reservationPlanServiceDTO.getStartDate())
-                .endDate(reservationPlanServiceDTO.getEndDate())
-                .reservationStatus(ReservationStatus.PLANNED)
-                .build();
-    }
-
     public ReservationPlanServiceDTO createReservationPlan(int roomNumber, String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS){
         HotelWithReservableRoomsServiceDTO hotel = hotelWithReservableRoomsServiceDTOS.stream().filter(hotelWithReservableRoomsServiceDTO -> hotelWithReservableRoomsServiceDTO.getHotelName().equals(hotelName)).findFirst().get();
         UniqueReservableRoomOfHotelServiceDTO room = hotel.getUniqueReservableRoomOfHotelServiceDTOList().stream().filter(uniqueReservableRoomOfHotelServiceDTO -> uniqueReservableRoomOfHotelServiceDTO.getNumber() == roomNumber).findFirst().get();
@@ -86,14 +73,22 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
     }
 
-    public ReservationModel reserveRoom(ReservationPlanServiceDTO reservationPlanServiceDTO, String userName) {
-        List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(reservationPlanServiceDTO.getSingleBeds(),
-                 reservationPlanServiceDTO.getDoubleBeds(),
-                 reservationPlanServiceDTO.getRoomType(),
-                 reservationPlanServiceDTO.getHotelName(),
-                 reservationPlanServiceDTO.getCity());
+    public ReservationModel prepareReservation(ReservationPlanServiceDTO reservationPlanServiceDTO, RoomModel roomModel, String userName){
+        return ReservationModel.builder()
+                .uuid(uuidWrapper.getRandomUUID())
+                .room(roomModel)
+                .user(userRepositoryService.getUserByName(userName).get())
+                .totalPrice(reservationPlanServiceDTO.getTotalPrice())
+                .startDate(reservationPlanServiceDTO.getStartDate())
+                .endDate(reservationPlanServiceDTO.getEndDate())
+                .reservationStatus(ReservationStatus.PLANNED)
+                .build();
+    }
 
+    public ReservationModel reserveRoom(ReservationPlanServiceDTO reservationPlanServiceDTO, String userName) {
+        List<Long> roomIds = getRoomsWithConditions(reservationPlanServiceDTO);
         List<Long> availableRoomsIds = availableRoomsFilterService.filterFreeRooms(roomIds, reservationPlanServiceDTO.getStartDate(), reservationPlanServiceDTO.getEndDate());
+
         for (Long availableRoomsId : availableRoomsIds) {
             RoomModel roomModel = roomRepositoryService.getRoomById(availableRoomsId).get();
             if (roomModel.getPricePerNight() == reservationPlanServiceDTO.getPricePerNight()) {
@@ -104,5 +99,13 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         throw new OutdatedReservationException("No more available rooms found of this type");
+    }
+
+    private List<Long> getRoomsWithConditions(ReservationPlanServiceDTO reservationPlanServiceDTO) {
+        return roomRepositoryService.getRoomsWithConditions(reservationPlanServiceDTO.getSingleBeds(),
+                reservationPlanServiceDTO.getDoubleBeds(),
+                reservationPlanServiceDTO.getRoomType(),
+                reservationPlanServiceDTO.getHotelName(),
+                reservationPlanServiceDTO.getCity());
     }
 }
