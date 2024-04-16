@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface RoomService {
-    List<ReservableRoomDTO> searchRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO);
     List<HotelWithReservableRoomsServiceDTO> searchHotelsWithReservableRooms(RoomSearchFormServiceDTO roomSearchFormServiceDTO);
     boolean isEndDateAfterStartDate(LocalDate startDate, LocalDate endDate);
 }
