@@ -77,18 +77,8 @@ public class ReservationServiceImpl implements ReservationService {
         return pricePerNight * (int) ChronoUnit.DAYS.between(startDate, endDate);
     }
 
-    public ReservationModel prepareReservation(ReservableRoomDTO reservableRoomDTO, String userName){
-        return ReservationModel.builder()
-                .room(roomRepositoryService.findRoomByNumberAndHotelName(reservableRoomDTO.getRoomNumber(), reservableRoomDTO.getHotelName()).get())
-                .user(userRepositoryService.getUserByName(userName).get())
-                .totalPrice(reservableRoomDTO.getTotalPrice())
-                .startDate(reservableRoomDTO.getStartDate())
-                .endDate(reservableRoomDTO.getEndDate())
-                .reservationStatus(ReservationStatus.PLANNED)
-                .build();
-    }
 
-    public ReservationModel prepareReservationNew(ReservationPlanServiceDTO reservationPlanServiceDTO, RoomModel roomModel, String userName){
+    public ReservationModel prepareReservation(ReservationPlanServiceDTO reservationPlanServiceDTO, RoomModel roomModel, String userName){
         return ReservationModel.builder()
                 .uuid(uuidWrapper.getRandomUUID())
                 .room(roomModel)
@@ -100,29 +90,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
     }
 
-    public ReservationModel prepareReservationNew(String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS, String userName){
-        HotelWithReservableRoomsServiceDTO hotelWithReservableRoomsServiceDTO = hotelWithReservableRoomsServiceDTOS.stream().filter(hotel -> hotel.getHotelName().equals(hotelName)).findFirst().get();
-
-        for (UniqueReservableRoomOfHotelServiceDTO uniqueReservableRoomOfHotelServiceDTO : hotelWithReservableRoomsServiceDTO.getUniqueReservableRoomOfHotelServiceDTOList()){
-            RoomModel roomModel = roomRepositoryService.findRoomByNumberAndHotelName(uniqueReservableRoomOfHotelServiceDTO.getNumber(), hotelName).get();
-
-            if (isRoomAvailableInTimePeriod(roomModel.getReservations(), uniqueReservableRoomOfHotelServiceDTO.getStartDate(), uniqueReservableRoomOfHotelServiceDTO.getEndDate())){
-                return ReservationModel.builder()
-                        .uuid(uuidWrapper.getRandomUUID())
-                        .room(roomModel)
-                        .user(userRepositoryService.getUserByName(userName).get())
-                        .totalPrice(uniqueReservableRoomOfHotelServiceDTO.getTotalPrice())
-                        .startDate(uniqueReservableRoomOfHotelServiceDTO.getStartDate())
-                        .endDate(uniqueReservableRoomOfHotelServiceDTO.getEndDate())
-                        .reservationStatus(ReservationStatus.PLANNED)
-                        .build();
-            }
-        }
-
-        throw new OutdatedReservationException("No more rooms available with these parameters.");
-    }
-
-    public ReservationPlanServiceDTO fixedPrepareReservationNew(int roomNumber, String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS){
+    public ReservationPlanServiceDTO createReservationPlan(int roomNumber, String hotelName, List<HotelWithReservableRoomsServiceDTO> hotelWithReservableRoomsServiceDTOS){
         HotelWithReservableRoomsServiceDTO hotel = hotelWithReservableRoomsServiceDTOS.stream().filter(hotelWithReservableRoomsServiceDTO -> hotelWithReservableRoomsServiceDTO.getHotelName().equals(hotelName)).findFirst().get();
         UniqueReservableRoomOfHotelServiceDTO room = hotel.getUniqueReservableRoomOfHotelServiceDTOList().stream().filter(uniqueReservableRoomOfHotelServiceDTO -> uniqueReservableRoomOfHotelServiceDTO.getNumber() == roomNumber).findFirst().get();
 
@@ -139,25 +107,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .build();
     }
 
-    /**
-     *         While the user stayed on the confirm reservation page someone else might have created a reservation in the same time period.
-     *         This solution works for now. But later I could lock the room for example 15 minutes to give time for the user to confirm the reservation and enhance user experience.
-     * @param reservationModel a reservation prepared by UserService.prepareReservation, with attributes provided by the user
-     * @return returns the reservation that was saved to the database.
-     */
-    public ReservationModel reserveRoom(ReservationModel reservationModel){
-        // By checking that the version is still the same, I can guarantee that the selected time period had no new reservations, and I can skip checking it all again
-        if (isRoomVersionUnchanged(reservationModel) || isRoomAvailableInTimePeriod(roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getReservations(), reservationModel.getStartDate(), reservationModel.getEndDate())){
-            ReservationModel reservation = reservationRepositoryService.save(reservationModel);
-            roomRepositoryService.incrementRoomVersion(reservation.getRoom());
-            reservationConfirmationEmailService.sendReservationConfirmationEmail(reservation);
-            return reservation;
-        } else {
-            throw new OutdatedReservationException("This reservation is no longer valid because the room has been updated");
-        }
-    }
-
-    public ReservationModel reserveRoomNew(ReservationPlanServiceDTO reservationPlanServiceDTO, String userName) {
+    public ReservationModel reserveRoom(ReservationPlanServiceDTO reservationPlanServiceDTO, String userName) {
         List<Long> roomIds = roomRepositoryService.getRoomsWithConditions(reservationPlanServiceDTO.getSingleBeds(),
                  reservationPlanServiceDTO.getDoubleBeds(),
                  reservationPlanServiceDTO.getRoomType(),
@@ -168,16 +118,12 @@ public class ReservationServiceImpl implements ReservationService {
         for (Long availableRoomsId : availableRoomsIds) {
             RoomModel roomModel = roomRepositoryService.getRoomById(availableRoomsId).get();
             if (roomModel.getPricePerNight() == reservationPlanServiceDTO.getPricePerNight()) {
-                ReservationModel reservation = reservationRepositoryService.save(prepareReservationNew(reservationPlanServiceDTO, roomModel, userName));
+                ReservationModel reservation = reservationRepositoryService.save(prepareReservation(reservationPlanServiceDTO, roomModel, userName));
                 roomRepositoryService.incrementRoomVersion(reservation.getRoom());
                 reservationConfirmationEmailService.sendReservationConfirmationEmail(reservation);
                 return reservation;
             }
         }
         throw new OutdatedReservationException("No more available rooms found of this type");
-    }
-
-    private boolean isRoomVersionUnchanged(ReservationModel reservationModel) {
-        return reservationModel.getRoom().getVersion() == roomRepositoryService.findRoomByNumberAndHotelName(reservationModel.getRoom().getRoomNumber(), reservationModel.getRoom().getHotel().getHotelName()).get().getVersion();
     }
 }
