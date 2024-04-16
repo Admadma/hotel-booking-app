@@ -51,7 +51,7 @@ public class ReviewServiceImplTest {
     private HotelService hotelService;
 
     @Test
-    public void testSearchHotelsWithReservableRoomsShouldSearchForAvailableRoomsMatchingTheSearchConditionAndReturnTheUniqueOnesGroupedByHotel(){
+    public void testCreateReviewShouldSaveNewReviewAndUpdateHotelAverageReviews(){
         when(hotelRepositoryService.findHotelByHotelName(HOTEL_NAME)).thenReturn(OPTIONAL_HOTEL_MODEL);
         when(userRepositoryService.getUserByName(USER_NAME)).thenReturn(OPTIONAL_USER_MODEL);
         when(reviewRepositoryService.save(REVIEW_MODEL)).thenReturn(REVIEW_MODEL);
