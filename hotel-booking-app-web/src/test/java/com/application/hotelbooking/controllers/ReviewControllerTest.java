@@ -143,6 +143,17 @@ public class ReviewControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "ADMIN", username = "admin")
+    public void testAdminCanNotAttemptToSubmitReview() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/submit-review")
+                        .flashAttr("reviewDTO", REVIEW_DTO)
+                        .sessionAttr("hotelName", HOTEL_NAME))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     @WithMockUser(authorities = "USER")
     public void testUserCanNavigateToReviewPageIfTheirSelectedReservationIsCompleted() throws Exception {
         when(reservationRepositoryService.getReservationByUuid(TEST_UUID)).thenReturn(OPTIONAL_COMPLETED_RESERVATION_MODEL);
