@@ -22,21 +22,22 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RoomRepositoryServiceImplTest {
 
-    public static final String HOTEL_NAME = "Test hotel";
-    public static final String NONEXISTENT_HOTEL_NAME = "Test hotel";
-    public static final String CITY = "Test city";
-    public static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName(HOTEL_NAME).build();
-    public static final Hotel HOTEL = Hotel.builder().hotelName(HOTEL_NAME).build();
-    public static final long ROOM_ID = 1l;
-    public static final int ROOM_NUMBER = 1;
-    public static final long VERSION = 0l;
-    public static final RoomModel ROOM_MODEL = RoomModel.builder().roomNumber(ROOM_NUMBER).version(VERSION).build();
-    public static final Room ROOM = Room.builder().roomNumber(ROOM_NUMBER).build();
-    public static final int NONEXISTENT_ROOM_NUMBER = 1;
-    public static final Optional<Room> EMPTY_ROOM = Optional.empty();
-    public static final Optional<RoomModel> TRANSFORMED_EMPTY_ROOM = Optional.empty();
-    public static final Optional<Room> FOUND_ROOM = Optional.of(Room.builder().id(ROOM_ID).roomNumber(ROOM_NUMBER).hotel(HOTEL).build());
-    public static final Optional<RoomModel> TRANSFORMED_ROOM = Optional.of(RoomModel.builder().id(ROOM_ID).roomNumber(ROOM_NUMBER).hotel(HOTEL_MODEL).build());
+    private static final String HOTEL_NAME = "Test hotel";
+    private static final String NONEXISTENT_HOTEL_NAME = "Test hotel";
+    private static final String CITY = "Test city";
+    private static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName(HOTEL_NAME).build();
+    private static final Hotel HOTEL = Hotel.builder().hotelName(HOTEL_NAME).build();
+    private static final long ROOM_ID = 1l;
+    private static final int ROOM_NUMBER = 1;
+    private static final long VERSION = 0l;
+    private static final RoomModel ROOM_MODEL = RoomModel.builder().roomNumber(ROOM_NUMBER).version(VERSION).build();
+    private static final Room ROOM = Room.builder().roomNumber(ROOM_NUMBER).build();
+    private static final int NONEXISTENT_ROOM_NUMBER = 1;
+    private static final Optional<Room> EMPTY_ROOM = Optional.empty();
+    private static final Optional<RoomModel> TRANSFORMED_EMPTY_ROOM = Optional.empty();
+    private static final Optional<Room> FOUND_ROOM = Optional.of(Room.builder().id(ROOM_ID).roomNumber(ROOM_NUMBER).hotel(HOTEL).build());
+    private static final Optional<RoomModel> TRANSFORMED_ROOM = Optional.of(RoomModel.builder().id(ROOM_ID).roomNumber(ROOM_NUMBER).hotel(HOTEL_MODEL).build());
+    private static final List<Long> RESULT_IDS = List.of(1l);
 
     @InjectMocks
     private RoomRepositoryServiceImpl roomRepositoryService;
@@ -147,15 +148,14 @@ public class RoomRepositoryServiceImplTest {
     }
 
     @Test
-    public void testGetRoomsWithConditionsShouldCallFindRoomsWithConditionsWithProvidedParameters(){
+    public void testGetRoomsWithConditionsShouldCallFindRoomsWithConditionsWithProvidedRoomSearchFormServiceDTOAttributes(){
         RoomSearchFormServiceDTO roomSearchFormServiceDTO = new RoomSearchFormServiceDTO(1, 1, RoomType.FAMILY_ROOM, HOTEL_NAME, CITY, null, null);
-        List<Long> ids = List.of(1l);
         when(roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
                 roomSearchFormServiceDTO.getRoomType(),
                 roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity()))
-                .thenReturn(ids);
+                .thenReturn(RESULT_IDS);
 
         List<Long> resultIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
 
@@ -165,6 +165,17 @@ public class RoomRepositoryServiceImplTest {
                 roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity());
         Assertions.assertThat(resultIds).isNotNull();
-        Assertions.assertThat(resultIds).isEqualTo(ids);
+        Assertions.assertThat(resultIds).isEqualTo(RESULT_IDS);
+    }
+
+    @Test
+    public void testGetRoomsWithConditionsShouldCallFindRoomsWithConditionsWithProvidedParameters(){
+        when(roomRepository.findRoomsWithConditions(1, 1,RoomType.FAMILY_ROOM, HOTEL_NAME, CITY)).thenReturn(RESULT_IDS);
+
+        List<Long> resultIds = roomRepositoryService.getRoomsWithConditions(1, 1,RoomType.FAMILY_ROOM, HOTEL_NAME, CITY);
+
+        verify(roomRepository).findRoomsWithConditions(1, 1,RoomType.FAMILY_ROOM, HOTEL_NAME, CITY);
+        Assertions.assertThat(resultIds).isNotNull();
+        Assertions.assertThat(resultIds).isEqualTo(RESULT_IDS);
     }
 }

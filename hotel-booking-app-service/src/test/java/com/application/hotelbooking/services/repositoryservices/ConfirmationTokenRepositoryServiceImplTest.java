@@ -20,13 +20,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ConfirmationTokenRepositoryServiceImplTest {
 
-    public static final String TEST_TOKEN = "Test_token";
-    public static final ConfirmationToken CONFIRMATION_TOKEN = ConfirmationToken.builder().token(TEST_TOKEN).build();
-    public static final Optional<ConfirmationToken> OPTIONAL_CONFIRMATION_TOKEN = Optional.of(CONFIRMATION_TOKEN);
-    public static final Optional<ConfirmationToken> EMPTY_OPTIONAL_CONFIRMATION_TOKEN = Optional.empty();
-    public static final ConfirmationTokenModel CONFIRMATION_TOKEN_MODEL = ConfirmationTokenModel.builder().token(TEST_TOKEN).build();
-    public static final Optional<ConfirmationTokenModel> OPTIONAL_CONFIRMATION_TOKEN_MODEL = Optional.of(CONFIRMATION_TOKEN_MODEL);
-    public static final Optional<ConfirmationTokenModel> EMPTY_OPTIONAL_CONFIRMATION_TOKEN_MODEL = Optional.empty();
+    private static final String TEST_TOKEN = "Test_token";
+    private static final ConfirmationToken CONFIRMATION_TOKEN = ConfirmationToken.builder().token(TEST_TOKEN).build();
+    private static final Optional<ConfirmationToken> OPTIONAL_CONFIRMATION_TOKEN = Optional.of(CONFIRMATION_TOKEN);
+    private static final Optional<ConfirmationToken> EMPTY_OPTIONAL_CONFIRMATION_TOKEN = Optional.empty();
+    private static final ConfirmationTokenModel CONFIRMATION_TOKEN_MODEL = ConfirmationTokenModel.builder().token(TEST_TOKEN).build();
+    private static final Optional<ConfirmationTokenModel> OPTIONAL_CONFIRMATION_TOKEN_MODEL = Optional.of(CONFIRMATION_TOKEN_MODEL);
+    private static final Optional<ConfirmationTokenModel> EMPTY_OPTIONAL_CONFIRMATION_TOKEN_MODEL = Optional.empty();
     @InjectMocks
     private ConfirmationTokenRepositoryServiceImpl confirmationTokenRepositoryService;
 

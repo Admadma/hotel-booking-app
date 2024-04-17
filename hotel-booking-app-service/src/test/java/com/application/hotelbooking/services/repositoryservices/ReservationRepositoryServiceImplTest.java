@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
@@ -19,12 +21,17 @@ import static org.mockito.Mockito.*;
 public class ReservationRepositoryServiceImplTest {
 
     private static final Long ID = 1l;
+    private static final UUID TEST_UUID = UUID.fromString("2a167ea9-850c-4059-8163-6f941561c419");
     private static final Reservation RESERVATION = Reservation.builder().user(User.builder().id(ID).build()).room(Room.builder().id(ID).build()).build();
     private static final ReservationModel RESERVATION_MODEL = ReservationModel.builder().user(UserModel.builder().id(ID).build()).room(RoomModel.builder().id(ID).build()).build();
     private static final List<Reservation> RESERVATIONS = List.of(RESERVATION);
     private static final List<Reservation> EMPTY_RESERVATIONS = List.of(RESERVATION);
     private static final List<ReservationModel> RESERVATION_MODELS = List.of();
     private static final List<ReservationModel> EMPTY_RESERVATION_MODELS = List.of();
+    private static final Optional<Reservation> OPTIONAL_RESERVATION = Optional.of(RESERVATION);
+    private static final Optional<Reservation> EMPTY_OPTIONAL_RESERVATION = Optional.empty();
+    private static final Optional<ReservationModel> OPTIONAL_RESERVATION_MODEL = Optional.of(RESERVATION_MODEL);
+    private static final Optional<ReservationModel> EMPTY_OPTIONAL_RESERVATION_MODEL = Optional.empty();
     @InjectMocks
     private ReservationRepositoryServiceImpl reservationRepositoryService;
 
@@ -99,6 +106,33 @@ public class ReservationRepositoryServiceImplTest {
         verify(reservationTransformer).transformToReservationModels(EMPTY_RESERVATIONS);
         Assertions.assertThat(reservationsResult).isNotNull();
         Assertions.assertThat(reservationsResult).isEmpty();
+    }
+
+    @Test
+    public void testGetReservationByUUIDShouldReturnOptionalOfReservationModelIfReservationExists() {
+        when(reservationRepository.findByUuid(TEST_UUID)).thenReturn(OPTIONAL_RESERVATION);
+        when(reservationTransformer.transformToOptionalReservationModel(OPTIONAL_RESERVATION)).thenReturn(OPTIONAL_RESERVATION_MODEL);
+
+        Optional<ReservationModel> resultReservationModel = reservationRepositoryService.getReservationByUuid(TEST_UUID);
+
+        verify(reservationRepository).findByUuid(TEST_UUID);
+        verify(reservationTransformer).transformToOptionalReservationModel(OPTIONAL_RESERVATION);
+        Assertions.assertThat(resultReservationModel).isNotNull();
+        Assertions.assertThat(resultReservationModel).isEqualTo(OPTIONAL_RESERVATION_MODEL);
+    }
+
+    @Test
+    public void testGetReservationByUUIDShouldReturnEmptyOptionalOfReservationModelIfReservationDoesNotExist() {
+        when(reservationRepository.findByUuid(TEST_UUID)).thenReturn(EMPTY_OPTIONAL_RESERVATION);
+        when(reservationTransformer.transformToOptionalReservationModel(EMPTY_OPTIONAL_RESERVATION)).thenReturn(EMPTY_OPTIONAL_RESERVATION_MODEL);
+
+        Optional<ReservationModel> resultReservationModel = reservationRepositoryService.getReservationByUuid(TEST_UUID);
+
+
+        verify(reservationRepository).findByUuid(TEST_UUID);
+        verify(reservationTransformer).transformToOptionalReservationModel(EMPTY_OPTIONAL_RESERVATION);
+        Assertions.assertThat(resultReservationModel).isNotNull();
+        Assertions.assertThat(resultReservationModel).isEqualTo(EMPTY_OPTIONAL_RESERVATION_MODEL);
     }
 
     @Test

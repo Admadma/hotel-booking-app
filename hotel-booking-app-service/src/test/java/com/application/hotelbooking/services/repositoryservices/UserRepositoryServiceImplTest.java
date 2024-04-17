@@ -20,16 +20,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class UserRepositoryServiceImplTest {
 
-    public static final String USER_NAME = "TestUsername";
-    public static final String NONEXISTENT_USER_NAME = "NonexistentUsername";
-    public static final String USER_EMAIL = "test@email";
-    public static final String NONEXISTENT_EMAIL = "Nonexistent@email";
-    public static final Optional<User> FOUND_USER = Optional.of(User.builder().username(USER_NAME).email(USER_EMAIL).build());
-    public static final Optional<UserModel> TRANSFORMED_USER = Optional.of(UserModel.builder().username(USER_NAME).email(USER_EMAIL).build());
-    public static final Optional<User> EMPTY_USER = Optional.empty();
-    public static final Optional<UserModel> EMPTY_TRANSFORMED_USER = Optional.empty();
-    public static final User USER = User.builder().username(USER_NAME).email(USER_EMAIL).build();
-    public static final UserModel USER_MODEL = UserModel.builder().username(USER_NAME).email(USER_EMAIL).build();
+    private static final String USER_NAME = "TestUsername";
+    private static final String NONEXISTENT_USER_NAME = "NonexistentUsername";
+    private static final String USER_EMAIL = "test@email";
+    private static final String NONEXISTENT_EMAIL = "Nonexistent@email";
+    private static final Optional<User> FOUND_USER = Optional.of(User.builder().username(USER_NAME).email(USER_EMAIL).build());
+    private static final Optional<UserModel> TRANSFORMED_USER = Optional.of(UserModel.builder().username(USER_NAME).email(USER_EMAIL).build());
+    private static final Optional<User> EMPTY_USER = Optional.empty();
+    private static final Optional<UserModel> EMPTY_TRANSFORMED_USER = Optional.empty();
+    private static final User USER = User.builder().username(USER_NAME).email(USER_EMAIL).build();
+    private static final UserModel USER_MODEL = UserModel.builder().username(USER_NAME).email(USER_EMAIL).build();
 
 
     @InjectMocks

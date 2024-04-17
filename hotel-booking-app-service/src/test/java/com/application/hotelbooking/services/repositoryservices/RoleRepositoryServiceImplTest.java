@@ -21,16 +21,16 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RoleRepositoryServiceImplTest {
-    public static final String ROLE_NAME = "TestRole";
-    public static final Role ROLE = Role.builder().name(ROLE_NAME).build();
-    public static final Optional<Role> OPTIONAL_ROLE = Optional.of(ROLE);
-    public static final Optional<Role> EMPTY_OPTIONAL_ROLE = Optional.empty();
-    public static final RoleModel ROLE_MODEL = RoleModel.builder().name(ROLE_NAME).build();
-    public static final Optional<RoleModel> OPTIONAL_ROLE_MODEL = Optional.of(ROLE_MODEL);
-    public static final Optional<RoleModel> EMPTY_OPTIONAL_ROLE_MODEL = Optional.empty();
-    public static final List<String> ROLE_NAMES = List.of("NAME1", "NAME3");
-    public static final List<Role> SELECTED_ROLES = List.of(Role.builder().name("NAME1").build(), Role.builder().name("NAME3").build());
-    public static final List<RoleModel> SELECTED_ROLE_MODELS = List.of(RoleModel.builder().name("NAME1").build(), RoleModel.builder().name("NAME3").build());
+    private static final String ROLE_NAME = "TestRole";
+    private static final Role ROLE = Role.builder().name(ROLE_NAME).build();
+    private static final Optional<Role> OPTIONAL_ROLE = Optional.of(ROLE);
+    private static final Optional<Role> EMPTY_OPTIONAL_ROLE = Optional.empty();
+    private static final RoleModel ROLE_MODEL = RoleModel.builder().name(ROLE_NAME).build();
+    private static final Optional<RoleModel> OPTIONAL_ROLE_MODEL = Optional.of(ROLE_MODEL);
+    private static final Optional<RoleModel> EMPTY_OPTIONAL_ROLE_MODEL = Optional.empty();
+    private static final List<String> ROLE_NAMES = List.of("NAME1", "NAME3");
+    private static final List<Role> SELECTED_ROLES = List.of(Role.builder().name("NAME1").build(), Role.builder().name("NAME3").build());
+    private static final List<RoleModel> SELECTED_ROLE_MODELS = List.of(RoleModel.builder().name("NAME1").build(), RoleModel.builder().name("NAME3").build());
     @InjectMocks
     private RoleRepositoryServiceImpl roleRepositoryService;
 
