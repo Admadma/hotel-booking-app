@@ -22,16 +22,16 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class SetupDataLoaderTest {
 
-    public static final String ADMIN_ROLE = "ADMIN";
-    public static final String USER_ROLE = "USER";
-    public static final String ADMIN_USERNAME = "admin";
-    public static final String ADMIN_PASSWORD = "adminadmin";
-    public static final String ADMIN_EMAIL = "hotelbookingservice01@gmail.com";
-    public static final List<String> ADMIN_ROLES = List.of(ADMIN_ROLE);
-    public static final RoleModel ROLE_MODEL = new RoleModel();
-    public static final UserModel USER_MODEL = new UserModel();
+    private static final String ADMIN_ROLE = "ADMIN";
+    private static final String USER_ROLE = "USER";
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "adminadmin";
+    private static final String ADMIN_EMAIL = "hotelbookingservice01@gmail.com";
+    private static final List<String> ADMIN_ROLES = List.of(ADMIN_ROLE);
+    private static final RoleModel ROLE_MODEL = new RoleModel();
+    private static final UserModel USER_MODEL = new UserModel();
     @InjectMocks
-    private SetupDataLoader setupDataLoader;
+    private SetupDataLoader setupDataLoader = new SetupDataLoader(ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_EMAIL);
 
     @Mock
     private RoleService roleService;
