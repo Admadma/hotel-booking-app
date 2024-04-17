@@ -48,6 +48,16 @@ public class HotelTransformerTest {
     }
 
     @Test
+    public void testTransformToHotelShouldReturnTransformedHotelModel(){
+        when(modelMapper.map(HOTEL_MODEL, HOTEL_CLASS)).thenReturn(HOTEL);
+
+        Hotel resultHotel = hotelTransformer.transformToHotel(HOTEL_MODEL);
+
+        verify(modelMapper).map(HOTEL_MODEL, HOTEL_CLASS);
+        Assertions.assertThat(resultHotel).isEqualTo(HOTEL);
+    }
+
+    @Test
     public void testTransformToHotelModelShouldReturnTransformedHotel(){
         when(modelMapper.map(HOTEL, HOTEL_MODEL_CLASS)).thenReturn(HOTEL_MODEL);
 
