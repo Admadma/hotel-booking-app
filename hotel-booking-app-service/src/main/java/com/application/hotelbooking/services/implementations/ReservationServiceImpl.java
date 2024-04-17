@@ -78,7 +78,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .uuid(uuidWrapper.getRandomUUID())
                 .room(roomModel)
                 .user(userRepositoryService.getUserByName(userName).get())
-                .totalPrice(reservationPlanServiceDTO.getTotalPrice())
+                .totalPrice(calculateTotalPrice(reservationPlanServiceDTO.getStartDate(), reservationPlanServiceDTO.getEndDate(), roomModel.getPricePerNight()))
                 .startDate(reservationPlanServiceDTO.getStartDate())
                 .endDate(reservationPlanServiceDTO.getEndDate())
                 .reservationStatus(ReservationStatus.PLANNED)
