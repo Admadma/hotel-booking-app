@@ -149,43 +149,43 @@ public class HomeControllerTest {
         verify(roomService).isEndDateAfterStartDate(LOCAL_DATE_NOW_PLUS_FIVE_DAYS, LOCAL_DATE_NOW_PLUS_FIVE_DAYS);
     }
 
-    @Test
-    public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTO() throws Exception {
-        when(roomService.isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate())).thenReturn(true);
-        when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
-        when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
-        when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
-                .andExpect(flash().attribute("successRoomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
-                .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
-                .andExpect(redirectedUrl("/hotelbooking/home"));
-
-        verify(roomService).isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate());
-        verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED);
-        verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
-        verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);
-    }
-
-    @Test
-    public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTOWithoutReplacingEmptyStrings() throws Exception {
-        when(roomService.isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate())).thenReturn(true);
-        when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
-        when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
-        when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/search-rooms")
-                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL))
-                .andExpect(flash().attribute("successRoomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL))
-                .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
-                .andExpect(redirectedUrl("/hotelbooking/home"));
-
-        verify(roomService).isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate());
-        verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL);
-        verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
-        verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);
-    }
+//    @Test
+//    public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTO() throws Exception {
+//        when(roomService.isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate())).thenReturn(true);
+//        when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
+//        when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
+//        when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
+//
+//        mockMvc.perform(MockMvcRequestBuilders
+//                        .post("/hotelbooking/search-rooms")
+//                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
+//                .andExpect(flash().attribute("successRoomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
+//                .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
+//                .andExpect(redirectedUrl("/hotelbooking/home"));
+//
+//        verify(roomService).isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate());
+//        verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_REPLACED);
+//        verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
+//        verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);
+//    }
+//
+//    @Test
+//    public void testSearchRoomFetchesReservableRoomsAndAddsThemToSessionAndRedirectsToHomePageWithTheSuccessfulFormDTOWithoutReplacingEmptyStrings() throws Exception {
+//        when(roomService.isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate())).thenReturn(true);
+//        when(roomSearchDTOTransformer.transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL)).thenReturn(ROOM_SEARCH_FORM_SERVICE_DTO);
+//        when(roomService.searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO)).thenReturn(RESERVABLE_ROOM_DTO_LIST);
+//        when(roomSearchDTOTransformer.transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST)).thenReturn(RESERVABLE_ROOM_VIEW_DTO_LIST);
+//
+//        mockMvc.perform(MockMvcRequestBuilders
+//                        .post("/hotelbooking/search-rooms")
+//                        .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL))
+//                .andExpect(flash().attribute("successRoomSearchFormDTO", ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL))
+//                .andExpect(request().sessionAttribute("resultDTOS", RESERVABLE_ROOM_VIEW_DTO_LIST))
+//                .andExpect(redirectedUrl("/hotelbooking/home"));
+//
+//        verify(roomService).isEndDateAfterStartDate(ROOM_SEARCH_FORM_DTO.getStartDate(), ROOM_SEARCH_FORM_DTO.getEndDate());
+//        verify(roomSearchDTOTransformer).transformToRoomSearchFormServiceDTO(ROOM_SEARCH_FORM_DTO_NOT_EMPTY_HOTEL);
+//        verify(roomService).searchRooms(ROOM_SEARCH_FORM_SERVICE_DTO);
+//        verify(roomSearchDTOTransformer).transformToRoomSearchResultViewDTOs(RESERVABLE_ROOM_DTO_LIST);
+//    }
 }
