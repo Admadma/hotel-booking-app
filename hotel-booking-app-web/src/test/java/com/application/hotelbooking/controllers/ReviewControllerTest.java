@@ -137,7 +137,7 @@ public class ReviewControllerTest {
     public void testAdminCanNotNavigateToReviewPage() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/makeReview")
+                        .get("/hotelbooking/review")
                         .flashAttr("reservationUuid", TEST_UUID))
                 .andExpect(status().isForbidden());
     }
@@ -147,7 +147,7 @@ public class ReviewControllerTest {
     public void testAdminCanNotAttemptToSubmitReview() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/submit-review")
+                        .post("/hotelbooking/review/submit-review")
                         .flashAttr("reviewDTO", REVIEW_DTO)
                         .sessionAttr("hotelName", HOTEL_NAME))
                 .andExpect(status().isForbidden());
@@ -160,7 +160,7 @@ public class ReviewControllerTest {
         when(reservationViewTransformer.transformToReservationView(COMPLETED_RESERVATION_MODEL)).thenReturn(COMPLETED_RESERVATION_VIEW);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/makeReview")
+                        .get("/hotelbooking/review")
                         .flashAttr("reservationUuid", TEST_UUID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("reviewpage"))
@@ -180,7 +180,7 @@ public class ReviewControllerTest {
         when(reservationViewTransformer.transformToReservationView(PLANNED_RESERVATION_MODEL)).thenReturn(PLANNED_RESERVATION_VIEW);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/makeReview")
+                        .get("/hotelbooking/review")
                         .flashAttr("reservationUuid", TEST_UUID))
                 .andExpect(redirectedUrl("/hotelbooking/myreservations"))
                 .andExpect(request().sessionAttributeDoesNotExist("hotelName"))
@@ -198,7 +198,7 @@ public class ReviewControllerTest {
         when(reservationViewTransformer.transformToReservationView(ACTIVE_RESERVATION_MODEL)).thenReturn(ACTIVE_RESERVATION_VIEW);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/makeReview")
+                        .get("/hotelbooking/review")
                         .flashAttr("reservationUuid", TEST_UUID))
                 .andExpect(redirectedUrl("/hotelbooking/myreservations"))
                 .andExpect(request().sessionAttributeDoesNotExist("hotelName"))
@@ -213,7 +213,7 @@ public class ReviewControllerTest {
     @WithMockUser(authorities = "USER")
     public void testSubmitReviewShouldReturnToReviewPageIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/submit-review")
+                        .post("/hotelbooking/review/submit-review")
                         .flashAttr("reviewDTO", REVIEW_DTO_NO_RATING_TOO_LONG_COMMENT))
                 .andExpect(status().isOk())
                 .andExpect(view().name("reviewpage"))
@@ -226,7 +226,7 @@ public class ReviewControllerTest {
         when(reviewService.createReview(REVIEW_DTO.getRating(), REVIEW_DTO.getComment(), HOTEL_NAME, USER_NAME)).thenReturn(REVIEW_MODEL);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/submit-review")
+                        .post("/hotelbooking/review/submit-review")
                         .flashAttr("reviewDTO", REVIEW_DTO)
                         .sessionAttr("hotelName", HOTEL_NAME))
                 .andExpect(status().isOk())
@@ -242,7 +242,7 @@ public class ReviewControllerTest {
         when(reviewService.createReview(REVIEW_DTO.getRating(), REVIEW_DTO.getComment(), HOTEL_NAME, USER_NAME)).thenThrow(DataIntegrityViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/submit-review")
+                        .post("/hotelbooking/review/submit-review")
                         .flashAttr("reviewDTO", REVIEW_DTO)
                         .sessionAttr("hotelName", HOTEL_NAME))
                 .andExpect(status().isOk())

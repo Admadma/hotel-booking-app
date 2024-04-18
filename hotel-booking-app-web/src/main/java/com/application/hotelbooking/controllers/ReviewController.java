@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.UUID;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/review")
 public class ReviewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);
@@ -59,7 +59,7 @@ public class ReviewController {
         return "reviewpage";
     }
 
-    @GetMapping("/makeReview")
+    @GetMapping("")
     public String reviews(@ModelAttribute("reservationUuid") UUID uuid, Model model, HttpServletRequest request){
         LOGGER.info("Navigating to review page");
 
