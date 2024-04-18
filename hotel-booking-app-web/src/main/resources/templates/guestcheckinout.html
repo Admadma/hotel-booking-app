@@ -38,27 +38,27 @@
         <div class="col-6" th:text="#{reservation.roomType}"/>
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:insert="~{fragments/roomtypenames ::roomtypenames(${session.reservation.room.roomType})}"/>
     </div>
-    <div class="row justify-content-between">
+    <div class="row justify-content-between" style="background-color: #EEEEEE">
         <div class="col-6" th:text="#{reservation.reservationStatus}"/>
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${session.reservation.reservationStatus})}"/>
     </div>
-    <div class="row justify-content-between" style="background-color: #EEEEEE">
+    <div class="row justify-content-between">
         <div class="col-6" th:text="#{reservation.singleBeds}"/>
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservation.room.singleBeds}"/>
     </div>
-    <div class="row justify-content-between">
+    <div class="row justify-content-between" style="background-color: #EEEEEE">
         <div class="col-6" th:text="#{reservation.doubleBeds}"/>
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservation.room.doubleBeds}"/>
     </div>
-    <div class="row justify-content-between" style="background-color: #EEEEEE">
+    <div class="row justify-content-between">
         <div class="col-6" th:text="#{reservation.startDate}"/>
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservation.startDate}"/>
     </div>
-    <div class="row justify-content-between">
+    <div class="row justify-content-between" style="background-color: #EEEEEE">
         <div class="col-6" th:text="#{reservation.endDate}"/>
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservation.endDate}"/>
     </div>
-    <div class="row justify-content-between" style="background-color: #EEEEEE">
+    <div class="row justify-content-between">
         <div class="col-6" th:text="#{reservation.totalPrice}"/>
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservation.totalPrice}+' HUF'"/>
     </div>
