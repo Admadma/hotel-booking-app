@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ReservationViewTransformerTest {
 
-    private static final Class<ReservationModel> RESERVATION_MODEL_CLASS = ReservationModel.class;
     private static final ReservationModel RESERVATION_MODEL = new ReservationModel();
     private static final List<ReservationModel> RESERVATION_MODELS = List.of(RESERVATION_MODEL);
     private static final Class<ReservationView> RESERVATION_VIEW_CLASS = ReservationView.class;
@@ -40,17 +39,6 @@ public class ReservationViewTransformerTest {
         verify(modelMapper).map(RESERVATION_MODEL, RESERVATION_VIEW_CLASS);
         Assertions.assertThat(resultReservationView).isNotNull();
         Assertions.assertThat(resultReservationView).isEqualTo(RESERVATION_VIEW);
-    }
-
-    @Test
-    public void testTransformToReservationModelShouldReturnTransformedReservationView(){
-        when(modelMapper.map(RESERVATION_VIEW, RESERVATION_MODEL_CLASS)).thenReturn(RESERVATION_MODEL);
-
-        ReservationModel resultReservationModel = reservationViewTransformer.transformToReservationModel(RESERVATION_VIEW);
-
-        verify(modelMapper).map(RESERVATION_VIEW, RESERVATION_MODEL_CLASS);
-        Assertions.assertThat(resultReservationModel).isNotNull();
-        Assertions.assertThat(resultReservationModel).isEqualTo(RESERVATION_MODEL);
     }
 
     @Test
