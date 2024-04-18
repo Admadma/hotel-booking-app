@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -50,5 +51,14 @@ public class DefaultSuccessLoginControllerTest {
                 .andExpect(redirectedUrl("/hotelbooking/home"));
 
         verify(userService).userHasRole(TEST_USER_NAME, ADMIN_ROLE_NAME);
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void testUnauthenticatedUserCanNotAccessDefaultSuccessLoginPage() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/hotelbooking/default"))
+                .andExpect(status().is3xxRedirection());
     }
 }

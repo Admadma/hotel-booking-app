@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/my-reservations")
 public class MyReservationsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MyReservationsController.class);
@@ -34,14 +34,14 @@ public class MyReservationsController {
             reservationService.cancelReservation(reservationId);
         } catch (Exception e) {
             LOGGER.info(e.getMessage());
-            return "redirect:/hotelbooking/myreservations?error";
+            return "redirect:/hotelbooking/my-reservations?error";
         }
         LOGGER.info("Successfully deleted reservation!");
 
-        return "redirect:/hotelbooking/myreservations";
+        return "redirect:/hotelbooking/my-reservations";
     }
 
-    @GetMapping("/myreservations")
+    @GetMapping("")
     public String myReservations(Authentication auth, Model model){
         LOGGER.info("Navigating to myreservations page");
         List<ReservationView> reservations = reservationViewTransformer.transformToReservationViews(reservationService.getReservationsOfUser(auth.getName()));

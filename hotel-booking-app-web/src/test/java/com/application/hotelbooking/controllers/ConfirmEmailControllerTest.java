@@ -37,7 +37,7 @@ public class ConfirmEmailControllerTest {
 
     @Test
     public void testUnauthenticatedUserCanNavigateToConfirmEmail() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirmemail")
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirm-email")
                         .sessionAttr("email", EMAIL))
                 .andExpect(status().isOk())
                 .andExpect(view().name("confirmemail"))
@@ -48,9 +48,9 @@ public class ConfirmEmailControllerTest {
     public void testConfirmTokenShouldRedirectToConfirmEmailPageWithInvalidLinkErrorIfConfirmTokenThrowsInvalidTokenException() throws Exception {
         doThrow(InvalidTokenException.class).when(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirmemail/confirm-token")
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirm-email/confirm-token")
                         .param("confirmationToken", CONFIRMATION_TOKEN))
-                .andExpect(redirectedUrl("/hotelbooking/register/confirmemail?invalidLink"));
+                .andExpect(redirectedUrl("/hotelbooking/register/confirm-email?invalidLink"));
 
         verify(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
     }
@@ -59,9 +59,9 @@ public class ConfirmEmailControllerTest {
     public void testConfirmTokenShouldRedirectToConfirmEmailPageWithEmailAlreadyConfirmedErrorIfConfirmTokenThrowsEmailAlreadyConfirmedException() throws Exception {
         doThrow(EmailAlreadyConfirmedException.class).when(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirmemail/confirm-token")
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirm-email/confirm-token")
                         .param("confirmationToken", CONFIRMATION_TOKEN))
-                .andExpect(redirectedUrl("/hotelbooking/register/confirmemail?emailAlreadyConfirmed"));
+                .andExpect(redirectedUrl("/hotelbooking/register/confirm-email?emailAlreadyConfirmed"));
 
         verify(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
     }
@@ -70,9 +70,9 @@ public class ConfirmEmailControllerTest {
     public void testConfirmTokenShouldRedirectToConfirmEmailPageWithTokenAlreadyExpiredErrorIfConfirmTokenThrowsExpiredTokenException() throws Exception {
         doThrow(ExpiredTokenException.class).when(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirmemail/confirm-token")
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirm-email/confirm-token")
                         .param("confirmationToken", CONFIRMATION_TOKEN))
-                .andExpect(redirectedUrl("/hotelbooking/register/confirmemail?tokenAlreadyExpired"));
+                .andExpect(redirectedUrl("/hotelbooking/register/confirm-email?tokenAlreadyExpired"));
 
         verify(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
     }
@@ -81,9 +81,9 @@ public class ConfirmEmailControllerTest {
     public void testConfirmTokenShouldRedirectToConfirmEmailPageWithGenericErrorIfConfirmTokenThrowsAnyOtherException() throws Exception {
         doThrow(DataIntegrityViolationException.class).when(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirmemail/confirm-token")
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirm-email/confirm-token")
                         .param("confirmationToken", CONFIRMATION_TOKEN))
-                .andExpect(redirectedUrl("/hotelbooking/register/confirmemail?error"));
+                .andExpect(redirectedUrl("/hotelbooking/register/confirm-email?error"));
 
         verify(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
     }
@@ -92,7 +92,7 @@ public class ConfirmEmailControllerTest {
     public void testConfirmTokenShouldRedirectToLoginPageIfNoExceptionsOccurredDuringTokenConfirmation() throws Exception {
         doNothing().when(userEmailTokenConfirmationService).confirmToken(CONFIRMATION_TOKEN);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirmemail/confirm-token")
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register/confirm-email/confirm-token")
                         .param("confirmationToken", CONFIRMATION_TOKEN))
                 .andExpect(redirectedUrl("/hotelbooking/login"));
 
@@ -103,9 +103,9 @@ public class ConfirmEmailControllerTest {
     public void testSendNewTokenShouldRedirectToConfirmEmailPageWithInvalidUserErrorIfResendConfirmationTokenThrowsInvalidUserException() throws Exception {
         doThrow(InvalidUserException.class).when(resendConfirmationTokenService).resendConfirmationToken(EMAIL);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirmemail/send-new-token")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirm-email/send-new-token")
                         .sessionAttr("email", EMAIL))
-                .andExpect(redirectedUrl("/hotelbooking/confirmemail?invalidUser"));
+                .andExpect(redirectedUrl("/hotelbooking/confirm-email?invalidUser"));
 
         verify(resendConfirmationTokenService).resendConfirmationToken(EMAIL);
     }
@@ -114,9 +114,9 @@ public class ConfirmEmailControllerTest {
     public void testSendNewTokenShouldRedirectToConfirmEmailPageWithEmailAlreadyConfirmedErrorIfResendConfirmationTokenThrowsEmailAlreadyConfirmedException() throws Exception {
         doThrow(EmailAlreadyConfirmedException.class).when(resendConfirmationTokenService).resendConfirmationToken(EMAIL);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirmemail/send-new-token")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirm-email/send-new-token")
                         .sessionAttr("email", EMAIL))
-                .andExpect(redirectedUrl("/hotelbooking/confirmemail?emailAlreadyConfirmed"));
+                .andExpect(redirectedUrl("/hotelbooking/confirm-email?emailAlreadyConfirmed"));
 
         verify(resendConfirmationTokenService).resendConfirmationToken(EMAIL);
     }
@@ -125,9 +125,9 @@ public class ConfirmEmailControllerTest {
     public void testSendNewTokenShouldRedirectToConfirmEmailPageWithResendErrorIfResendConfirmationTokenThrowsAnyOtherException() throws Exception {
         doThrow(DataIntegrityViolationException.class).when(resendConfirmationTokenService).resendConfirmationToken(EMAIL);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirmemail/send-new-token")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirm-email/send-new-token")
                         .sessionAttr("email", EMAIL))
-                .andExpect(redirectedUrl("/hotelbooking/confirmemail?resendError"));
+                .andExpect(redirectedUrl("/hotelbooking/confirm-email?resendError"));
 
         verify(resendConfirmationTokenService).resendConfirmationToken(EMAIL);
     }
@@ -136,7 +136,7 @@ public class ConfirmEmailControllerTest {
     public void testConfirmTokenShouldReturnToConfirmEmailPageIfNoExceptionsOccurredWhileResendingToken() throws Exception {
         doNothing().when(resendConfirmationTokenService).resendConfirmationToken(EMAIL);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirmemail/send-new-token")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/register/confirm-email/send-new-token")
                         .sessionAttr("email", EMAIL))
                 .andExpect(view().name("confirmemail"));
 

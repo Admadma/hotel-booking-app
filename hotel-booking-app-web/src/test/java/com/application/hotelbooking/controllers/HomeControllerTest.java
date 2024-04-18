@@ -155,7 +155,7 @@ public class HomeControllerTest {
     @Test
     public void testSearchRoomsReturnsToHomePageIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/search-rooms")
+                        .post("/hotelbooking/home/search-rooms")
                         .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_WITH_FOUR_INVALID_FIELDS))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
@@ -170,7 +170,7 @@ public class HomeControllerTest {
         when(roomService.isEndDateAfterStartDate(END_DATE, START_DATE)).thenReturn(false);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/search-rooms")
+                        .post("/hotelbooking/home/search-rooms")
                         .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_START_DATE_AFTER_END_DATE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
@@ -185,7 +185,7 @@ public class HomeControllerTest {
         when(roomService.isEndDateAfterStartDate(START_DATE, START_DATE)).thenReturn(false);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/search-rooms")
+                        .post("/hotelbooking/home/search-rooms")
                         .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO_START_END_DATE_SAME))
                 .andExpect(status().isOk())
                 .andExpect(view().name("homepage"))
@@ -203,7 +203,7 @@ public class HomeControllerTest {
         when(hotelsWithReservableRoomsDTOTransformer.transformToHotelsWithReservableRoomsDTOs(HOTEL_WITH_RESERVABLE_ROOMS_SERVICE_DTO_LIST)).thenReturn(HOTEL_WITH_RESERVABLE_ROOMS_DTO_LIST);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/search-rooms")
+                        .post("/hotelbooking/home/search-rooms")
                         .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
                 .andExpect(request().sessionAttribute("hotelsRoomsResultDTOs", HOTEL_WITH_RESERVABLE_ROOMS_DTO_LIST))
                 .andExpect(request().sessionAttributeDoesNotExist("noMatchingResults"))
@@ -223,7 +223,7 @@ public class HomeControllerTest {
         when(hotelsWithReservableRoomsDTOTransformer.transformToHotelsWithReservableRoomsDTOs(EMPTY_HOTEL_WITH_RESERVABLE_ROOMS_SERVICE_DTO_LIST)).thenReturn(EMPTY_HOTEL_WITH_RESERVABLE_ROOMS_DTO_LIST);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/search-rooms")
+                        .post("/hotelbooking/home/search-rooms")
                         .flashAttr("roomSearchFormDTO", ROOM_SEARCH_FORM_DTO))
                 .andExpect(request().sessionAttribute("noMatchingResults", true))
                 .andExpect(request().sessionAttributeDoesNotExist("hotelsRoomsResultDTOs"))

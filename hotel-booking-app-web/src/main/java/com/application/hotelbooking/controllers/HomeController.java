@@ -29,7 +29,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/home")
 public class HomeController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
@@ -57,7 +57,7 @@ public class HomeController {
         }
     }
 
-    @PostMapping(value = "/search-rooms")
+    @PostMapping("/search-rooms")
     public String searchRooms(@Valid @ModelAttribute("roomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, BindingResult result, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
@@ -85,7 +85,7 @@ public class HomeController {
     }
 
 
-    @GetMapping(value = "/home")
+    @GetMapping(value = "")
     public String homeWithParams(Model model, @ModelAttribute("successRoomSearchFormDTO") RoomSearchFormDTO roomSearchFormDTO, HttpServletRequest request){
         LOGGER.info("Navigating to home page");
 

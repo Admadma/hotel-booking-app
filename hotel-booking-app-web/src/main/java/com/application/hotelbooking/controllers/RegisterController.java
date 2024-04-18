@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/register")
 public class RegisterController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
@@ -32,7 +32,7 @@ public class RegisterController {
     @Autowired
     private InternetAddressValidator internetAddressValidator;
 
-    @RequestMapping(value = "register/create-new-user")
+    @RequestMapping("/create-new-user")
     public String createUser(@Valid @ModelAttribute("newUserFormDTO") NewUserFormDTO newUserFormDTO, BindingResult result, HttpServletRequest request){
         if (result.hasErrors()){
             LOGGER.info("Error while validating newUserFormDTO");
@@ -40,11 +40,8 @@ public class RegisterController {
         }
 
         try {
-            LOGGER.info("Validating email");
             internetAddressValidator.validate(newUserFormDTO.getEmail());
-            LOGGER.info("creating...");
             userService.createUser(newUserFormDTO.getUsername(), newUserFormDTO.getPassword(), newUserFormDTO.getEmail(), List.of("USER"));
-            LOGGER.info("...created");
         } catch (AddressException ae) {
             result.rejectValue("email", "registration.error.email.invalid", "That email is invalid");
             LOGGER.info("That email is invalid");
@@ -64,10 +61,10 @@ public class RegisterController {
         }
 
         request.getSession().setAttribute("email", newUserFormDTO.getEmail());
-        return "redirect:/hotelbooking/register/confirmemail";
+        return "redirect:/hotelbooking/register/confirm-email";
     }
 
-    @GetMapping("/register")
+    @GetMapping("")
     public String registration(Model model){
         LOGGER.info("Navigating to registration page");
         model.addAttribute("newUserFormDTO", new NewUserFormDTO());

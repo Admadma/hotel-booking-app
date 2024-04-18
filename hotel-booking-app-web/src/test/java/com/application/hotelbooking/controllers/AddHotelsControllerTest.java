@@ -55,7 +55,7 @@ public class AddHotelsControllerTest {
     @Test
     @WithMockUser(authorities = "ADMIN")
     public void testAdminUserCanNavigateToAddHotelsPage() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addHotels"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/add-hotels"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("addhotels"))
                 .andExpect(model().attributeExists("hotelCreationDTO"))
@@ -65,7 +65,7 @@ public class AddHotelsControllerTest {
     @Test
     @WithMockUser(authorities = "ADMIN")
     public void testAddHotelsAddsErrorModelAttributeIfCalledWithFileUploadErrorModelAttribute() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addHotels")
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/add-hotels")
                         .flashAttr("fileUploadError", "fileUploadError"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("addhotels"))
@@ -76,7 +76,7 @@ public class AddHotelsControllerTest {
     @Test
     @WithMockUser(authorities = "USER")
     public void testNonAdminUserForbiddenToNavigateToAddHotelsPage() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addHotels"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/add-hotels"))
                 .andExpect(status().isForbidden());
     }
 
@@ -84,7 +84,7 @@ public class AddHotelsControllerTest {
     @WithMockUser(authorities = "USER")
     public void testCreateNewHotelForbiddenForNonAdminUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-hotel")
+                        .post("/hotelbooking/admin/add-hotels/create-new-hotel")
                         .flashAttr("hotelCreationDTO", Matchers.any(HotelCreationDTO.class)))
                 .andExpect(status().isForbidden());
 
@@ -94,7 +94,7 @@ public class AddHotelsControllerTest {
     @WithMockUser(authorities = "ADMIN")
     public void testCreateNewHotelShouldReturnToAddHotelsPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-hotel")
+                        .post("/hotelbooking/admin/add-hotels/create-new-hotel")
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO_WITH_TWO_INVALID_FIELDS))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
@@ -108,7 +108,7 @@ public class AddHotelsControllerTest {
         when(storageService.store(MULTIPART_FILE)).thenThrow(StorageException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-hotel")
+                        .post("/hotelbooking/admin/add-hotels/create-new-hotel")
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
@@ -127,7 +127,7 @@ public class AddHotelsControllerTest {
         when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenThrow(InvalidHotelException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-hotel")
+                        .post("/hotelbooking/admin/add-hotels/create-new-hotel")
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
@@ -148,7 +148,7 @@ public class AddHotelsControllerTest {
         when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenThrow(DataIntegrityViolationException.class); // Example error that might occur during JpaRepository.save
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-hotel")
+                        .post("/hotelbooking/admin/add-hotels/create-new-hotel")
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
@@ -170,7 +170,7 @@ public class AddHotelsControllerTest {
         when(hotelService.createHotel(HOTEL_CREATION_SERVICE_DTO)).thenReturn(null);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-hotel")
+                        .post("/hotelbooking/admin/add-hotels/create-new-hotel")
                         .flashAttr("hotelCreationDTO", HOTEL_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("successMessage"))

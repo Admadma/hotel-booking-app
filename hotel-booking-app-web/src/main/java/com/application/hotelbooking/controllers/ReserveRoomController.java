@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/reserve-room")
 public class ReserveRoomController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReserveRoomController.class);
@@ -45,10 +45,10 @@ public class ReserveRoomController {
             request.getSession().removeAttribute("hotelsRoomsResultDTOs");
         }
 
-        return "redirect:/hotelbooking/myreservations?reservationSuccess";
+        return "redirect:/hotelbooking/my-reservations?reservationSuccess";
     }
 
-    @GetMapping("/reserveroom")
+    @GetMapping("")
     public String reserveRoom(@RequestParam("hotelName") String hotelName,
                               @RequestParam("number") int roomNumber,
                               @SessionAttribute("hotelsRoomsResultDTOs") List<HotelWithReservableRoomsDTO> hotelsWithReservableRoomsDTOS,

@@ -15,7 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path = "hotelbooking/register")
+@RequestMapping(path = "hotelbooking/register/confirm-email")
 public class ConfirmEmailController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmEmailController.class);
@@ -25,47 +25,47 @@ public class ConfirmEmailController {
     @Autowired
     private ResendConfirmationTokenService resendConfirmationTokenService;
 
-    @GetMapping(value = "/confirmemail/confirm-token")
+    @GetMapping("/confirm-token")
     private String confirmToken(@RequestParam("confirmationToken") String confirmationToken){
         try{
             userEmailTokenConfirmationService.confirmToken(confirmationToken);
         } catch (InvalidTokenException itc){
             LOGGER.info("Invalid token.");
-            return "redirect:/hotelbooking/register/confirmemail?invalidLink";
+            return "redirect:/hotelbooking/register/confirm-email?invalidLink";
         } catch (EmailAlreadyConfirmedException eac){
             LOGGER.info("Email already confirmed.");
-            return "redirect:/hotelbooking/register/confirmemail?emailAlreadyConfirmed";
+            return "redirect:/hotelbooking/register/confirm-email?emailAlreadyConfirmed";
         } catch (ExpiredTokenException ete){
             LOGGER.info("Token already expired");
-            return "redirect:/hotelbooking/register/confirmemail?tokenAlreadyExpired";
+            return "redirect:/hotelbooking/register/confirm-email?tokenAlreadyExpired";
         } catch (Exception e){
             LOGGER.info("Error while validating token");
             LOGGER.info(e.getMessage());
-            return "redirect:/hotelbooking/register/confirmemail?error";
+            return "redirect:/hotelbooking/register/confirm-email?error";
         }
         return "redirect:/hotelbooking/login";
     }
 
-    @PostMapping(value = "/confirmemail/send-new-token")
+    @PostMapping("/send-new-token")
     private String sendNewToken(@SessionAttribute("email") String email){
         LOGGER.info("send-new-token");
         try {
             resendConfirmationTokenService.resendConfirmationToken(email);
         } catch (InvalidUserException iue) {
             LOGGER.info("There is no user with that email");
-            return "redirect:/hotelbooking/confirmemail?invalidUser";
+            return "redirect:/hotelbooking/confirm-email?invalidUser";
         } catch (EmailAlreadyConfirmedException eac){
             LOGGER.info("Email already confirmed.");
-            return "redirect:/hotelbooking/confirmemail?emailAlreadyConfirmed";
+            return "redirect:/hotelbooking/confirm-email?emailAlreadyConfirmed";
         } catch (Exception e){
             LOGGER.info("Error while resending confirmation token");
             LOGGER.info(e.getMessage());
-            return "redirect:/hotelbooking/confirmemail?resendError";
+            return "redirect:/hotelbooking/confirm-email?resendError";
         }
         return "confirmemail";
     }
 
-    @GetMapping("/confirmemail")
+    @GetMapping("")
     private String confirmEmail(Model model, HttpServletRequest request){
         LOGGER.info("Nvaigating to confirmemail page");
         model.addAttribute("email", request.getSession().getAttribute("email"));

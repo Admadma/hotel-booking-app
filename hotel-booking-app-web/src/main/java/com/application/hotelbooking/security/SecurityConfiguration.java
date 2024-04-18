@@ -18,12 +18,11 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/hotelbooking/home/**", "/hotelbooking/newHome/**", "/hotelbooking/search-rooms/**", "/hotelbooking/search-rooms-new/**", "/hotelbooking/reserveroomNew/**", "/hotelbooking/register/**", "/error/**").permitAll();
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
-                    auth.requestMatchers("/hotelbooking/rooms/**", "/hotelbooking/reservation/**", "/hotelbooking/makeReview/**").hasAnyAuthority("USER");
-                    auth.requestMatchers("/hotelbooking/account/**", "/hotelbooking/change-password/**").hasAnyAuthority("ADMIN", "USER");
-                    auth.requestMatchers("/images/*", "/myImages/**", "/hotelbooking/default", "/hotelbooking/login/**").permitAll();
-                    auth.anyRequest().hasAnyAuthority("USER");
+                    auth.requestMatchers("/hotelbooking/reserve-room/**", "/hotelbooking/my-reservations/**", "/hotelbooking/review/**").hasAnyAuthority("USER");
+                    auth.requestMatchers("/hotelbooking/default/**", "/hotelbooking/account/**").authenticated();
+                    auth.requestMatchers("/hotelbooking/login/**", "/error/**", "/images/**", "/hotelbooking/home/**").permitAll();
+                    auth.requestMatchers("/hotelbooking/register/**").anonymous();
                 })
                 .formLogin(form -> form
                         .loginPage("/hotelbooking/login")

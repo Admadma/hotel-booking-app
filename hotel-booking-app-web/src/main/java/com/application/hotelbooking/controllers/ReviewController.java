@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.UUID;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/review")
 public class ReviewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewController.class);
@@ -38,7 +38,7 @@ public class ReviewController {
     private ReservationViewTransformer reservationViewTransformer;
 
 
-    @PostMapping(value = "/submit-review")
+    @PostMapping("/submit-review")
     public String submitReview(@Valid @ModelAttribute("reviewDTO") ReviewDTO reviewDTO, BindingResult result, HttpServletRequest request, Authentication auth){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
@@ -59,7 +59,7 @@ public class ReviewController {
         return "reviewpage";
     }
 
-    @GetMapping("/makeReview")
+    @GetMapping("")
     public String reviews(@ModelAttribute("reservationUuid") UUID uuid, Model model, HttpServletRequest request){
         LOGGER.info("Navigating to review page");
 
@@ -71,7 +71,7 @@ public class ReviewController {
             model.addAttribute("reviewDTO", new ReviewDTO());
             return "reviewpage";
         } else {
-            return "redirect:/hotelbooking/myreservations";
+            return "redirect:/hotelbooking/my-reservations";
         }
     }
 }

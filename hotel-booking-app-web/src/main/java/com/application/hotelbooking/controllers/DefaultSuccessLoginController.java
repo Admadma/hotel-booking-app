@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/default")
 public class DefaultSuccessLoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSuccessLoginController.class);
@@ -18,7 +18,7 @@ public class DefaultSuccessLoginController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/default")
+    @GetMapping("")
     public String defaultSuccessLogin(HttpServletRequest request){
         LOGGER.info("Redirecting user to the appropriate successful login page");
 

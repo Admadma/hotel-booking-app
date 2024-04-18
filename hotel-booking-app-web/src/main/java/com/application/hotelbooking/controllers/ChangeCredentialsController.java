@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/account")
 public class ChangeCredentialsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChangeCredentialsController.class);
@@ -57,7 +57,7 @@ public class ChangeCredentialsController {
         return "redirect:/hotelbooking/account?success";
     }
 
-    @GetMapping("/account")
+    @GetMapping("")
     public String changeCredentials(Model model){
         LOGGER.info("Navigating to account page");
         ChangeCredentialsDto changeCredentialsDto = new ChangeCredentialsDto();

@@ -13,7 +13,7 @@
 
 
 <div class="container" style="width: 28rem; padding-top: 3em;">
-    <form class="list-group-item" th:action="@{retrieve-reservation-info}" method="get">
+    <form class="list-group-item" th:action="@{/hotelbooking/admin/guest-check-in-out/retrieve-reservation-info}" method="get">
         <input class="form-control" type="text" id="reservationId" name="reservationId" th:value="${reservationId}" th:placeholder="#{admin.reservation.form.reservation.id}" />
         <div class="row justify-content-center" style="padding: 1.5em;">
             <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createhotel" th:text="#{admin.button.submit.get.reservation.info}"/>
@@ -63,12 +63,12 @@
         <div class="col-6 row justify-content-end" style="margin-right: 0.5rem;" th:text="${session.reservation.totalPrice}+' HUF'"/>
     </div>
     <div class="row justify-content-center" th:if="${'PLANNED' == session.reservation.reservationStatus.toString()}" style="padding: 1.5em;">
-        <form th:action="@{check-in}" method="post">
+        <form th:action="@{/hotelbooking/admin/guest-check-in-out/check-in}" method="post">
             <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="Check in" th:text="#{reservation.check.in}"/>
         </form>
     </div>
     <div class="row justify-content-center" th:if="${'ACTIVE' == session.reservation.reservationStatus.toString()}" style="padding: 1.5em;">
-        <form th:action="@{check-out}" method="post">
+        <form th:action="@{/hotelbooking/admin/guest-check-in-out/check-out}" method="post">
             <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="Check out" th:text="#{reservation.check.out}"/>
         </form>
     </div>

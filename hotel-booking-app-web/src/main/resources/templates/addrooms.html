@@ -12,7 +12,7 @@
 <div th:insert="~{fragments/navbaradmin ::navbar}"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em; justify-content: center;">
-    <form th:class="list-group-item" th:action="@{create-new-room}" th:object="${roomCreationDTO}" method="post">
+    <form th:class="list-group-item" th:action="@{/hotelbooking/admin/add-rooms/create-new-room}" th:object="${roomCreationDTO}" method="post">
         <p th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}" class="alert alert-danger"/>
         <p th:if="${successMessage}" th:text="#{admin.room.validation.global.success}" class="alert alert-success"/>
 

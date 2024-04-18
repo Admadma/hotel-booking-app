@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(path = "hotelbooking/admin")
+@RequestMapping(path = "hotelbooking/admin/add-rooms")
 public class AddRoomsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddRoomsController.class);
@@ -41,7 +41,7 @@ public class AddRoomsController {
     @Autowired
     private HotelViewTransformer hotelViewTransformer;
 
-    @PostMapping(value = "/create-new-room")
+    @PostMapping("/create-new-room")
     public String saveNewRoom(@Valid @ModelAttribute("roomCreationDTO") RoomCreationDTO roomCreationDTO, BindingResult result, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
@@ -58,7 +58,7 @@ public class AddRoomsController {
         return "addrooms";
     }
 
-    @GetMapping("/addRooms")
+    @GetMapping("")
     public String addRooms(Model model, HttpServletRequest request){
         LOGGER.info("Navigating to addRooms page");
         model.addAttribute("roomCreationDTO", new RoomCreationDTO());

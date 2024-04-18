@@ -92,7 +92,7 @@ public class ReserveRoomControllerTest {
         when(reservationPlanTransformer.transformToReservationPlanDTO(RESERVATION_PLAN_SERVICE_DTO)).thenReturn(RESERVATION_PLAN_DTO);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/reserveroom")
+                        .get("/hotelbooking/reserve-room")
                         .param("hotelName", HOTEL_NAME)
                         .param("number", String.valueOf(ROOM_NUMBER))
                         .sessionAttr("hotelsRoomsResultDTOs", HOTEL_WITH_RESERVABLE_ROOMS_DTO_LIST))
@@ -109,7 +109,7 @@ public class ReserveRoomControllerTest {
     @WithMockUser(authorities = "ADMIN")
     public void testAdminUserCanNotAttemptToPrepareReservation() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/reserveroom")
+                        .get("/hotelbooking/reserve-room")
                         .param("hotelName", HOTEL_NAME)
                         .param("number", String.valueOf(ROOM_NUMBER))
                         .sessionAttr("hotelsRoomsResultDTOs", HOTEL_WITH_RESERVABLE_ROOMS_DTO_LIST))
@@ -121,7 +121,7 @@ public class ReserveRoomControllerTest {
     @WithMockUser(authorities = "ADMIN", username = "admin")
     public void testAdminUserCanNotAttemptToReserveRoom() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/reserve")
+                        .post("/hotelbooking/reserve-room/reserve")
                         .sessionAttr("reservationPlan", RESERVATION_PLAN_DTO))
                 .andExpect(status().isForbidden())
                 .andExpect(request().sessionAttribute("reservationPlan", RESERVATION_PLAN_DTO));
@@ -134,7 +134,7 @@ public class ReserveRoomControllerTest {
         when(reservationService.reserveRoom(RESERVATION_PLAN_SERVICE_DTO, USER_NAME)).thenThrow(OutdatedReservationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/reserve")
+                        .post("/hotelbooking/reserve-room/reserve")
                         .sessionAttr("reservationPlan", RESERVATION_PLAN_DTO))
                 .andExpect(redirectedUrl("/hotelbooking/home?reservationError"))
                 .andExpect(request().sessionAttributeDoesNotExist("reservationPlan"))
@@ -151,7 +151,7 @@ public class ReserveRoomControllerTest {
         when(reservationService.reserveRoom(RESERVATION_PLAN_SERVICE_DTO, USER_NAME)).thenThrow(DataIntegrityViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/reserve")
+                        .post("/hotelbooking/reserve-room/reserve")
                         .sessionAttr("reservationPlan", RESERVATION_PLAN_DTO))
                 .andExpect(redirectedUrl("/hotelbooking/home?reservationError"))
                 .andExpect(request().sessionAttributeDoesNotExist("reservationPlan"))
@@ -168,9 +168,9 @@ public class ReserveRoomControllerTest {
         when(reservationService.reserveRoom(RESERVATION_PLAN_SERVICE_DTO, USER_NAME)).thenReturn(RESERVATION_MODEL);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/reserve")
+                        .post("/hotelbooking/reserve-room/reserve")
                         .sessionAttr("reservationPlan", RESERVATION_PLAN_DTO))
-                .andExpect(redirectedUrl("/hotelbooking/myreservations?reservationSuccess"))
+                .andExpect(redirectedUrl("/hotelbooking/my-reservations?reservationSuccess"))
                 .andExpect(request().sessionAttributeDoesNotExist("reservationPlan"))
                 .andExpect(request().sessionAttributeDoesNotExist("resultDTOS"));
 

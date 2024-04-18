@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping(path = "hotelbooking/admin")
+@RequestMapping(path = "hotelbooking/admin/add-hotels")
 public class AddHotelsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddHotelsController.class);
@@ -32,7 +32,7 @@ public class AddHotelsController {
     @Autowired
     private StorageService storageService;
 
-    @PostMapping(value = "/create-new-hotel")
+    @PostMapping("/create-new-hotel")
     public String saveNewHotel(@Valid @ModelAttribute("hotelCreationDTO") HotelCreationDTO hotelCreationDTO, BindingResult result, Model model){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
@@ -64,10 +64,10 @@ public class AddHotelsController {
         redirectAttributes.addFlashAttribute("fileUploadError", "Invalid file size");
 
         LOGGER.info("Handling MaxUploadSizeExceededException");
-        return "redirect:/hotelbooking/admin/addHotels";
+        return "redirect:/hotelbooking/admin/add-hotels";
     }
 
-    @GetMapping("/addHotels")
+    @GetMapping("")
     public String addHotels(Model model, @ModelAttribute("fileUploadError") String fileUploadError){
         LOGGER.info("Navigating to addHotels page");
 

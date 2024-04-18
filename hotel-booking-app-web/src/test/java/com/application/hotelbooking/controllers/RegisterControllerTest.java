@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -42,6 +44,7 @@ public class RegisterControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithAnonymousUser
     public void testUnauthenticatedUserCanNavigateToRegisterPage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register"))
                 .andExpect(status().isOk())
@@ -51,6 +54,23 @@ public class RegisterControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = {"USER", "ADMIN"})
+    public void testAuthenticatedUserCanNotNavigateToRegisterPage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/register"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"USER", "ADMIN"})
+    public void testAuthenticatedUserCanNotAttemptToCreateNewUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/hotelbooking/register/create-new-user")
+                        .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithAnonymousUser
     public void testCreateNewUserShouldReturnToRegisterPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/register/create-new-user")
@@ -62,6 +82,7 @@ public class RegisterControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void testCreateNewUserShouldRejectInvalidEmailAndReturnToRegisterPageWithErrorCode() throws Exception {
         doThrow(AddressException.class).when(internetAddressValidator).validate(NEW_USER_FORM_DTO_INVALID_EMAIL.getEmail());
 
@@ -77,6 +98,7 @@ public class RegisterControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void testCreateNewUserShouldRejectUsernameIfItsTakenAndReturnToRegisterPageWithErrorCode() throws Exception {
         doNothing().when(internetAddressValidator).validate(NEW_USER_FORM_DTO.getEmail());
         doThrow(UserAlreadyExistsException.class).when(userService).createUser(NEW_USER_FORM_DTO.getUsername(), NEW_USER_FORM_DTO.getPassword(), NEW_USER_FORM_DTO.getEmail(), SINGLETON_LIST_OF_USER_ROLE);
@@ -94,6 +116,7 @@ public class RegisterControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void testCreateNewUserShouldRejectEmailIfItsTakenAndReturnToRegisterPageWithErrorCode() throws Exception {
         doNothing().when(internetAddressValidator).validate(NEW_USER_FORM_DTO.getEmail());
         doThrow(EmailAlreadyExistsException.class).when(userService).createUser(NEW_USER_FORM_DTO.getUsername(), NEW_USER_FORM_DTO.getPassword(), NEW_USER_FORM_DTO.getEmail(), SINGLETON_LIST_OF_USER_ROLE);
@@ -111,6 +134,7 @@ public class RegisterControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void testCreateNewUserShouldReturnToRegisterPageWithErrorCodeIfAnyOtherExceptionOccurred() throws Exception {
         doNothing().when(internetAddressValidator).validate(NEW_USER_FORM_DTO.getEmail());
         doThrow(DataIntegrityViolationException.class).when(userService).createUser(NEW_USER_FORM_DTO.getUsername(), NEW_USER_FORM_DTO.getPassword(), NEW_USER_FORM_DTO.getEmail(), SINGLETON_LIST_OF_USER_ROLE);
@@ -128,6 +152,7 @@ public class RegisterControllerTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void testCreateNewUserShouldSetSessionAttributeAndRedirectToConfirmEmailPageIfNoExceptionsOccurred() throws Exception {
         doNothing().when(internetAddressValidator).validate(NEW_USER_FORM_DTO.getEmail());
         when(userService.createUser(NEW_USER_FORM_DTO.getUsername(), NEW_USER_FORM_DTO.getPassword(), NEW_USER_FORM_DTO.getEmail(), SINGLETON_LIST_OF_USER_ROLE)).thenReturn(null);
@@ -136,7 +161,7 @@ public class RegisterControllerTest {
                         .post("/hotelbooking/register/create-new-user")
                         .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO))
                 .andExpect(request().sessionAttribute("email", NEW_USER_FORM_DTO.getEmail()))
-                .andExpect(redirectedUrl("/hotelbooking/register/confirmemail"));
+                .andExpect(redirectedUrl("/hotelbooking/register/confirm-email"));
 
         verify(internetAddressValidator).validate(NEW_USER_FORM_DTO.getEmail());
         verify(userService).createUser(NEW_USER_FORM_DTO.getUsername(), NEW_USER_FORM_DTO.getPassword(), NEW_USER_FORM_DTO.getEmail(), SINGLETON_LIST_OF_USER_ROLE);

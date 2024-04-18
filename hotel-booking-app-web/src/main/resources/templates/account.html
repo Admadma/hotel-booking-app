@@ -12,7 +12,7 @@
 <div th:insert="~{fragments/navbar ::navbar}"/>
 
 <div class="container" style="width: 28rem; padding-top: 3em; justify-content: center;">
-    <form th:class="list-group-item" th:action="@{change-password}" th:object="${credentials}" method="POST">
+    <form th:class="list-group-item" th:action="@{/hotelbooking/account/change-password}" th:object="${credentials}" method="POST">
         <h1 class = "text-center" th:text="#{account.form.header.change.password}"/>
         <div th:if="${param.error}" class="alert alert-danger" th:text="#{account.form.error}"/>
         <div th:if="${param.invalidUserError}" class="alert alert-danger" th:text="#{account.form.invalid.user.error}"/>

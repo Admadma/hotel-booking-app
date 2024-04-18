@@ -66,7 +66,7 @@ public class AddRoomsControllerTest {
         when(hotelRepositoryService.getAllHotels()).thenReturn(HOTEL_MODEL_LIST);
         when(hotelViewTransformer.transformToHotelViews(HOTEL_MODEL_LIST)).thenReturn(HOTEL_VIEW_LIST);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addRooms"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/add-rooms"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("addrooms"))
                 .andExpect(model().attributeExists("roomCreationDTO"))
@@ -81,7 +81,7 @@ public class AddRoomsControllerTest {
     @Test
     @WithMockUser(authorities = "USER")
     public void testNonAdminUserForbiddenToNavigateToAddRoomsPage() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/addRooms"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/admin/add-rooms"))
                 .andExpect(status().isForbidden());
     }
 
@@ -89,7 +89,7 @@ public class AddRoomsControllerTest {
     @WithMockUser(authorities = "USER")
     public void testCreateNewRoomForbiddenForNonAdminUser() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-room")
+                        .post("/hotelbooking/admin/add-rooms/create-new-room")
                         .flashAttr("roomCreationDTO", Matchers.any(RoomCreationDTO.class)))
                 .andExpect(status().isForbidden());
 
@@ -99,7 +99,7 @@ public class AddRoomsControllerTest {
     @WithMockUser(authorities = "ADMIN")
     public void testCreateNewHotelShouldReturnToAddHotelsPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-room")
+                        .post("/hotelbooking/admin/add-rooms/create-new-room")
                         .flashAttr("roomCreationDTO", ROOM_CREATION_DTO_WITH_FIVE_INVALID_FIELDS))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
@@ -115,7 +115,7 @@ public class AddRoomsControllerTest {
         when(roomService.createRoomFromDTO(ROOM_CREATION_SERVICE_DTO)).thenThrow(DataIntegrityViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-room")
+                        .post("/hotelbooking/admin/add-rooms/create-new-room")
                         .flashAttr("roomCreationDTO", ROOM_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("successMessage"))
@@ -133,7 +133,7 @@ public class AddRoomsControllerTest {
         when(roomService.createRoomFromDTO(ROOM_CREATION_SERVICE_DTO)).thenReturn(ROOM_MODEL);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/create-new-room")
+                        .post("/hotelbooking/admin/add-rooms/create-new-room")
                         .flashAttr("roomCreationDTO", ROOM_CREATION_DTO))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("successMessage"))

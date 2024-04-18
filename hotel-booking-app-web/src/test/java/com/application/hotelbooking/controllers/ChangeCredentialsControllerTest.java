@@ -26,7 +26,7 @@ public class ChangeCredentialsControllerTest {
     private static final ChangeCredentialsDto CHANGE_CREDENTIALS_DTO = new ChangeCredentialsDto("12345678", "123345678");
     private static final ChangeCredentialsDto EMPTY_CHANGE_CREDENTIALS_DTO = new ChangeCredentialsDto();
     private static final ChangeCredentialsDto CHANGE_CREDENTIALS_DTO_WITH_TWO_INVALID_FIELDS = new ChangeCredentialsDto("1", "1");
-    public static final String TEST_USER_NAME = "test_user";
+    private static final String TEST_USER_NAME = "test_user";
 
     @MockBean
     private UserService userService;
@@ -56,7 +56,7 @@ public class ChangeCredentialsControllerTest {
     @WithMockUser(authorities = "ADMIN")
     public void testAdminUserCanAttemptToChangePassword() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/change-password")
+                        .post("/hotelbooking/account/change-password")
                         .flashAttr("credentials", CHANGE_CREDENTIALS_DTO_WITH_TWO_INVALID_FIELDS))
                 .andExpect(status().isOk());
     }
@@ -65,7 +65,7 @@ public class ChangeCredentialsControllerTest {
     @WithMockUser(authorities = "USER")
     public void testChangePasswordShouldReturnToAccountPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/change-password")
+                        .post("/hotelbooking/account/change-password")
                         .flashAttr("credentials", CHANGE_CREDENTIALS_DTO_WITH_TWO_INVALID_FIELDS))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account"))
@@ -78,7 +78,7 @@ public class ChangeCredentialsControllerTest {
     public void testChangePasswordShouldRedirectToAccountPageWithInvalidUserErrorIfChangePasswordThrowsInvalidUserException() throws Exception {
         doThrow(InvalidUserException.class).when(userService).changePassword(TEST_USER_NAME, CHANGE_CREDENTIALS_DTO.getNewPassword(), CHANGE_CREDENTIALS_DTO.getOldPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/change-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/account/change-password")
                         .flashAttr("credentials", CHANGE_CREDENTIALS_DTO))
                 .andExpect(redirectedUrl("/hotelbooking/account?invalidUserError"));
 
@@ -90,7 +90,7 @@ public class ChangeCredentialsControllerTest {
     public void testChangePasswordShouldRedirectToAccountPageWithGenericErrorIfChangePasswordThrowsOptimisticLockException() throws Exception {
         doThrow(OptimisticLockException.class).when(userService).changePassword(TEST_USER_NAME, CHANGE_CREDENTIALS_DTO.getNewPassword(), CHANGE_CREDENTIALS_DTO.getOldPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/change-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/account/change-password")
                         .flashAttr("credentials", CHANGE_CREDENTIALS_DTO))
                 .andExpect(redirectedUrl("/hotelbooking/account?error"));
 
@@ -102,7 +102,7 @@ public class ChangeCredentialsControllerTest {
     public void testChangePasswordShouldRejectOldPasswordAndReturnToAccountPageIfChangePasswordThrowsCredentialMismatchException() throws Exception {
         doThrow(CredentialMismatchException.class).when(userService).changePassword(TEST_USER_NAME, CHANGE_CREDENTIALS_DTO.getNewPassword(), CHANGE_CREDENTIALS_DTO.getOldPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/change-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/account/change-password")
                         .flashAttr("credentials", CHANGE_CREDENTIALS_DTO))
                 .andExpect(view().name("account"))
                 .andExpect(model().attributeHasFieldErrorCode("credentials", "oldPassword", "account.form.old.password.not.found"));
@@ -115,7 +115,7 @@ public class ChangeCredentialsControllerTest {
     public void testChangePasswordShouldRedirectToAccountPageWithGenericErrorIfChangePasswordThrowsAnyOtherException() throws Exception {
         doThrow(DataIntegrityViolationException.class).when(userService).changePassword(TEST_USER_NAME, CHANGE_CREDENTIALS_DTO.getNewPassword(), CHANGE_CREDENTIALS_DTO.getOldPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/change-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/account/change-password")
                         .flashAttr("credentials", CHANGE_CREDENTIALS_DTO))
                 .andExpect(redirectedUrl("/hotelbooking/account?error"));
 
@@ -127,7 +127,7 @@ public class ChangeCredentialsControllerTest {
     public void testChangePasswordShouldRedirectToAccountPageWithSuccessMessageIfNoExceptionsOccurredWhileChangingPassword() throws Exception {
         doNothing().when(userService).changePassword(TEST_USER_NAME, CHANGE_CREDENTIALS_DTO.getNewPassword(), CHANGE_CREDENTIALS_DTO.getOldPassword());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/change-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/account/change-password")
                         .flashAttr("credentials", CHANGE_CREDENTIALS_DTO))
                 .andExpect(redirectedUrl("/hotelbooking/account?success"));
 

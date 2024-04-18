@@ -21,7 +21,7 @@
     <p th:text="#{confirm.email.message.line.1(${session.email})}" />
     <p th:text="#{confirm.email.message.line.2}" />
     <p th:text="#{confirm.email.resend.message}" />
-    <form id="resend" th:action="@{confirmemail/send-new-token}" method="post">
+    <form id="resend" th:action="@{/hotelbooking/register/confirm-email/send-new-token}" method="post">
         <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" th:text="#{confirm.email.resend.button}" />
     </form>
 </div>
