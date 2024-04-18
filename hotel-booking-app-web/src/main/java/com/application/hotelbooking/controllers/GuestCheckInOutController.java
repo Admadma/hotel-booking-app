@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @Controller
-@RequestMapping(path = "hotelbooking/admin")
+@RequestMapping(path = "hotelbooking/admin/guest-check-in-out")
 public class GuestCheckInOutController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GuestCheckInOutController.class);
@@ -26,7 +26,7 @@ public class GuestCheckInOutController {
     @Autowired
     private ReservationViewTransformer reservationViewTransformer;
 
-    @GetMapping(value = "/retrieve-reservation-info")
+    @GetMapping("/retrieve-reservation-info")
     public String retrieveReservationInfo(@RequestParam("reservationId") UUID uuid, HttpServletRequest request){
         LOGGER.info("Retrieving reservation info");
 
@@ -37,7 +37,7 @@ public class GuestCheckInOutController {
         return "guestcheckinout";
     }
 
-    @PostMapping(value = "/check-in")
+    @PostMapping("/check-in")
     public String checkInGuest(@SessionAttribute("reservation") ReservationView reservationView, HttpServletRequest request){
         LOGGER.info("Checking in guest");
 
@@ -50,7 +50,7 @@ public class GuestCheckInOutController {
         return "guestcheckinout";
     }
 
-    @PostMapping(value = "/check-out")
+    @PostMapping("/check-out")
     public String checkOutGuest(@SessionAttribute("reservation") ReservationView reservationView, HttpServletRequest request){
         LOGGER.info("Checking out guest");
 
@@ -63,7 +63,7 @@ public class GuestCheckInOutController {
         return "guestcheckinout";
     }
 
-    @GetMapping("/checkInOut")
+    @GetMapping("")
     public String checkInOut(){
         LOGGER.info("Navigating to check in/out page");
 

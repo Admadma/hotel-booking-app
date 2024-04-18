@@ -57,7 +57,7 @@ public class GuestCheckInOutControllerTest {
     public void testAdminCanNavigateToGuestCheckInOutPage() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/admin/checkInOut"))
+                        .get("/hotelbooking/admin/guest-check-in-out"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("guestcheckinout"));
     }
@@ -67,7 +67,7 @@ public class GuestCheckInOutControllerTest {
     public void testUserCanNotNavigateToGuestCheckInOutPage() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/admin/checkInOut"))
+                        .get("/hotelbooking/admin/guest-check-in-out"))
                 .andExpect(status().isForbidden());
     }
 
@@ -78,7 +78,7 @@ public class GuestCheckInOutControllerTest {
         when(reservationViewTransformer.transformToReservationView(RESERVATION_MODEL)).thenReturn(RESERVATION_VIEW);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/admin/retrieve-reservation-info")
+                        .get("/hotelbooking/admin/guest-check-in-out/retrieve-reservation-info")
                         .param("reservationId", String.valueOf(TEST_UUID)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("guestcheckinout"))
@@ -93,7 +93,7 @@ public class GuestCheckInOutControllerTest {
     public void testUserCanNotRetrieveReservationInfo() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/hotelbooking/admin/retrieve-reservation-info")
+                        .get("/hotelbooking/admin/guest-check-in-out/retrieve-reservation-info")
                         .flashAttr("reservationId", TEST_UUID))
                 .andExpect(status().isForbidden());
     }
@@ -104,7 +104,7 @@ public class GuestCheckInOutControllerTest {
         when(checkInOutService.checkInGuest(TEST_UUID)).thenReturn(RESERVATION_MODEL);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/check-in")
+                        .post("/hotelbooking/admin/guest-check-in-out/check-in")
                         .sessionAttr("reservation", RESERVATION_VIEW))
                 .andExpect(status().isOk())
                 .andExpect(view().name("guestcheckinout"))
@@ -118,7 +118,7 @@ public class GuestCheckInOutControllerTest {
     public void testUserCanNotCheckInGuests() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/check-in")
+                        .post("/hotelbooking/admin/guest-check-in-out/check-in")
                         .sessionAttr("reservation", RESERVATION_VIEW))
                 .andExpect(status().isForbidden());
     }
@@ -129,7 +129,7 @@ public class GuestCheckInOutControllerTest {
         when(checkInOutService.checkOutGuest(TEST_UUID)).thenReturn(RESERVATION_MODEL);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/check-out")
+                        .post("/hotelbooking/admin/guest-check-in-out/check-out")
                         .sessionAttr("reservation", RESERVATION_VIEW))
                 .andExpect(status().isOk())
                 .andExpect(view().name("guestcheckinout"))
@@ -143,7 +143,7 @@ public class GuestCheckInOutControllerTest {
     public void testUserCanNotCheckOutGuests() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/hotelbooking/admin/check-out")
+                        .post("/hotelbooking/admin/guest-check-in-out/check-out")
                         .sessionAttr("reservation", RESERVATION_VIEW))
                 .andExpect(status().isForbidden());
     }
