@@ -21,7 +21,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
                     auth.requestMatchers("/hotelbooking/reserve-room/**", "/hotelbooking/my-reservations/**", "/hotelbooking/review/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/hotelbooking/default/**", "/hotelbooking/account/**").authenticated();
-                    auth.requestMatchers("/hotelbooking/login/**", "/hotelbooking/register/**", "/error/**", "/images/**", "/hotelbooking/home/**", "/hotelbooking/search-rooms/**").permitAll();
+                    auth.requestMatchers("/hotelbooking/login/**", "/hotelbooking/register/**", "/error/**", "/images/**", "/hotelbooking/home/**").permitAll();
                 })
                 .formLogin(form -> form
                         .loginPage("/hotelbooking/login")
