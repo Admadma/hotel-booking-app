@@ -182,7 +182,7 @@ public class ReviewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/hotelbooking/review")
                         .flashAttr("reservationUuid", TEST_UUID))
-                .andExpect(redirectedUrl("/hotelbooking/myreservations"))
+                .andExpect(redirectedUrl("/hotelbooking/my-reservations"))
                 .andExpect(request().sessionAttributeDoesNotExist("hotelName"))
                 .andExpect(request().sessionAttributeDoesNotExist("hotelImageName"))
                 .andExpect(model().attributeDoesNotExist("reviewDTO"));
@@ -200,7 +200,7 @@ public class ReviewControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/hotelbooking/review")
                         .flashAttr("reservationUuid", TEST_UUID))
-                .andExpect(redirectedUrl("/hotelbooking/myreservations"))
+                .andExpect(redirectedUrl("/hotelbooking/my-reservations"))
                 .andExpect(request().sessionAttributeDoesNotExist("hotelName"))
                 .andExpect(request().sessionAttributeDoesNotExist("hotelImageName"))
                 .andExpect(model().attributeDoesNotExist("reviewDTO"));
