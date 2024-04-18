@@ -13,7 +13,7 @@
 
 <div class="container" style="width: 28rem; padding-top: 3em;">
     <img th:src="@{/images/__${session.hotelImageName}__}" alt="${session.hotelImageName}">
-    <form class="list-group-item" th:action="@{review/submit-review}" th:object="${reviewDTO}" method="post">
+    <form class="list-group-item" th:action="@{/hotelbooking/review/submit-review}" th:object="${reviewDTO}" method="post">
 
         <div class="input-group mb-3">
             <label for="rating" th:text="#{review.choose.rating}"></label><br>

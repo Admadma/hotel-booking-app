@@ -38,7 +38,7 @@ public class ReviewController {
     private ReservationViewTransformer reservationViewTransformer;
 
 
-    @PostMapping(value = "/submit-review")
+    @PostMapping("/submit-review")
     public String submitReview(@Valid @ModelAttribute("reviewDTO") ReviewDTO reviewDTO, BindingResult result, HttpServletRequest request, Authentication auth){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");

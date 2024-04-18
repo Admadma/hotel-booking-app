@@ -58,10 +58,10 @@
                 <td th:text="${reservation.totalPrice} + ' HUF'" />
                 <td th:insert="~{fragments/reservationstatusnames ::reservationstatusnames(${reservation.reservationStatus})}" hidden="true"></td>
                 <td>
-                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{my-reservations/cancel-reservation}" method="post">
+                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'PLANNED')}" th:action="@{/hotelbooking/my-reservations/cancel-reservation}" method="post">
                         <button class="btn btn-danger" th:value="${reservation.id}" th:name="reservationId" th:text="#{myreservations.button.cancel}" />
                     </form>
-                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{review}" method="get">
+                    <form th:if="${#strings.equals(reservation.reservationStatus.toString(), 'COMPLETED')}" th:action="@{/hotelbooking/review}" method="get">
                         <button class="btn btn-primary" th:value="${reservation.uuid}" th:name="reservationUuid" th:text="#{myreservations.button.leave.review}" />
                     </form>
                 </td>
