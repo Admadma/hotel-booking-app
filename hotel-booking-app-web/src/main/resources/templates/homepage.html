@@ -113,7 +113,7 @@
             <div class="dropdown-content" style="margin: .5em; width: 90%">
                 <ul style="list-style-type: none; padding-left: 0px;">
                     <li th:each="uniqueReservableRoomOfHotelDTO : ${hotelsRoomsResultDTO.uniqueReservableRoomOfHotelDTOList}">
-                        <a th:href="@{reserveroom(hotelName=${hotelsRoomsResultDTO.hotelName}, number=${uniqueReservableRoomOfHotelDTO.number})}" style="text-decoration: none; color: inherit;">
+                        <a th:href="@{reserve-room(hotelName=${hotelsRoomsResultDTO.hotelName}, number=${uniqueReservableRoomOfHotelDTO.number})}" style="text-decoration: none; color: inherit;">
                             <div class="col-md-12" style="margin-bottom: .5em; border-radius: 15px; background-color: cornsilk; font-size: 1.8em">
                                 <div style="text-align: center;">
                                     <span th:insert="~{fragments/roomtypenames ::roomtypenames(${uniqueReservableRoomOfHotelDTO.roomType})}"></span>
