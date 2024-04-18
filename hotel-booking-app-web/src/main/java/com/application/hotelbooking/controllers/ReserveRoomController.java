@@ -55,20 +55,15 @@ public class ReserveRoomController {
                               HttpServletRequest request){
         LOGGER.info("Navigating to reserveroom page");
 
-        try {
-            request.getSession().setAttribute("reservationPlan",
-                    reservationPlanTransformer.transformToReservationPlanDTO(
-                            reservationService.createReservationPlan(
-                                    roomNumber,
-                                    hotelName,
-                                    hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS)
-                            )
-                    )
-            );
-        } catch (OutdatedReservationException ore) {
-            LOGGER.info(ore.getMessage());
-            return "redirect:/hotelbooking/home?reservationError";
-        }
+        request.getSession().setAttribute("reservationPlan",
+                reservationPlanTransformer.transformToReservationPlanDTO(
+                        reservationService.createReservationPlan(
+                                roomNumber,
+                                hotelName,
+                                hotelsWithReservableRoomsDTOTransformer.transformToHotelWithReservableRoomsServiceDTOs(hotelsWithReservableRoomsDTOS)
+                        )
+                )
+        );
 
         return "reserveroom";
     }

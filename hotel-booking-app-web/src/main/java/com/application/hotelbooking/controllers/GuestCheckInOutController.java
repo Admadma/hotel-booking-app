@@ -27,9 +27,8 @@ public class GuestCheckInOutController {
     private ReservationViewTransformer reservationViewTransformer;
 
     @GetMapping(value = "/retrieve-reservation-info")
-    public String saveNewHotel(@RequestParam("reservationId") UUID uuid, HttpServletRequest request){
-        LOGGER.info("here");
-        LOGGER.info(uuid.toString());
+    public String retrieveReservationInfo(@RequestParam("reservationId") UUID uuid, HttpServletRequest request){
+        LOGGER.info("Retrieving reservation info");
 
         ReservationView reservationView = reservationViewTransformer.transformToReservationView(checkInOutService.getReservationDetails(uuid));
 
@@ -40,11 +39,9 @@ public class GuestCheckInOutController {
 
     @PostMapping(value = "/check-in")
     public String checkInGuest(@SessionAttribute("reservation") ReservationView reservationView, HttpServletRequest request){
-        LOGGER.info("check-in");
+        LOGGER.info("Checking in guest");
 
         try {
-            LOGGER.info("updating reservation");
-            LOGGER.info(reservationView.getUuid().toString());
             checkInOutService.checkInGuest(reservationView.getUuid());
         } finally {
             request.getSession().removeAttribute("reservation");
@@ -55,11 +52,9 @@ public class GuestCheckInOutController {
 
     @PostMapping(value = "/check-out")
     public String checkOutGuest(@SessionAttribute("reservation") ReservationView reservationView, HttpServletRequest request){
-        LOGGER.info("check-out");
+        LOGGER.info("Checking out guest");
 
         try {
-            LOGGER.info("updating reservation");
-            LOGGER.info(reservationView.getUuid().toString());
             checkInOutService.checkOutGuest(reservationView.getUuid());
         } finally {
             request.getSession().removeAttribute("reservation");
@@ -69,10 +64,9 @@ public class GuestCheckInOutController {
     }
 
     @GetMapping("/checkInOut")
-    public String checkInOut(Model model){
+    public String checkInOut(){
         LOGGER.info("Navigating to check in/out page");
 
-        model.addAttribute("hotelCreationDTO", new HotelCreationDTO());
         return "guestcheckinout";
     }
 }

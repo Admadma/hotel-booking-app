@@ -53,9 +53,6 @@ public class AddHotelsController {
             result.reject("admin.hotel.validation.global.error");
             LOGGER.info("Error while creating hotel");
             LOGGER.info(e.getMessage());
-            LOGGER.info(e.toString());
-            LOGGER.info(e.getStackTrace().toString());
-            LOGGER.info(e.getCause().toString());
             return "addhotels";
         }
 
@@ -66,7 +63,7 @@ public class AddHotelsController {
     public String maxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException exceededException, RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("fileUploadError", "Invalid file size");
 
-        System.out.println("handling");
+        LOGGER.info("Handling MaxUploadSizeExceededException");
         return "redirect:/hotelbooking/admin/addHotels";
     }
 

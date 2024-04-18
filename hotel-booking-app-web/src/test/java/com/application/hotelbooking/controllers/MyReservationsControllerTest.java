@@ -27,7 +27,9 @@ public class MyReservationsControllerTest {
 
     private static final Long RESERVATION_ID = 1L;
     private static final String TEST_USER_NAME = "test_user";
-    private static final ReservationModel RESERVATION_MODEL = new ReservationModel();
+    private static final LocalDate START_DATE = LocalDate.of(2024, 3, 1);
+    private static final LocalDate END_DATE = LocalDate.of(2024, 3, 2);
+    private static final ReservationModel RESERVATION_MODEL = ReservationModel.builder().reservationStatus(ReservationStatus.PLANNED).build();
     private static final List<ReservationModel> RESERVATION_MODEL_LIST = List.of(RESERVATION_MODEL);
     private static final HotelView HOTEL_VIEW = HotelView.builder()
             .hotelName("Test Hotel")
@@ -40,9 +42,10 @@ public class MyReservationsControllerTest {
             .build();
     private static final ReservationView RESERVATION_VIEW = ReservationView.builder()
             .room(ROOM_VIEW)
-            .startDate(LocalDate.now().plusDays(5))
-            .endDate(LocalDate.now().plusDays(10))
+            .startDate(START_DATE)
+            .endDate(END_DATE)
             .totalPrice(100)
+            .reservationStatus(ReservationStatus.PLANNED)
             .build();
     private static final List<ReservationView> RESERVATION_VIEW_LIST = List.of(RESERVATION_VIEW);
 

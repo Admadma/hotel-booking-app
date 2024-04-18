@@ -3,11 +3,8 @@ package com.application.hotelbooking.controllers;
 import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.domain.ReservationView;
 import com.application.hotelbooking.dto.ReviewDTO;
-import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.services.ReviewService;
-import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
-import com.application.hotelbooking.transformers.HotelViewTransformer;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -42,19 +39,19 @@ public class ReviewController {
 
 
     @PostMapping(value = "/submit-review")
-    public String saveNewRoom(@Valid @ModelAttribute("reviewDTO") ReviewDTO reviewDTO, BindingResult result, HttpServletRequest request, Authentication auth){
+    public String submitReview(@Valid @ModelAttribute("reviewDTO") ReviewDTO reviewDTO, BindingResult result, HttpServletRequest request, Authentication auth){
         if (result.hasErrors()){
             LOGGER.info("Error while validating");
             return "reviewpage";
         }
 
         try {
-            System.out.println(reviewDTO.toString());
             reviewService.createReview(
                     reviewDTO.getRating(),
                     reviewDTO.getComment(),
                     request.getSession().getAttribute("hotelName").toString(),
                     auth.getName());
+            LOGGER.info("Created review.");
         } catch (Exception e){
             LOGGER.info("Error while makeing a review");
             return "reviewpage";
@@ -63,7 +60,7 @@ public class ReviewController {
     }
 
     @GetMapping("/makeReview")
-    public String addHotels(@ModelAttribute("reservationUuid") UUID uuid, Model model, HttpServletRequest request){
+    public String reviews(@ModelAttribute("reservationUuid") UUID uuid, Model model, HttpServletRequest request){
         LOGGER.info("Navigating to review page");
 
         ReservationView reservationView = reservationViewTransformer.transformToReservationView(reservationRepositoryService.getReservationByUuid(uuid).get());
