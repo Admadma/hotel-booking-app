@@ -222,8 +222,8 @@ public class ReviewControllerTest {
 
     @Test
     @WithMockUser(authorities = "USER", username = USER_NAME)
-    public void testSubmitReviewShouldCallToCreateTheNewReviewAndReturnToReviewPage() throws Exception {
-        when(reviewService.createReview(REVIEW_DTO.getRating(), REVIEW_DTO.getComment(), HOTEL_NAME, USER_NAME)).thenReturn(REVIEW_MODEL);
+    public void testSubmitReviewShouldReturnToReviewPageIfAnyExceptionHappenedDuringReviewCreation() throws Exception {
+        when(reviewService.createReview(REVIEW_DTO.getRating(), REVIEW_DTO.getComment(), HOTEL_NAME, USER_NAME)).thenThrow(DataIntegrityViolationException.class);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/review/submit-review")
@@ -238,16 +238,14 @@ public class ReviewControllerTest {
 
     @Test
     @WithMockUser(authorities = "USER", username = USER_NAME)
-    public void testSubmitReviewShouldReturnToReviewPageIfAnyExceptionHappenedDuringReviewCreation() throws Exception {
-        when(reviewService.createReview(REVIEW_DTO.getRating(), REVIEW_DTO.getComment(), HOTEL_NAME, USER_NAME)).thenThrow(DataIntegrityViolationException.class);
+    public void testSubmitReviewShouldCallToCreateTheNewReviewAndRedirectToHomePageIfNoErrorsOccurred() throws Exception {
+        when(reviewService.createReview(REVIEW_DTO.getRating(), REVIEW_DTO.getComment(), HOTEL_NAME, USER_NAME)).thenReturn(REVIEW_MODEL);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/review/submit-review")
                         .flashAttr("reviewDTO", REVIEW_DTO)
                         .sessionAttr("hotelName", HOTEL_NAME))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeErrorCount("reviewDTO", 0))
-                .andExpect(view().name("reviewpage"));
+                .andExpect(redirectedUrl("/hotelbooking/home"));
 
         verify(reviewService).createReview(REVIEW_DTO.getRating(), REVIEW_DTO.getComment(), HOTEL_NAME, USER_NAME);
     }

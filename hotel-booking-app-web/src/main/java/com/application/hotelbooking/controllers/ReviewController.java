@@ -56,7 +56,7 @@ public class ReviewController {
             LOGGER.info("Error while makeing a review");
             return "reviewpage";
         }
-        return "reviewpage";
+        return "redirect:/hotelbooking/home";
     }
 
     @GetMapping("")
