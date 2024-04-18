@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Service
 public class HotelServiceImpl implements HotelService {
 
@@ -42,7 +45,12 @@ public class HotelServiceImpl implements HotelService {
     }
 
     public void updateAverageRating(HotelModel hotelModel){
-        double newRating = hotelModel.getReviews().stream().mapToDouble(ReviewModel::getRating).average().orElse(0);
+        double newRating = BigDecimal.valueOf(hotelModel.getReviews()
+                .stream()
+                .mapToDouble(ReviewModel::getRating).average()
+                .orElse(0))
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
         hotelModel.setAverageRating(newRating);
         hotelRepositoryService.save(hotelModel);
     }

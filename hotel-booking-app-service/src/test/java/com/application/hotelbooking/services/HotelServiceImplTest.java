@@ -24,10 +24,13 @@ public class HotelServiceImplTest {
 
     public static final long HOTEL_ID = 1l;
     public static final String HOTEL_NAME = "Existing hotel";
-    public static final ReviewModel REVIEW_MODEL_ONE = ReviewModel.builder().rating(2).build();
-    public static final ReviewModel REVIEW_MODEL_TWO = ReviewModel.builder().rating(5).build();
-    public static final HotelModel HOTEL_MODEL = HotelModel.builder().rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_ONE, REVIEW_MODEL_TWO)).build();
-    public static final HotelModel HOTEL_MODEL_WITH_UPDATED_AVERAGE_REVIEWS = HotelModel.builder().rooms(List.of()).averageRating(3.5).reviews(List.of(REVIEW_MODEL_ONE, REVIEW_MODEL_TWO)).build();
+    public static final ReviewModel REVIEW_MODEL_RATING_ONE = ReviewModel.builder().rating(1).build();
+    public static final ReviewModel REVIEW_MODEL_RATING_TWO = ReviewModel.builder().rating(2).build();
+    public static final HotelModel HOTEL_MODEL = HotelModel.builder().rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
+    public static final HotelModel HOTEL_MODEL_WITH_HIGHER_RATINGS = HotelModel.builder().rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO, REVIEW_MODEL_RATING_TWO)).build();
+    public static final HotelModel HOTEL_MODEL_WITH_LOWER_RATINGS = HotelModel.builder().rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
+    public static final HotelModel HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING = HotelModel.builder().rooms(List.of()).averageRating(1.67).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO, REVIEW_MODEL_RATING_TWO)).build();
+    public static final HotelModel HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING = HotelModel.builder().rooms(List.of()).averageRating(1.33).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
     public static final HotelModel HOTEL_MODEL_WITH_ROOMS = HotelModel.builder().rooms(List.of(RoomModel.builder().roomNumber(1).build())).build();
     public static final HotelCreationServiceDTO HOTEL_CREATION_SERVICE_DTO = HotelCreationServiceDTO.builder().hotelName(HOTEL_NAME).build();
     public static final Optional<HotelModel> OPTIONAL_HOTEL_MODEL = Optional.of(HOTEL_MODEL);
@@ -82,11 +85,20 @@ public class HotelServiceImplTest {
     }
 
     @Test
-    public void testUpdateAverageRatingShould(){
-        when(hotelRepositoryService.save(HOTEL_MODEL_WITH_UPDATED_AVERAGE_REVIEWS)).thenReturn(HOTEL_MODEL_WITH_UPDATED_AVERAGE_REVIEWS);
+    public void testUpdateAverageRatingShouldCalculateAverageRatingAndRoundUpToTwoDecimalPointsIfNumberAfterScaleIFiveOrLarger(){
+        when(hotelRepositoryService.save(HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING)).thenReturn(HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING);
 
-        hotelService.updateAverageRating(HOTEL_MODEL);
+        hotelService.updateAverageRating(HOTEL_MODEL_WITH_HIGHER_RATINGS);
 
-        verify(hotelRepositoryService).save(HOTEL_MODEL_WITH_UPDATED_AVERAGE_REVIEWS);
+        verify(hotelRepositoryService).save(HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING);
+    }
+
+    @Test
+    public void testUpdateAverageRatingShouldCalculateAverageRatingAndRoundDownToTwoDecimalPointsIfNumberAfterScaleIsSmallerThanFive(){
+        when(hotelRepositoryService.save(HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING)).thenReturn(HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING);
+
+        hotelService.updateAverageRating(HOTEL_MODEL_WITH_LOWER_RATINGS);
+
+        verify(hotelRepositoryService).save(HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING);
     }
 }
