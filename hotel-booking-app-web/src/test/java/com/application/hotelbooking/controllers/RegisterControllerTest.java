@@ -136,7 +136,7 @@ public class RegisterControllerTest {
                         .post("/hotelbooking/register/create-new-user")
                         .flashAttr("newUserFormDTO", NEW_USER_FORM_DTO))
                 .andExpect(request().sessionAttribute("email", NEW_USER_FORM_DTO.getEmail()))
-                .andExpect(redirectedUrl("/hotelbooking/register/confirmemail"));
+                .andExpect(redirectedUrl("/hotelbooking/register/confirm-email"));
 
         verify(internetAddressValidator).validate(NEW_USER_FORM_DTO.getEmail());
         verify(userService).createUser(NEW_USER_FORM_DTO.getUsername(), NEW_USER_FORM_DTO.getPassword(), NEW_USER_FORM_DTO.getEmail(), SINGLETON_LIST_OF_USER_ROLE);
