@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/login")
 public class LoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
@@ -24,7 +24,7 @@ public class LoginController {
         return authentication.isAuthenticated();
     }
 
-    @GetMapping("/login")
+    @GetMapping("")
     public String login(){
         if (isAuthenticated()){
             return "redirect:/hotelbooking/home";
