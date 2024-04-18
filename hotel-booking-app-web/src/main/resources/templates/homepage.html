@@ -38,7 +38,7 @@
 
 <div class="container" style="width: 56rem; padding-top: 1.5em; margin-top: 1.5em; border-radius: 20px;  justify-content: center; background-color:Gainsboro;">
     <div th:if="${param.reservationError}" class="alert alert-danger" th:text="#{home.reservation.error}"/>
-    <form th:action="@{search-rooms}" th:object="${roomSearchFormDTO}" method="post">
+    <form th:action="@{home/search-rooms}" th:object="${roomSearchFormDTO}" method="post">
         <div class="form-row" style="justify-content: center;">
             <div class="form-group col-md-3" style="margin: 0em .5em;">
                 <label for="singleBeds" th:text="#{home.room.form.singlebeds}"/>
