@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path = "hotelbooking")
+@RequestMapping(path = "hotelbooking/admin")
 public class AdminPageController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminPageController.class);
 
-    @GetMapping("/admin")
+    @GetMapping("")
     public String admin(){
         LOGGER.info("Navigating to admin page");
 
