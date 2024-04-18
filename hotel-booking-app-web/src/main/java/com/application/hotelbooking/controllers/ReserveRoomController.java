@@ -45,7 +45,7 @@ public class ReserveRoomController {
             request.getSession().removeAttribute("hotelsRoomsResultDTOs");
         }
 
-        return "redirect:/hotelbooking/myreservations?reservationSuccess";
+        return "redirect:/hotelbooking/my-reservations?reservationSuccess";
     }
 
     @GetMapping("/reserveroom")

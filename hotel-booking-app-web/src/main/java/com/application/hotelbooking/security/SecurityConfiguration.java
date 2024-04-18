@@ -19,7 +19,7 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/hotelbooking/admin/**").hasAnyAuthority("ADMIN");
-                    auth.requestMatchers("/hotelbooking/reserveroom/**", "/hotelbooking/reserve/**", "/hotelbooking/review/**").hasAnyAuthority("USER");
+                    auth.requestMatchers("/hotelbooking/reserveroom/**", "/hotelbooking/reserve/**", "/hotelbooking/my-reservations/**", "/hotelbooking/review/**").hasAnyAuthority("USER");
                     auth.requestMatchers("/hotelbooking/default", "/hotelbooking/account/**", "/hotelbooking/change-password/**").authenticated();
                     auth.requestMatchers("/hotelbooking/login/**", "/hotelbooking/register/**", "/error/**", "/images/**", "/hotelbooking/home/**", "/hotelbooking/search-rooms/**").permitAll();
                 })

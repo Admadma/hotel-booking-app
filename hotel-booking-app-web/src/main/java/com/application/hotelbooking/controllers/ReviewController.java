@@ -71,7 +71,7 @@ public class ReviewController {
             model.addAttribute("reviewDTO", new ReviewDTO());
             return "reviewpage";
         } else {
-            return "redirect:/hotelbooking/myreservations";
+            return "redirect:/hotelbooking/my-reservations";
         }
     }
 }

@@ -64,7 +64,7 @@ public class MyReservationsControllerTest {
         when(reservationService.getReservationsOfUser(TEST_USER_NAME)).thenReturn(RESERVATION_MODEL_LIST);
         when(reservationViewTransformer.transformToReservationViews(RESERVATION_MODEL_LIST)).thenReturn(RESERVATION_VIEW_LIST);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/myreservations"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/my-reservations"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("myreservations"))
                 .andExpect(model().attribute("reservations", RESERVATION_VIEW_LIST));
@@ -76,14 +76,14 @@ public class MyReservationsControllerTest {
     @Test
     @WithMockUser(username = TEST_USER_NAME, authorities = "ADMIN")
     public void testAdminUserCanNotNavigateToMyReservationsPage() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/myreservations"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotelbooking/my-reservations"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(username = TEST_USER_NAME, authorities = "ADMIN")
     public void testAdminUserCanNotAttemptToCancelOwnReservation() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/cancel-reservation")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/my-reservations/cancel-reservation")
                 .flashAttr("reservationId", RESERVATION_ID))
                 .andExpect(status().isForbidden());
     }
@@ -93,9 +93,9 @@ public class MyReservationsControllerTest {
     public void testCancelReservationShouldRedirectToMyReservationsPageWithGenericErrorIfCancelReservationThrowsAnyException() throws Exception {
         doThrow(DataIntegrityViolationException.class).when(reservationService).cancelReservation(RESERVATION_ID);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/cancel-reservation")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/my-reservations/cancel-reservation")
                         .flashAttr("reservationId", RESERVATION_ID))
-                .andExpect(redirectedUrl("/hotelbooking/myreservations?error"));
+                .andExpect(redirectedUrl("/hotelbooking/my-reservations?error"));
 
         verify(reservationService).cancelReservation(RESERVATION_ID);
     }
@@ -105,9 +105,9 @@ public class MyReservationsControllerTest {
     public void testCancelReservationShouldRedirectToMyReservationsPageIfNoExceptionOccurredWhileCancellingReservation() throws Exception {
         doNothing().when(reservationService).cancelReservation(RESERVATION_ID);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/cancel-reservation")
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/my-reservations/cancel-reservation")
                         .flashAttr("reservationId", RESERVATION_ID))
-                .andExpect(redirectedUrl("/hotelbooking/myreservations"));
+                .andExpect(redirectedUrl("/hotelbooking/my-reservations"));
 
         verify(reservationService).cancelReservation(RESERVATION_ID);
     }
