@@ -26,12 +26,14 @@ public class HotelServiceImplTest {
     public static final String HOTEL_NAME = "Existing hotel";
     public static final ReviewModel REVIEW_MODEL_RATING_ONE = ReviewModel.builder().rating(1).build();
     public static final ReviewModel REVIEW_MODEL_RATING_TWO = ReviewModel.builder().rating(2).build();
-    public static final HotelModel HOTEL_MODEL = HotelModel.builder().rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
-    public static final HotelModel HOTEL_MODEL_WITH_HIGHER_RATINGS = HotelModel.builder().rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO, REVIEW_MODEL_RATING_TWO)).build();
-    public static final HotelModel HOTEL_MODEL_WITH_LOWER_RATINGS = HotelModel.builder().rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
-    public static final HotelModel HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING = HotelModel.builder().rooms(List.of()).averageRating(1.67).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO, REVIEW_MODEL_RATING_TWO)).build();
-    public static final HotelModel HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING = HotelModel.builder().rooms(List.of()).averageRating(1.33).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
-    public static final HotelModel HOTEL_MODEL_WITH_ROOMS = HotelModel.builder().rooms(List.of(RoomModel.builder().roomNumber(1).build())).build();
+    public static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName(HOTEL_NAME).rooms(List.of()).averageRating(0.0).build();
+    public static final HotelModel HOTEL_MODEL_WITH_HIGHER_RATINGS = HotelModel.builder().hotelName(HOTEL_NAME).rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO, REVIEW_MODEL_RATING_TWO)).build();
+    public static final Optional<HotelModel> OPTIONAL_HOTEL_MODEL_WITH_HIGHER_RATINGS = Optional.of(HOTEL_MODEL_WITH_HIGHER_RATINGS);
+    public static final HotelModel HOTEL_MODEL_WITH_LOWER_RATINGS = HotelModel.builder().hotelName(HOTEL_NAME).rooms(List.of()).averageRating(0.0).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
+    public static final Optional<HotelModel> OPTIONAL_HOTEL_MODEL_WITH_LOWER_RATINGS = Optional.of(HOTEL_MODEL_WITH_LOWER_RATINGS);
+    public static final HotelModel HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING = HotelModel.builder().hotelName(HOTEL_NAME).rooms(List.of()).averageRating(1.67).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO, REVIEW_MODEL_RATING_TWO)).build();
+    public static final HotelModel HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING = HotelModel.builder().hotelName(HOTEL_NAME).rooms(List.of()).averageRating(1.33).reviews(List.of(REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_ONE, REVIEW_MODEL_RATING_TWO)).build();
+    public static final HotelModel HOTEL_MODEL_WITH_ROOMS = HotelModel.builder().hotelName(HOTEL_NAME).rooms(List.of(RoomModel.builder().roomNumber(1).build())).build();
     public static final HotelCreationServiceDTO HOTEL_CREATION_SERVICE_DTO = HotelCreationServiceDTO.builder().hotelName(HOTEL_NAME).build();
     public static final Optional<HotelModel> OPTIONAL_HOTEL_MODEL = Optional.of(HOTEL_MODEL);
     public static final Optional<HotelModel> OPTIONAL_HOTEL_MODEL_WITH_ROOMS = Optional.of(HOTEL_MODEL_WITH_ROOMS);
@@ -86,19 +88,23 @@ public class HotelServiceImplTest {
 
     @Test
     public void testUpdateAverageRatingShouldCalculateAverageRatingAndRoundUpToTwoDecimalPointsIfNumberAfterScaleIFiveOrLarger(){
+        when(hotelRepositoryService.findHotelByHotelName(HOTEL_MODEL.getHotelName())).thenReturn(OPTIONAL_HOTEL_MODEL_WITH_HIGHER_RATINGS);
         when(hotelRepositoryService.save(HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING)).thenReturn(HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING);
 
-        hotelService.updateAverageRating(HOTEL_MODEL_WITH_HIGHER_RATINGS);
+        hotelService.updateAverageRating(HOTEL_MODEL);
 
+        verify(hotelRepositoryService).findHotelByHotelName(HOTEL_MODEL.getHotelName());
         verify(hotelRepositoryService).save(HOTEL_MODEL_WITH_ROUNDED_UP_AVERAGE_RATING);
     }
 
     @Test
     public void testUpdateAverageRatingShouldCalculateAverageRatingAndRoundDownToTwoDecimalPointsIfNumberAfterScaleIsSmallerThanFive(){
+        when(hotelRepositoryService.findHotelByHotelName(HOTEL_MODEL.getHotelName())).thenReturn(OPTIONAL_HOTEL_MODEL_WITH_LOWER_RATINGS);
         when(hotelRepositoryService.save(HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING)).thenReturn(HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING);
 
-        hotelService.updateAverageRating(HOTEL_MODEL_WITH_LOWER_RATINGS);
+        hotelService.updateAverageRating(HOTEL_MODEL);
 
+        verify(hotelRepositoryService).findHotelByHotelName(HOTEL_MODEL.getHotelName());
         verify(hotelRepositoryService).save(HOTEL_MODEL_WITH_ROUNDED_DOWN_AVERAGE_RATING);
     }
 }

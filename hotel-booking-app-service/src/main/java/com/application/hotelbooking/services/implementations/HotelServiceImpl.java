@@ -45,13 +45,14 @@ public class HotelServiceImpl implements HotelService {
     }
 
     public void updateAverageRating(HotelModel hotelModel){
-        double newRating = BigDecimal.valueOf(hotelModel.getReviews()
+        HotelModel hotelModelWithNewReviews = hotelRepositoryService.findHotelByHotelName(hotelModel.getHotelName()).get();
+        double newRating = BigDecimal.valueOf(hotelModelWithNewReviews.getReviews()
                 .stream()
                 .mapToDouble(ReviewModel::getRating).average()
                 .orElse(0))
                 .setScale(2, RoundingMode.HALF_UP)
                 .doubleValue();
-        hotelModel.setAverageRating(newRating);
-        hotelRepositoryService.save(hotelModel);
+        hotelModelWithNewReviews.setAverageRating(newRating);
+        hotelRepositoryService.save(hotelModelWithNewReviews);
     }
 }
