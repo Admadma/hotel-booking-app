@@ -1,6 +1,9 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.ReservationView;
+import com.application.hotelbooking.exceptions.InvalidReservationException;
+import com.application.hotelbooking.exceptions.InvalidTokenException;
+import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import org.slf4j.Logger;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping(path = "hotelbooking/my-reservations")
@@ -29,9 +33,18 @@ public class MyReservationsController {
     private ReservationViewTransformer reservationViewTransformer;
 
     @PostMapping(value = "/cancel-reservation")
-    public String cancelReservation(@ModelAttribute("reservationId") Long reservationId){
+    public String cancelReservation(@ModelAttribute("reservationUuid") UUID uuid, Authentication auth){
         try {
-            reservationService.cancelReservation(reservationId);
+            reservationService.cancelReservation(uuid, auth.getName());
+        } catch (InvalidTokenException ite) {
+            LOGGER.info(ite.getMessage());
+            return "redirect:/hotelbooking/my-reservations?error";
+        } catch (InvalidReservationException ire) {
+            LOGGER.info(ire.getMessage());
+            return "redirect:/hotelbooking/my-reservations?error";
+        } catch (InvalidUserException iue) {
+            LOGGER.info(iue.getMessage());
+            return "redirect:/hotelbooking/my-reservations?error";
         } catch (Exception e) {
             LOGGER.info(e.getMessage());
             return "redirect:/hotelbooking/my-reservations?error";
