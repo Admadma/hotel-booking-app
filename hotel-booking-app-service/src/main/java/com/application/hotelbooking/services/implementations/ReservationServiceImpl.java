@@ -4,6 +4,9 @@ import com.application.hotelbooking.domain.ReservationModel;
 import com.application.hotelbooking.domain.ReservationStatus;
 import com.application.hotelbooking.domain.RoomModel;
 import com.application.hotelbooking.dto.*;
+import com.application.hotelbooking.exceptions.InvalidReservationException;
+import com.application.hotelbooking.exceptions.InvalidTokenException;
+import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.AvailableRoomsFilterService;
 import com.application.hotelbooking.services.ReservationConfirmationEmailService;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -47,9 +52,23 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepositoryService.getReservationsByUserId(userRepositoryService.getUserByName(username).get().getId());
     }
 
-    public void cancelReservation(Long reservationId){
+    public void cancelReservation(UUID uuid, String userName) throws InvalidTokenException, InvalidReservationException, InvalidUserException {
         // Future logic for refunding transaction would go here
-        reservationRepositoryService.delete(reservationId);
+        Optional<ReservationModel> reservationModel = reservationRepositoryService.getReservationByUuid(uuid);
+
+        if (reservationModel.isEmpty()) {
+            throw new InvalidTokenException("Could not find a reservation with that UUID");
+        }
+
+        if (!ReservationStatus.PLANNED.equals(reservationModel.get().getReservationStatus())) {
+            throw new InvalidReservationException("User attempted to delete ACTIVE or COMPLETED reservation");
+        }
+
+        if (!userName.equals(reservationModel.get().getUser().getUsername())) {
+            throw new InvalidUserException("This reservation does not belong to this user");
+        }
+
+        reservationRepositoryService.delete(reservationModel.get().getId());
     }
 
     public int calculateTotalPrice(LocalDate startDate, LocalDate endDate, int pricePerNight){

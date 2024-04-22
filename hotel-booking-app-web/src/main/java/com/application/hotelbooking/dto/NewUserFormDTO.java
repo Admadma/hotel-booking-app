@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewUserFormDTO {
-    @Size(min = 8, max = 18, message = "{registration.error.username.length}")
+    @Size(min = 4, max = 18, message = "{registration.error.username.length}")
     private String username;
     @Size(min = 8, max = 18, message = "{registration.error.password.length}")
     private String password;

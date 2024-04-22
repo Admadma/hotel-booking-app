@@ -5,6 +5,9 @@ import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.dto.ReservationPlanServiceDTO;
 import com.application.hotelbooking.dto.UniqueReservableRoomOfHotelServiceDTO;
+import com.application.hotelbooking.exceptions.InvalidReservationException;
+import com.application.hotelbooking.exceptions.InvalidTokenException;
+import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
 import com.application.hotelbooking.services.implementations.ReservationConfirmationEmailServiceImpl;
 import com.application.hotelbooking.services.implementations.ReservationServiceImpl;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -47,6 +51,10 @@ public class ReservationServiceImplTest {
     private static final UserModel USER_MODEL = UserModel.builder()
             .id(USER_ID)
             .username(USER_NAME)
+            .build();
+    private static final UserModel USER_MODEL_WITH_DIFFERENT_USER_NAME = UserModel.builder()
+            .id(USER_ID)
+            .username("Different name")
             .build();
     private static final Optional<UserModel> OPTIONAL_USER_MODEL = Optional.of(USER_MODEL);
     private static final List<ReservationModel> RESERVATION_MODELS = List.of(ReservationModel.builder()
@@ -99,6 +107,28 @@ public class ReservationServiceImplTest {
             .endDate(OBSERVED_END_DATE)
             .reservationStatus(ReservationStatus.PLANNED)
             .build();
+
+    private static final Optional<ReservationModel> OPTIONAL_RESERVATION_MODEL = Optional.of(ReservationModel.builder()
+            .id(RESERVATION_ID)
+            .uuid(TEST_UUID)
+            .user(USER_MODEL)
+            .reservationStatus(ReservationStatus.PLANNED)
+            .build());
+    private static final Optional<ReservationModel> OPTIONAL_RESERVATION_MODEL_ACTIVE = Optional.of(ReservationModel.builder()
+            .uuid(TEST_UUID)
+            .room(ROOM_MODEL)
+            .user(USER_MODEL)
+            .totalPrice(RESERVATION_PLAN.getTotalPrice())
+            .startDate(OBSERVED_START_DATE)
+            .endDate(OBSERVED_END_DATE)
+            .reservationStatus(ReservationStatus.ACTIVE)
+            .build());
+    private static final Optional<ReservationModel> OPTIONAL_RESERVATION_MODEL_PLANNED_DIFFERENT_USERNAME = Optional.of(ReservationModel.builder()
+            .uuid(TEST_UUID)
+            .user(USER_MODEL_WITH_DIFFERENT_USER_NAME)
+            .reservationStatus(ReservationStatus.PLANNED)
+            .build());
+    private static final Optional<ReservationModel> EMPTY_OPTIONAL_RESERVATION_MODEL = Optional.empty();
 
     private static UniqueReservableRoomOfHotelServiceDTO UNIQUE_RESERVABLE_ROOM_OF_HOTEL_SERVICE_DTO_ONE = UniqueReservableRoomOfHotelServiceDTO.builder()
             .number(1)
@@ -185,11 +215,43 @@ public class ReservationServiceImplTest {
     }
 
     @Test
-    public void testCancelReservationShouldCallDeleteWithProvidedId() {
+    public void testCancelReservationShouldThrowInvalidTokenExceptionIfNoReservationExistsWithProvidedUUID() {
+        when(reservationRepositoryService.getReservationByUuid(TEST_UUID)).thenReturn(EMPTY_OPTIONAL_RESERVATION_MODEL);
+
+        assertThrows(InvalidTokenException.class,
+                () -> reservationService.cancelReservation(TEST_UUID, USER_NAME));
+
+        verify(reservationRepositoryService).getReservationByUuid(TEST_UUID);
+    }
+
+    @Test
+    public void testCancelReservationShouldThrowInvalidReservationExceptionIfFoundReservationIsNotInPlannedStatus() {
+        when(reservationRepositoryService.getReservationByUuid(TEST_UUID)).thenReturn(OPTIONAL_RESERVATION_MODEL_ACTIVE);
+
+        assertThrows(InvalidReservationException.class,
+                () -> reservationService.cancelReservation(TEST_UUID, USER_NAME));
+
+        verify(reservationRepositoryService).getReservationByUuid(TEST_UUID);
+    }
+
+    @Test
+    public void testCancelReservationShouldThrowInvalidUserExceptionIfFoundReservationIsInPlannedStatusButUserNameDoesNotMatch() {
+        when(reservationRepositoryService.getReservationByUuid(TEST_UUID)).thenReturn(OPTIONAL_RESERVATION_MODEL_PLANNED_DIFFERENT_USERNAME);
+
+        assertThrows(InvalidUserException.class,
+                () -> reservationService.cancelReservation(TEST_UUID, USER_NAME));
+
+        verify(reservationRepositoryService).getReservationByUuid(TEST_UUID);
+    }
+
+    @Test
+    public void testCancelReservationShouldNotThrowExceptionAndDeleteReservationOfUser() {
+        when(reservationRepositoryService.getReservationByUuid(TEST_UUID)).thenReturn(OPTIONAL_RESERVATION_MODEL);
         doNothing().when(reservationRepositoryService).delete(RESERVATION_ID);
 
-        reservationService.cancelReservation(RESERVATION_ID);
+        assertDoesNotThrow(() -> reservationService.cancelReservation(TEST_UUID, USER_NAME));
 
+        verify(reservationRepositoryService).getReservationByUuid(TEST_UUID);
         verify(reservationRepositoryService).delete(RESERVATION_ID);
     }
 
