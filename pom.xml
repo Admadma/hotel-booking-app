@@ -17,7 +17,7 @@
 	</parent>
 
 	<modules>
-		<module>hotel-booking-app-domain</module>
+		<module>hotel-booking-app-persistence</module>
 		<module>hotel-booking-app-service</module>
 		<module>hotel-booking-app-web</module>
 	</modules>
