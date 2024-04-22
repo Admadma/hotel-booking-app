@@ -131,6 +131,19 @@ public class MyReservationsControllerTest {
 
     @Test
     @WithMockUser(authorities = "USER", username = TEST_USER_NAME)
+    public void testCancelReservationShouldRedirectToMyReservationsPageWithGenericErrorIfCancelReservationThrowsAnyException() throws Exception {
+        doThrow(DataIntegrityViolationException.class).when(reservationService).cancelReservation(TEST_UUID, TEST_USER_NAME);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/hotelbooking/my-reservations/cancel-reservation")
+                        .flashAttr("reservationUuid", TEST_UUID))
+                .andExpect(redirectedUrl("/hotelbooking/my-reservations?error"));
+
+        verify(reservationService).cancelReservation(TEST_UUID, TEST_USER_NAME);
+    }
+
+
+    @Test
+    @WithMockUser(authorities = "USER", username = TEST_USER_NAME)
     public void testCancelReservationShouldRedirectToMyReservationsPageIfNoExceptionOccurredWhileCancellingReservation() throws Exception {
         doNothing().when(reservationService).cancelReservation(TEST_UUID, TEST_USER_NAME);
 
