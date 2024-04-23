@@ -1,7 +1,7 @@
 package com.application.hotelbooking.security;
 
 import com.application.hotelbooking.models.UserModel;
-import com.application.hotelbooking.domain.UserView;
+import com.application.hotelbooking.views.UserView;
 import com.application.hotelbooking.services.repositoryservices.UserRepositoryService;
 import com.application.hotelbooking.transformers.UserViewTransformer;
 import org.junit.jupiter.api.Test;

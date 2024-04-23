@@ -1,7 +1,7 @@
 package com.application.hotelbooking.security;
 
-import com.application.hotelbooking.domain.RoleView;
-import com.application.hotelbooking.domain.UserView;
+import com.application.hotelbooking.views.RoleView;
+import com.application.hotelbooking.views.UserView;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -34,7 +34,7 @@ public class ReserveRoomControllerTest {
     private static final LocalDate END_DATE = LocalDate.of(2024, 3, 5);
     private static final String USER_NAME = "testUser";
     private static final com.application.hotelbooking.models.RoomType SINGLE_ROOM_MODEL = com.application.hotelbooking.models.RoomType.SINGLE_ROOM;
-    private static final com.application.hotelbooking.domain.RoomType SINGLE_ROOM_DOMAIN = com.application.hotelbooking.domain.RoomType.SINGLE_ROOM;
+    private static final com.application.hotelbooking.views.RoomType SINGLE_ROOM_VIEW = com.application.hotelbooking.views.RoomType.SINGLE_ROOM;
 
     private static final ReservationModel RESERVATION_MODEL = new ReservationModel();
 
@@ -44,7 +44,7 @@ public class ReserveRoomControllerTest {
             .doubleBeds(0)
             .pricePerNight(10)
             .totalPrice(40)
-            .roomType(SINGLE_ROOM_DOMAIN)
+            .roomType(SINGLE_ROOM_VIEW)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .build();

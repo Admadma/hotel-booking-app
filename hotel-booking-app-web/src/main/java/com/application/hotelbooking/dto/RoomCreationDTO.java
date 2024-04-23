@@ -1,6 +1,6 @@
 package com.application.hotelbooking.dto;
 
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.views.RoomType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;

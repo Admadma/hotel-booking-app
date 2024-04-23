@@ -1,4 +1,4 @@
-package com.application.hotelbooking.domain;
+package com.application.hotelbooking.views;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

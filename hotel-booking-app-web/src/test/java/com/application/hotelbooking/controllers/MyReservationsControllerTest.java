@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.views.*;
 import com.application.hotelbooking.exceptions.InvalidReservationException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
@@ -32,8 +32,8 @@ public class MyReservationsControllerTest {
 
     private static final Long RESERVATION_ID = 1L;
     private static final String TEST_USER_NAME = "test_user";
-    private static final com.application.hotelbooking.domain.RoomType FAMILY_ROOM_DOMAIN = com.application.hotelbooking.domain.RoomType.FAMILY_ROOM;
-    private static final com.application.hotelbooking.domain.ReservationStatus PLANNED_RESERVATION_STATUS_DOMAIN = com.application.hotelbooking.domain.ReservationStatus.PLANNED;
+    private static final com.application.hotelbooking.views.RoomType FAMILY_ROOM_VIEW = com.application.hotelbooking.views.RoomType.FAMILY_ROOM;
+    private static final com.application.hotelbooking.views.ReservationStatus PLANNED_RESERVATION_STATUS_VIEW = com.application.hotelbooking.views.ReservationStatus.PLANNED;
     private static final UUID TEST_UUID = UUID.fromString("2a167ea9-850c-4059-8163-6f941561c419");
     private static final LocalDate START_DATE = LocalDate.of(2024, 3, 1);
     private static final LocalDate END_DATE = LocalDate.of(2024, 3, 2);
@@ -46,14 +46,14 @@ public class MyReservationsControllerTest {
     private static final RoomView ROOM_VIEW = RoomView.builder()
             .roomNumber(1)
             .hotel(HOTEL_VIEW)
-            .roomType(FAMILY_ROOM_DOMAIN)
+            .roomType(FAMILY_ROOM_VIEW)
             .build();
     private static final ReservationView RESERVATION_VIEW = ReservationView.builder()
             .room(ROOM_VIEW)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .totalPrice(100)
-            .reservationStatus(PLANNED_RESERVATION_STATUS_DOMAIN)
+            .reservationStatus(PLANNED_RESERVATION_STATUS_VIEW)
             .build();
     private static final List<ReservationView> RESERVATION_VIEW_LIST = List.of(RESERVATION_VIEW);
 

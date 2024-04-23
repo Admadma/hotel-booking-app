@@ -1,8 +1,8 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.views.RoomType;
 import com.application.hotelbooking.models.HotelModel;
-import com.application.hotelbooking.domain.HotelView;
+import com.application.hotelbooking.views.HotelView;
 import com.application.hotelbooking.models.RoomModel;
 import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
@@ -35,8 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AddRoomsControllerTest {
 
     private static final com.application.hotelbooking.models.RoomType FAMILY_ROOM_MODEL = com.application.hotelbooking.models.RoomType.FAMILY_ROOM;
-    private static final com.application.hotelbooking.domain.RoomType FAMILY_ROOM_DOMAIN= com.application.hotelbooking.domain.RoomType.FAMILY_ROOM;
-    private static final RoomCreationDTO ROOM_CREATION_DTO = new RoomCreationDTO(1, 1, 1, FAMILY_ROOM_DOMAIN, 1L);
+    private static final com.application.hotelbooking.views.RoomType FAMILY_ROOM_VIEW = com.application.hotelbooking.views.RoomType.FAMILY_ROOM;
+    private static final RoomCreationDTO ROOM_CREATION_DTO = new RoomCreationDTO(1, 1, 1, FAMILY_ROOM_VIEW, 1L);
     private static final RoomCreationServiceDTO ROOM_CREATION_SERVICE_DTO = new RoomCreationServiceDTO(1L, 1, 1, 1, 1, FAMILY_ROOM_MODEL, 1L);
     private static final RoomModel ROOM_MODEL = new RoomModel();
     private static final RoomCreationDTO EMPTY_ROOM_CREATION_DTO = new RoomCreationDTO();

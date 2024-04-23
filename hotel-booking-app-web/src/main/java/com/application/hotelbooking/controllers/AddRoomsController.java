@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.views.RoomType;
 import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.services.RoomCreationService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;

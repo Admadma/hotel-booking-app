@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.models.ReservationModel;
-import com.application.hotelbooking.domain.ReservationView;
+import com.application.hotelbooking.views.ReservationView;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

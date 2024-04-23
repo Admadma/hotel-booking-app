@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.models.HotelModel;
-import com.application.hotelbooking.domain.HotelView;
+import com.application.hotelbooking.views.HotelView;
 import com.application.hotelbooking.dto.HotelCreationDTO;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import org.assertj.core.api.Assertions;

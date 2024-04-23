@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.views.*;
 import com.application.hotelbooking.dto.ReviewDTO;
 import com.application.hotelbooking.models.*;
 import com.application.hotelbooking.security.SecurityConfiguration;
@@ -37,9 +37,9 @@ public class ReviewControllerTest {
     private static final com.application.hotelbooking.models.ReservationStatus PLANNED_RESERVATION_STATUS_MODEL = com.application.hotelbooking.models.ReservationStatus.PLANNED;
     private static final com.application.hotelbooking.models.ReservationStatus ACTIVE_RESERVATION_STATUS_MODEL = com.application.hotelbooking.models.ReservationStatus.ACTIVE;
     private static final com.application.hotelbooking.models.ReservationStatus COMPLETED_RESERVATION_STATUS_MODEL = com.application.hotelbooking.models.ReservationStatus.COMPLETED;
-    private static final com.application.hotelbooking.domain.ReservationStatus PLANNED_RESERVATION_STATUS_DOMAIN = com.application.hotelbooking.domain.ReservationStatus.PLANNED;
-    private static final com.application.hotelbooking.domain.ReservationStatus ACTIVE_RESERVATION_STATUS_DOMAIN = com.application.hotelbooking.domain.ReservationStatus.ACTIVE;
-    private static final com.application.hotelbooking.domain.ReservationStatus COMPLETED_RESERVATION_STATUS_DOMAIN = com.application.hotelbooking.domain.ReservationStatus.COMPLETED;
+    private static final com.application.hotelbooking.views.ReservationStatus PLANNED_RESERVATION_STATUS_VIEW = com.application.hotelbooking.views.ReservationStatus.PLANNED;
+    private static final com.application.hotelbooking.views.ReservationStatus ACTIVE_RESERVATION_STATUS_VIEW = com.application.hotelbooking.views.ReservationStatus.ACTIVE;
+    private static final com.application.hotelbooking.views.ReservationStatus COMPLETED_RESERVATION_STATUS_VIEW = com.application.hotelbooking.views.ReservationStatus.COMPLETED;
     private static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName(HOTEL_NAME).build();
     private static final String IMAGE_NAME = "test_image.png";
     private static final HotelView HOTEL_VIEW = HotelView.builder().hotelName(HOTEL_NAME).imageName(IMAGE_NAME).build();
@@ -81,7 +81,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(PLANNED_RESERVATION_STATUS_DOMAIN)
+            .reservationStatus(PLANNED_RESERVATION_STATUS_VIEW)
             .build();
     private static final Optional<ReservationModel> OPTIONAL_PLANNED_RESERVATION_MODEL = Optional.of(PLANNED_RESERVATION_MODEL);
     private static final ReservationModel ACTIVE_RESERVATION_MODEL = ReservationModel.builder()
@@ -100,7 +100,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(ACTIVE_RESERVATION_STATUS_DOMAIN)
+            .reservationStatus(ACTIVE_RESERVATION_STATUS_VIEW)
             .build();
 
     private static final Optional<ReservationModel> OPTIONAL_ACTIVE_RESERVATION_MODEL = Optional.of(ACTIVE_RESERVATION_MODEL);
@@ -120,7 +120,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(COMPLETED_RESERVATION_STATUS_DOMAIN)
+            .reservationStatus(COMPLETED_RESERVATION_STATUS_VIEW)
             .build();
     private static final Optional<ReservationModel> OPTIONAL_COMPLETED_RESERVATION_MODEL = Optional.of(COMPLETED_RESERVATION_MODEL);
     private static final ReviewDTO REVIEW_DTO = ReviewDTO.builder().rating(5).comment("Lorem ipsum dolor sit amet, consectetur adipiscing elit.").build();
