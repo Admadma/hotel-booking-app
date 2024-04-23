@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.UserAlreadyExistsException;
 import jakarta.persistence.OptimisticLockException;

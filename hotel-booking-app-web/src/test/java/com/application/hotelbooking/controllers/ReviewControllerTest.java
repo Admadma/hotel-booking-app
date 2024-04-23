@@ -1,13 +1,13 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.views.*;
 import com.application.hotelbooking.dto.ReviewDTO;
+import com.application.hotelbooking.models.*;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReviewService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,6 +34,12 @@ public class ReviewControllerTest {
     private static final LocalDate START_DATE = LocalDate.of(2024, 3, 1);
     private static final LocalDate END_DATE = LocalDate.of(2024, 3, 5);
     private static final String HOTEL_NAME = "Hotel 1";
+    private static final com.application.hotelbooking.models.ReservationStatus PLANNED_RESERVATION_STATUS_MODEL = com.application.hotelbooking.models.ReservationStatus.PLANNED;
+    private static final com.application.hotelbooking.models.ReservationStatus ACTIVE_RESERVATION_STATUS_MODEL = com.application.hotelbooking.models.ReservationStatus.ACTIVE;
+    private static final com.application.hotelbooking.models.ReservationStatus COMPLETED_RESERVATION_STATUS_MODEL = com.application.hotelbooking.models.ReservationStatus.COMPLETED;
+    private static final com.application.hotelbooking.views.ReservationStatus PLANNED_RESERVATION_STATUS_VIEW = com.application.hotelbooking.views.ReservationStatus.PLANNED;
+    private static final com.application.hotelbooking.views.ReservationStatus ACTIVE_RESERVATION_STATUS_VIEW = com.application.hotelbooking.views.ReservationStatus.ACTIVE;
+    private static final com.application.hotelbooking.views.ReservationStatus COMPLETED_RESERVATION_STATUS_VIEW = com.application.hotelbooking.views.ReservationStatus.COMPLETED;
     private static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName(HOTEL_NAME).build();
     private static final String IMAGE_NAME = "test_image.png";
     private static final HotelView HOTEL_VIEW = HotelView.builder().hotelName(HOTEL_NAME).imageName(IMAGE_NAME).build();
@@ -66,7 +72,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(ReservationStatus.PLANNED)
+            .reservationStatus(PLANNED_RESERVATION_STATUS_MODEL)
             .build();
     private static final ReservationView PLANNED_RESERVATION_VIEW = ReservationView.builder()
             .uuid(TEST_UUID)
@@ -75,7 +81,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(ReservationStatus.PLANNED)
+            .reservationStatus(PLANNED_RESERVATION_STATUS_VIEW)
             .build();
     private static final Optional<ReservationModel> OPTIONAL_PLANNED_RESERVATION_MODEL = Optional.of(PLANNED_RESERVATION_MODEL);
     private static final ReservationModel ACTIVE_RESERVATION_MODEL = ReservationModel.builder()
@@ -85,7 +91,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(ReservationStatus.ACTIVE)
+            .reservationStatus(ACTIVE_RESERVATION_STATUS_MODEL)
             .build();
     private static final ReservationView ACTIVE_RESERVATION_VIEW = ReservationView.builder()
             .uuid(TEST_UUID)
@@ -94,7 +100,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(ReservationStatus.ACTIVE)
+            .reservationStatus(ACTIVE_RESERVATION_STATUS_VIEW)
             .build();
 
     private static final Optional<ReservationModel> OPTIONAL_ACTIVE_RESERVATION_MODEL = Optional.of(ACTIVE_RESERVATION_MODEL);
@@ -105,7 +111,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(ReservationStatus.COMPLETED)
+            .reservationStatus(COMPLETED_RESERVATION_STATUS_MODEL)
             .build();
     private static final ReservationView COMPLETED_RESERVATION_VIEW = ReservationView.builder()
             .uuid(TEST_UUID)
@@ -114,7 +120,7 @@ public class ReviewControllerTest {
             .totalPrice(100)
             .startDate(START_DATE)
             .endDate(END_DATE)
-            .reservationStatus(ReservationStatus.COMPLETED)
+            .reservationStatus(COMPLETED_RESERVATION_STATUS_VIEW)
             .build();
     private static final Optional<ReservationModel> OPTIONAL_COMPLETED_RESERVATION_MODEL = Optional.of(COMPLETED_RESERVATION_MODEL);
     private static final ReviewDTO REVIEW_DTO = ReviewDTO.builder().rating(5).comment("Lorem ipsum dolor sit amet, consectetur adipiscing elit.").build();

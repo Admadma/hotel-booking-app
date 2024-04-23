@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.views.RoomType;
 import com.application.hotelbooking.dto.RoomCreationDTO;
 import com.application.hotelbooking.services.RoomCreationService;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.application.hotelbooking.dto;
 
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.views.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

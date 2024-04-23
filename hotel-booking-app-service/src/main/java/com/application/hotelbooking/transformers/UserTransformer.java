@@ -1,15 +1,12 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.User;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.entities.User;
+import com.application.hotelbooking.models.UserModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserTransformer {

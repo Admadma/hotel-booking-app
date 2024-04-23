@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.ConfirmationTokenModel;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.ConfirmationTokenModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.services.implementations.UserEmailConfirmationSenderServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.ConfirmationTokenRepositoryService;
 import com.application.hotelbooking.wrappers.UUIDWrapper;

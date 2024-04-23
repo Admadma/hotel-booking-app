@@ -1,7 +1,7 @@
 package com.application.hotelbooking.security;
 
-import com.application.hotelbooking.domain.RoleView;
-import com.application.hotelbooking.domain.UserView;
+import com.application.hotelbooking.views.RoleView;
+import com.application.hotelbooking.views.UserView;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.ReservationView;
+import com.application.hotelbooking.views.ReservationView;
 import com.application.hotelbooking.exceptions.InvalidReservationException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;
 import com.application.hotelbooking.exceptions.InvalidUserException;

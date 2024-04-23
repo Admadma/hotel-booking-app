@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.implementations;
 
-import com.application.hotelbooking.domain.RoomModel;
+import com.application.hotelbooking.models.RoomModel;
 import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.services.AvailableRoomsFilterService;
 import com.application.hotelbooking.services.ReservationService;

@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.RoomModel;
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.models.RoomModel;
+import com.application.hotelbooking.models.RoomType;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 

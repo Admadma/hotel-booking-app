@@ -1,11 +1,14 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.entities.*;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
+import com.application.hotelbooking.models.HotelModel;
+import com.application.hotelbooking.models.RoomModel;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.RoomRepositoryServiceImpl;
 import com.application.hotelbooking.transformers.RoomTransformer;
+import com.application.hotelbooking.transformers.RoomTypeTransformer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +28,8 @@ public class RoomRepositoryServiceImplTest {
     private static final String HOTEL_NAME = "Test hotel";
     private static final String NONEXISTENT_HOTEL_NAME = "Test hotel";
     private static final String CITY = "Test city";
+    private static final com.application.hotelbooking.models.RoomType FAMILY_ROOM_MODEL = com.application.hotelbooking.models.RoomType.FAMILY_ROOM;
+    private static final com.application.hotelbooking.entities.RoomType FAMILY_ROOM_ENTITY = com.application.hotelbooking.entities.RoomType.FAMILY_ROOM;
     private static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName(HOTEL_NAME).build();
     private static final Hotel HOTEL = Hotel.builder().hotelName(HOTEL_NAME).build();
     private static final long ROOM_ID = 1l;
@@ -47,6 +52,9 @@ public class RoomRepositoryServiceImplTest {
 
     @Mock
     private RoomTransformer roomTransformer;
+    @Mock
+    private RoomTypeTransformer roomTypeTransformer;
+
 
     @Test
     public void testGetRoomByIdShouldReturnOptionalOfRoomModelIfRoomExists(){
@@ -149,19 +157,21 @@ public class RoomRepositoryServiceImplTest {
 
     @Test
     public void testGetRoomsWithConditionsShouldCallFindRoomsWithConditionsWithProvidedRoomSearchFormServiceDTOAttributes(){
-        RoomSearchFormServiceDTO roomSearchFormServiceDTO = new RoomSearchFormServiceDTO(1, 1, RoomType.FAMILY_ROOM, HOTEL_NAME, CITY, null, null);
+        RoomSearchFormServiceDTO roomSearchFormServiceDTO = new RoomSearchFormServiceDTO(1, 1, FAMILY_ROOM_MODEL, HOTEL_NAME, CITY, null, null);
+        when(roomTypeTransformer.transformToRoomTypeEntity(roomSearchFormServiceDTO.getRoomType())).thenReturn(FAMILY_ROOM_ENTITY);
         when(roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
-                roomSearchFormServiceDTO.getRoomType(),
+                FAMILY_ROOM_ENTITY,
                 roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity()))
                 .thenReturn(RESULT_IDS);
 
         List<Long> resultIds = roomRepositoryService.getRoomsWithConditions(roomSearchFormServiceDTO);
 
+        verify(roomTypeTransformer).transformToRoomTypeEntity(roomSearchFormServiceDTO.getRoomType());
         verify(roomRepository).findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
-                roomSearchFormServiceDTO.getRoomType(),
+                FAMILY_ROOM_ENTITY,
                 roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity());
         Assertions.assertThat(resultIds).isNotNull();
@@ -170,11 +180,13 @@ public class RoomRepositoryServiceImplTest {
 
     @Test
     public void testGetRoomsWithConditionsShouldCallFindRoomsWithConditionsWithProvidedParameters(){
-        when(roomRepository.findRoomsWithConditions(1, 1,RoomType.FAMILY_ROOM, HOTEL_NAME, CITY)).thenReturn(RESULT_IDS);
+        when(roomTypeTransformer.transformToRoomTypeEntity(FAMILY_ROOM_MODEL)).thenReturn(FAMILY_ROOM_ENTITY);
+        when(roomRepository.findRoomsWithConditions(1, 1,FAMILY_ROOM_ENTITY, HOTEL_NAME, CITY)).thenReturn(RESULT_IDS);
 
-        List<Long> resultIds = roomRepositoryService.getRoomsWithConditions(1, 1,RoomType.FAMILY_ROOM, HOTEL_NAME, CITY);
+        List<Long> resultIds = roomRepositoryService.getRoomsWithConditions(1, 1, FAMILY_ROOM_MODEL, HOTEL_NAME, CITY);
 
-        verify(roomRepository).findRoomsWithConditions(1, 1,RoomType.FAMILY_ROOM, HOTEL_NAME, CITY);
+        verify(roomTypeTransformer).transformToRoomTypeEntity(FAMILY_ROOM_MODEL);
+        verify(roomRepository).findRoomsWithConditions(1, 1, FAMILY_ROOM_ENTITY, HOTEL_NAME, CITY);
         Assertions.assertThat(resultIds).isNotNull();
         Assertions.assertThat(resultIds).isEqualTo(RESULT_IDS);
     }

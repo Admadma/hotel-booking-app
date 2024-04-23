@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices.implementations;
 
-import com.application.hotelbooking.domain.ConfirmationTokenModel;
+import com.application.hotelbooking.models.ConfirmationTokenModel;
 import com.application.hotelbooking.repositories.ConfirmationTokenRepository;
 import com.application.hotelbooking.services.repositoryservices.ConfirmationTokenRepositoryService;
 import com.application.hotelbooking.transformers.ConfirmationTokenTransformer;

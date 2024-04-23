@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.models.ReservationModel;
 import com.application.hotelbooking.services.implementations.AvailableRoomsFilterServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import org.assertj.core.api.Assertions;

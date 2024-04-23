@@ -1,8 +1,8 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.HotelModel;
-import com.application.hotelbooking.domain.ReviewModel;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.HotelModel;
+import com.application.hotelbooking.models.ReviewModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.services.implementations.ReviewServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.HotelRepositoryService;
 import com.application.hotelbooking.services.repositoryservices.ReviewRepositoryService;

@@ -1,6 +1,5 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.*;
 import com.application.hotelbooking.dto.HotelWithReservableRoomsServiceDTO;
 import com.application.hotelbooking.dto.ReservableRoomDTO;
 import com.application.hotelbooking.dto.ReservationPlanServiceDTO;
@@ -9,6 +8,7 @@ import com.application.hotelbooking.exceptions.InvalidReservationException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
+import com.application.hotelbooking.models.*;
 import com.application.hotelbooking.services.implementations.ReservationConfirmationEmailServiceImpl;
 import com.application.hotelbooking.services.implementations.ReservationServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;

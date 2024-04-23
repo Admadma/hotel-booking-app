@@ -1,7 +1,7 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.ReservationStatus;
-import com.application.hotelbooking.domain.ReservationView;
+import com.application.hotelbooking.views.ReservationStatus;
+import com.application.hotelbooking.views.ReservationView;
 import com.application.hotelbooking.dto.ReviewDTO;
 import com.application.hotelbooking.services.ReviewService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;

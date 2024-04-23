@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services.implementations;
 
-import com.application.hotelbooking.domain.ReservationModel;
-import com.application.hotelbooking.domain.ReservationStatus;
+import com.application.hotelbooking.models.ReservationModel;
+import com.application.hotelbooking.models.ReservationStatus;
 import com.application.hotelbooking.services.CheckInOutService;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;

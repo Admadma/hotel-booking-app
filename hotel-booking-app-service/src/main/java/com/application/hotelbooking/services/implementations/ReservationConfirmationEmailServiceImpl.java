@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.implementations;
 
-import com.application.hotelbooking.domain.ReservationModel;
+import com.application.hotelbooking.models.ReservationModel;
 import com.application.hotelbooking.services.EmailSenderService;
 import com.application.hotelbooking.services.ReservationConfirmationEmailService;
 import org.springframework.beans.factory.annotation.Autowired;

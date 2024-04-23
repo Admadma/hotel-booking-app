@@ -1,6 +1,5 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,6 +20,8 @@ import static org.mockito.Mockito.*;
 public class HotelsWithReservableRoomsDTOTransformerTest {
     private static final Class<HotelWithReservableRoomsDTO> HOTEL_WITH_RESERVABLE_ROOMS_DTO_CLASS = HotelWithReservableRoomsDTO.class;
     private static final Class<HotelWithReservableRoomsServiceDTO> HOTEL_WITH_RESERVABLE_ROOMS_SERVICE_DTO_CLASS = HotelWithReservableRoomsServiceDTO.class;
+    private static final com.application.hotelbooking.models.RoomType SINGLE_ROOM_MODEL = com.application.hotelbooking.models.RoomType.SINGLE_ROOM;
+    private static final com.application.hotelbooking.views.RoomType SINGLE_ROOM_VIEW = com.application.hotelbooking.views.RoomType.SINGLE_ROOM;
     private static final String HOTEL_NAME = "Hotel name";
     private static final String CITY = "City name";
     private static final String IMAGE_NAME = "image_name.png";
@@ -34,7 +35,7 @@ public class HotelsWithReservableRoomsDTOTransformerTest {
             .doubleBeds(0)
             .pricePerNight(10)
             .totalPrice(40)
-            .roomType(RoomType.SINGLE_ROOM)
+            .roomType(SINGLE_ROOM_VIEW)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .build();
@@ -51,7 +52,7 @@ public class HotelsWithReservableRoomsDTOTransformerTest {
             .doubleBeds(0)
             .pricePerNight(10)
             .totalPrice(40)
-            .roomType(RoomType.SINGLE_ROOM)
+            .roomType(SINGLE_ROOM_MODEL)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .build();

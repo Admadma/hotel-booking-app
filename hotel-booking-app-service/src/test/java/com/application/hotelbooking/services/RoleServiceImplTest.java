@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.RoleModel;
+import com.application.hotelbooking.models.RoleModel;
 import com.application.hotelbooking.services.implementations.RoleServiceImpl;
 import com.application.hotelbooking.services.repositoryservices.RoleRepositoryService;
 import org.assertj.core.api.Assertions;

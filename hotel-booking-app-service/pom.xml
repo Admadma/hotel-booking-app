@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.application</groupId>
-            <artifactId>hotel-booking-app-domain</artifactId>
+            <artifactId>hotel-booking-app-persistence</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

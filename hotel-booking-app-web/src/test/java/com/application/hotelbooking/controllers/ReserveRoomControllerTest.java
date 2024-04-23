@@ -1,8 +1,8 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.*;
 import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.exceptions.OutdatedReservationException;
+import com.application.hotelbooking.models.ReservationModel;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.transformers.HotelsWithReservableRoomsDTOTransformer;
@@ -33,6 +33,9 @@ public class ReserveRoomControllerTest {
     private static final LocalDate START_DATE = LocalDate.of(2024, 3, 1);
     private static final LocalDate END_DATE = LocalDate.of(2024, 3, 5);
     private static final String USER_NAME = "testUser";
+    private static final com.application.hotelbooking.models.RoomType SINGLE_ROOM_MODEL = com.application.hotelbooking.models.RoomType.SINGLE_ROOM;
+    private static final com.application.hotelbooking.views.RoomType SINGLE_ROOM_VIEW = com.application.hotelbooking.views.RoomType.SINGLE_ROOM;
+
     private static final ReservationModel RESERVATION_MODEL = new ReservationModel();
 
     private static UniqueReservableRoomOfHotelDTO UNIQUE_RESERVABLE_ROOM_OF_HOTEL_DTO = UniqueReservableRoomOfHotelDTO.builder()
@@ -41,7 +44,7 @@ public class ReserveRoomControllerTest {
             .doubleBeds(0)
             .pricePerNight(10)
             .totalPrice(40)
-            .roomType(RoomType.SINGLE_ROOM)
+            .roomType(SINGLE_ROOM_VIEW)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .build();
@@ -51,7 +54,7 @@ public class ReserveRoomControllerTest {
             .doubleBeds(0)
             .pricePerNight(10)
             .totalPrice(40)
-            .roomType(RoomType.SINGLE_ROOM)
+            .roomType(SINGLE_ROOM_MODEL)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .build();
