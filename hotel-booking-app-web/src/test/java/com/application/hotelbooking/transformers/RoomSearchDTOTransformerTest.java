@@ -1,7 +1,5 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.dto.ReservableRoomDTO;
-import com.application.hotelbooking.dto.ReservableRoomViewDTO;
 import com.application.hotelbooking.dto.RoomSearchFormDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import org.assertj.core.api.Assertions;
@@ -11,8 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-
-import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

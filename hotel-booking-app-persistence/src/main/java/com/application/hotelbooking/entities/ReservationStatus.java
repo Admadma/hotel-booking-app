@@ -1,4 +1,4 @@
-package com.application.hotelbooking.domain;
+package com.application.hotelbooking.entities;
 
 public enum ReservationStatus {
     PLANNED,

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootConfiguration
-@EntityScan("com.application.hotelbooking.domain")
+@EntityScan("com.application.hotelbooking.entities")
 @EnableJpaRepositories("com.application.hotelbooking.repositories")
 public class DomainTestConfiguration {
 }

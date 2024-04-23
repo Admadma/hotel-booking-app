@@ -1,8 +1,8 @@
 package com.application.hotelbooking.repositories;
 
-import com.application.hotelbooking.domain.Hotel;
-import com.application.hotelbooking.domain.Room;
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.entities.Hotel;
+import com.application.hotelbooking.entities.Room;
+import com.application.hotelbooking.entities.RoomType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

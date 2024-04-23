@@ -1,7 +1,7 @@
 package com.application.hotelbooking.repositories;
 
-import com.application.hotelbooking.domain.ConfirmationToken;
-import com.application.hotelbooking.domain.User;
+import com.application.hotelbooking.entities.ConfirmationToken;
+import com.application.hotelbooking.entities.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -7,6 +7,7 @@ import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.services.repositoryservices.RoomRepositoryService;
 import com.application.hotelbooking.transformers.RoomTransformer;
+import com.application.hotelbooking.transformers.RoomTypeTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class RoomRepositoryServiceImpl implements RoomRepositoryService {
 
     @Autowired
     private RoomTransformer roomTransformer;
+
+    @Autowired
+    private RoomTypeTransformer roomTypeTransformer;
 
     public Optional<RoomModel> getRoomById(Long roomId){
         return roomTransformer.transformToOptionalRoomModel(roomRepository.findById(roomId));
@@ -46,7 +50,7 @@ public class RoomRepositoryServiceImpl implements RoomRepositoryService {
     public List<Long> getRoomsWithConditions(RoomSearchFormServiceDTO roomSearchFormServiceDTO) {
         return roomRepository.findRoomsWithConditions(roomSearchFormServiceDTO.getSingleBeds(),
                 roomSearchFormServiceDTO.getDoubleBeds(),
-                roomSearchFormServiceDTO.getRoomType(),
+                roomTypeTransformer.transformToRoomTypeEntity(roomSearchFormServiceDTO.getRoomType()),
                 roomSearchFormServiceDTO.getHotelName(),
                 roomSearchFormServiceDTO.getCity());
     }
@@ -54,7 +58,7 @@ public class RoomRepositoryServiceImpl implements RoomRepositoryService {
     public List<Long> getRoomsWithConditions(int singleBeds, int doubleBeds, RoomType roomType, String hotelName, String city) {
         return roomRepository.findRoomsWithConditions(singleBeds,
                 doubleBeds,
-                roomType,
+                roomTypeTransformer.transformToRoomTypeEntity(roomType),
                 hotelName,
                 city);
     }

@@ -1,6 +1,6 @@
 package com.application.hotelbooking.repositories;
 
-import com.application.hotelbooking.domain.Hotel;
+import com.application.hotelbooking.entities.Hotel;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

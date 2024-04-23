@@ -1,7 +1,7 @@
 package com.application.hotelbooking.repositories;
 
-import com.application.hotelbooking.domain.Room;
-import com.application.hotelbooking.domain.RoomType;
+import com.application.hotelbooking.entities.Room;
+import com.application.hotelbooking.entities.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

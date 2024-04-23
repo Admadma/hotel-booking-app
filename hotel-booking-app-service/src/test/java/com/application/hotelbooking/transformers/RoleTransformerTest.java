@@ -1,6 +1,6 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.Role;
+import com.application.hotelbooking.entities.Role;
 import com.application.hotelbooking.domain.RoleModel;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.Reservation;
+import com.application.hotelbooking.entities.Reservation;
 import com.application.hotelbooking.domain.ReservationModel;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

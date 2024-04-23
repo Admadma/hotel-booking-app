@@ -1,6 +1,6 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.domain.Review;
+import com.application.hotelbooking.entities.Review;
 import com.application.hotelbooking.domain.ReviewModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

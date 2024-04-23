@@ -1,5 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices;
 
+import com.application.hotelbooking.entities.*;
 import com.application.hotelbooking.domain.*;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.ReservationRepositoryServiceImpl;

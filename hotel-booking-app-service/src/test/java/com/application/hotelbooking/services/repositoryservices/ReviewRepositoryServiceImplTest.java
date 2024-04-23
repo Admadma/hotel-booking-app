@@ -1,7 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.HotelModel;
-import com.application.hotelbooking.domain.Review;
+import com.application.hotelbooking.entities.Review;
 import com.application.hotelbooking.domain.ReviewModel;
 import com.application.hotelbooking.repositories.ReviewRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.ReviewRepositoryServiceImpl;

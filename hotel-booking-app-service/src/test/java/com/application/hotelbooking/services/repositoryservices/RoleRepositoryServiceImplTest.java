@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.Role;
+import com.application.hotelbooking.entities.Role;
 import com.application.hotelbooking.domain.RoleModel;
 import com.application.hotelbooking.repositories.RoleRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.RoleRepositoryServiceImpl;

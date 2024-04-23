@@ -1,6 +1,6 @@
 package com.application.hotelbooking.repositories;
 
-import com.application.hotelbooking.domain.Role;
+import com.application.hotelbooking.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

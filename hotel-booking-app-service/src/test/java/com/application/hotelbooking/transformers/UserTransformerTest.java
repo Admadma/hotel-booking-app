@@ -1,6 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.entities.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
