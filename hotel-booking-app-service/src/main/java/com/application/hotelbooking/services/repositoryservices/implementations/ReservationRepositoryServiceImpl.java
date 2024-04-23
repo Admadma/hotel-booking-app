@@ -1,11 +1,9 @@
 package com.application.hotelbooking.services.repositoryservices.implementations;
 
-import com.application.hotelbooking.domain.ReservationModel;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.ReservationModel;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.services.repositoryservices.ReservationRepositoryService;
 import com.application.hotelbooking.transformers.ReservationTransformer;
-import com.application.hotelbooking.transformers.UserTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

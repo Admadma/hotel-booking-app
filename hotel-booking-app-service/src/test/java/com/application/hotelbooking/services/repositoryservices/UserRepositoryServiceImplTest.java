@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.entities.User;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.repositories.UserRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.UserRepositoryServiceImpl;
 import com.application.hotelbooking.transformers.UserTransformer;

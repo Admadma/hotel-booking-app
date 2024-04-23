@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.ConfirmationTokenModel;
+import com.application.hotelbooking.models.ConfirmationTokenModel;
 
 import java.util.Optional;
 

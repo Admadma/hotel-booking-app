@@ -1,8 +1,8 @@
 package com.application.hotelbooking.services.implementations;
 
-import com.application.hotelbooking.domain.HotelModel;
-import com.application.hotelbooking.domain.ReviewModel;
-import com.application.hotelbooking.domain.RoomModel;
+import com.application.hotelbooking.models.HotelModel;
+import com.application.hotelbooking.models.ReviewModel;
+import com.application.hotelbooking.models.RoomModel;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import com.application.hotelbooking.exceptions.InvalidHotelException;
 import com.application.hotelbooking.services.HotelService;

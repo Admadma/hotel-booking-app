@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services.implementations;
 
-import com.application.hotelbooking.domain.RoleModel;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.RoleModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.exceptions.*;
 
 import com.application.hotelbooking.services.UserService;

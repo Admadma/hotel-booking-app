@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.UserModel;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface UserEmailConfirmationSenderService {

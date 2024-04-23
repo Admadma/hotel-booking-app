@@ -1,7 +1,9 @@
 package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.entities.*;
-import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.models.ReservationModel;
+import com.application.hotelbooking.models.RoomModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.repositories.ReservationRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.ReservationRepositoryServiceImpl;
 import com.application.hotelbooking.transformers.ReservationTransformer;

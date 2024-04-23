@@ -1,8 +1,8 @@
 package com.application.hotelbooking.services.implementations;
 
-import com.application.hotelbooking.domain.ReservationModel;
-import com.application.hotelbooking.domain.ReservationStatus;
-import com.application.hotelbooking.domain.RoomModel;
+import com.application.hotelbooking.models.ReservationModel;
+import com.application.hotelbooking.models.ReservationStatus;
+import com.application.hotelbooking.models.RoomModel;
 import com.application.hotelbooking.dto.*;
 import com.application.hotelbooking.exceptions.InvalidReservationException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;

@@ -1,6 +1,6 @@
 package com.application.hotelbooking.controllers;
 
-import com.application.hotelbooking.domain.HotelModel;
+import com.application.hotelbooking.models.HotelModel;
 import com.application.hotelbooking.domain.HotelView;
 import com.application.hotelbooking.domain.RoomType;
 import com.application.hotelbooking.dto.*;
@@ -31,13 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(HomeController.class)
 public class HomeControllerTest {
 
+    private static final com.application.hotelbooking.models.RoomType FAMILY_ROOM_MODEL = com.application.hotelbooking.models.RoomType.FAMILY_ROOM;
+    private static final com.application.hotelbooking.models.RoomType SINGLE_ROOM_MODEL = com.application.hotelbooking.models.RoomType.SINGLE_ROOM;
+    private static final com.application.hotelbooking.domain.RoomType FAMILY_ROOM_DOMAIN = com.application.hotelbooking.domain.RoomType.FAMILY_ROOM;
     private static final LocalDate START_DATE = LocalDate.now().plusDays(7);
     private static final LocalDate END_DATE = LocalDate.now().plusDays(14);
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "", "", START_DATE, END_DATE);
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, null, null, START_DATE, END_DATE);
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_WITH_FOUR_INVALID_FIELDS = new RoomSearchFormDTO(-1, -1, RoomType.FAMILY_ROOM, "", "", null, null);
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_START_DATE_AFTER_END_DATE = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", END_DATE, START_DATE);
-    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_START_END_DATE_SAME = new RoomSearchFormDTO(1, 1, RoomType.FAMILY_ROOM, "Test Hotel", "Test City", START_DATE, START_DATE);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO = new RoomSearchFormDTO(1, 1, FAMILY_ROOM_DOMAIN, "", "", START_DATE, END_DATE);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL = new RoomSearchFormDTO(1, 1, FAMILY_ROOM_DOMAIN, null, null, START_DATE, END_DATE);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_WITH_FOUR_INVALID_FIELDS = new RoomSearchFormDTO(-1, -1, FAMILY_ROOM_DOMAIN, "", "", null, null);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_START_DATE_AFTER_END_DATE = new RoomSearchFormDTO(1, 1, FAMILY_ROOM_DOMAIN, "Test Hotel", "Test City", END_DATE, START_DATE);
+    private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_START_END_DATE_SAME = new RoomSearchFormDTO(1, 1, FAMILY_ROOM_DOMAIN, "Test Hotel", "Test City", START_DATE, START_DATE);
     private static final RoomSearchFormDTO ROOM_SEARCH_FORM_DTO_ONLY_START_END_DATE = RoomSearchFormDTO.builder().startDate(START_DATE).endDate(END_DATE).build();
     private static final RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO_ONLY_START_END_DATE = RoomSearchFormServiceDTO.builder().startDate(START_DATE).endDate(END_DATE).build();
     private static final RoomSearchFormServiceDTO ROOM_SEARCH_FORM_SERVICE_DTO = RoomSearchFormServiceDTO.builder()
@@ -45,7 +48,7 @@ public class HomeControllerTest {
             .doubleBeds(ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL.getDoubleBeds())
             .hotelName(ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL.getHotelName())
             .city(ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL.getCity())
-            .roomType(ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL.getRoomType())
+            .roomType(FAMILY_ROOM_MODEL)
             .startDate(ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL.getStartDate())
             .endDate(ROOM_SEARCH_FORM_DTO_REPLACED_EMPTY_STRINGS_WITH_NULL.getEndDate())
             .build();
@@ -61,7 +64,7 @@ public class HomeControllerTest {
             .doubleBeds(0)
             .pricePerNight(10)
             .totalPrice(40)
-            .roomType(RoomType.SINGLE_ROOM)
+            .roomType(FAMILY_ROOM_DOMAIN)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .build();
@@ -71,7 +74,7 @@ public class HomeControllerTest {
             .doubleBeds(0)
             .pricePerNight(10)
             .totalPrice(40)
-            .roomType(RoomType.SINGLE_ROOM)
+            .roomType(SINGLE_ROOM_MODEL)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .build();

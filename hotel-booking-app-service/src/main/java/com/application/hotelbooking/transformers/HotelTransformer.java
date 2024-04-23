@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.entities.Hotel;
-import com.application.hotelbooking.domain.HotelModel;
+import com.application.hotelbooking.models.HotelModel;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

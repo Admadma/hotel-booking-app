@@ -1,9 +1,10 @@
 package com.application.hotelbooking.services.repositoryservices;
 
 import com.application.hotelbooking.entities.*;
-import com.application.hotelbooking.domain.*;
 import com.application.hotelbooking.dto.RoomCreationServiceDTO;
 import com.application.hotelbooking.dto.RoomSearchFormServiceDTO;
+import com.application.hotelbooking.models.HotelModel;
+import com.application.hotelbooking.models.RoomModel;
 import com.application.hotelbooking.repositories.RoomRepository;
 import com.application.hotelbooking.services.repositoryservices.implementations.RoomRepositoryServiceImpl;
 import com.application.hotelbooking.transformers.RoomTransformer;
@@ -27,7 +28,7 @@ public class RoomRepositoryServiceImplTest {
     private static final String HOTEL_NAME = "Test hotel";
     private static final String NONEXISTENT_HOTEL_NAME = "Test hotel";
     private static final String CITY = "Test city";
-    private static final com.application.hotelbooking.domain.RoomType FAMILY_ROOM_MODEL = com.application.hotelbooking.domain.RoomType.FAMILY_ROOM;
+    private static final com.application.hotelbooking.models.RoomType FAMILY_ROOM_MODEL = com.application.hotelbooking.models.RoomType.FAMILY_ROOM;
     private static final com.application.hotelbooking.entities.RoomType FAMILY_ROOM_ENTITY = com.application.hotelbooking.entities.RoomType.FAMILY_ROOM;
     private static final HotelModel HOTEL_MODEL = HotelModel.builder().hotelName(HOTEL_NAME).build();
     private static final Hotel HOTEL = Hotel.builder().hotelName(HOTEL_NAME).build();

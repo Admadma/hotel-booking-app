@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.RoleModel;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.RoleModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.exceptions.CredentialMismatchException;
 import com.application.hotelbooking.exceptions.EmailAlreadyExistsException;
 import com.application.hotelbooking.exceptions.InvalidUserException;

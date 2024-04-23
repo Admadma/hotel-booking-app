@@ -1,6 +1,5 @@
 package com.application.hotelbooking.transformers;
 
-import com.application.hotelbooking.entities.Room;
 import com.application.hotelbooking.entities.RoomType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RoomTypeTransformerTest {
 
-    private static final com.application.hotelbooking.domain.RoomType FAMILY_ROOM_DOMAIN = com.application.hotelbooking.domain.RoomType.FAMILY_ROOM;
+    private static final com.application.hotelbooking.models.RoomType FAMILY_ROOM_MODEL = com.application.hotelbooking.models.RoomType.FAMILY_ROOM;
     private static final com.application.hotelbooking.entities.RoomType FAMILY_ROOM_ENTITY = com.application.hotelbooking.entities.RoomType.FAMILY_ROOM;
     private static final Class<com.application.hotelbooking.entities.RoomType> ROOM_TYPE_ENTITY_CLASS = com.application.hotelbooking.entities.RoomType.class;
 
@@ -35,11 +34,11 @@ public class RoomTypeTransformerTest {
 
     @Test
     public void testTransformToRoomTypeEntityShouldTransformReceivedRoomTypeToRoomTypeEntityInstance(){
-        when(modelMapper.map(FAMILY_ROOM_DOMAIN, ROOM_TYPE_ENTITY_CLASS)).thenReturn(FAMILY_ROOM_ENTITY);
+        when(modelMapper.map(FAMILY_ROOM_MODEL, ROOM_TYPE_ENTITY_CLASS)).thenReturn(FAMILY_ROOM_ENTITY);
 
-        RoomType resultRoomType = roomTypeTransformer.transformToRoomTypeEntity(FAMILY_ROOM_DOMAIN);
+        RoomType resultRoomType = roomTypeTransformer.transformToRoomTypeEntity(FAMILY_ROOM_MODEL);
 
-        verify(modelMapper).map(FAMILY_ROOM_DOMAIN, ROOM_TYPE_ENTITY_CLASS);
+        verify(modelMapper).map(FAMILY_ROOM_MODEL, ROOM_TYPE_ENTITY_CLASS);
         Assertions.assertThat(resultRoomType).isNotNull();
         Assertions.assertThat(resultRoomType).isEqualTo(FAMILY_ROOM_ENTITY);
     }

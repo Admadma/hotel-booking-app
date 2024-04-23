@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.models.*;
 import com.application.hotelbooking.services.implementations.ReservationConfirmationEmailServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

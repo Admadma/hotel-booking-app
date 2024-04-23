@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.entities.Role;
-import com.application.hotelbooking.domain.RoleModel;
+import com.application.hotelbooking.models.RoleModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

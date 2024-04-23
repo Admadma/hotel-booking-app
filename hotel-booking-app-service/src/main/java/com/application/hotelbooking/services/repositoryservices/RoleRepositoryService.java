@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.RoleModel;
+import com.application.hotelbooking.models.RoleModel;
 
 import java.util.Collection;
 import java.util.List;

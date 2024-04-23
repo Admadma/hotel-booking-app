@@ -1,10 +1,7 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.RoleModel;
+import com.application.hotelbooking.models.RoleModel;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.List;
 
 public interface RoleService {
     @Transactional

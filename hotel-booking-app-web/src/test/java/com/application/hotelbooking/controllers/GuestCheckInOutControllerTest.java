@@ -1,6 +1,7 @@
 package com.application.hotelbooking.controllers;
 
 import com.application.hotelbooking.domain.*;
+import com.application.hotelbooking.models.ReservationModel;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.CheckInOutService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
@@ -25,13 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GuestCheckInOutController.class)
 public class GuestCheckInOutControllerTest {
 
+    private static final com.application.hotelbooking.domain.ReservationStatus COMPLETED_RESERVATION_STATUS_DOMAIN = com.application.hotelbooking.domain.ReservationStatus.COMPLETED;
+    private static final com.application.hotelbooking.domain.RoomType FAMILY_ROOM_DOMAIN = com.application.hotelbooking.domain.RoomType.FAMILY_ROOM;
     private static final UUID TEST_UUID = UUID.fromString("2a167ea9-850c-4059-8163-6f941561c419");
     private static final LocalDate START_DATE= LocalDate.of(2024, 3, 1);
     private static final LocalDate END_DATE = LocalDate.of(2024, 3, 2);
     private static final ReservationModel RESERVATION_MODEL = new ReservationModel();
     private static final UserView USER_VIEW = UserView.builder().username("TEST_USER_NAME").build();
     private static final HotelView HOTEL_VIEW = HotelView.builder().hotelName("TEST_HOTEL").build();
-    private static final RoomView ROOM_VIEW = RoomView.builder().roomNumber(1).singleBeds(2).doubleBeds(1).roomType(RoomType.FAMILY_ROOM).hotel(HOTEL_VIEW).build();
+    private static final RoomView ROOM_VIEW = RoomView.builder().roomNumber(1).singleBeds(2).doubleBeds(1).roomType(FAMILY_ROOM_DOMAIN).hotel(HOTEL_VIEW).build();
     private static final ReservationView RESERVATION_VIEW = ReservationView.builder()
             .uuid(TEST_UUID)
             .room(ROOM_VIEW)
@@ -39,7 +42,7 @@ public class GuestCheckInOutControllerTest {
             .startDate(START_DATE)
             .endDate(END_DATE)
             .totalPrice(100)
-            .reservationStatus(ReservationStatus.COMPLETED)
+            .reservationStatus(COMPLETED_RESERVATION_STATUS_DOMAIN)
             .build();
 
 

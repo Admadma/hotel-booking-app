@@ -1,7 +1,7 @@
 package com.application.hotelbooking.transformers;
 
 import com.application.hotelbooking.entities.ConfirmationToken;
-import com.application.hotelbooking.domain.ConfirmationTokenModel;
+import com.application.hotelbooking.models.ConfirmationTokenModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

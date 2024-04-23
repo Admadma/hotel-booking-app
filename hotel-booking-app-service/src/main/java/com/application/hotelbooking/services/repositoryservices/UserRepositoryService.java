@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.UserModel;
 
 import java.util.Optional;
 

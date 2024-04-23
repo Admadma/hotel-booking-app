@@ -1,4 +1,4 @@
-package com.application.hotelbooking.domain;
+package com.application.hotelbooking.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @Builder

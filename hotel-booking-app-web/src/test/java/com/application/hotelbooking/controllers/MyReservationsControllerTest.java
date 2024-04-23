@@ -4,6 +4,7 @@ import com.application.hotelbooking.domain.*;
 import com.application.hotelbooking.exceptions.InvalidReservationException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;
 import com.application.hotelbooking.exceptions.InvalidUserException;
+import com.application.hotelbooking.models.ReservationModel;
 import com.application.hotelbooking.security.SecurityConfiguration;
 import com.application.hotelbooking.services.ReservationService;
 import com.application.hotelbooking.transformers.ReservationViewTransformer;
@@ -31,10 +32,12 @@ public class MyReservationsControllerTest {
 
     private static final Long RESERVATION_ID = 1L;
     private static final String TEST_USER_NAME = "test_user";
+    private static final com.application.hotelbooking.domain.RoomType FAMILY_ROOM_DOMAIN = com.application.hotelbooking.domain.RoomType.FAMILY_ROOM;
+    private static final com.application.hotelbooking.domain.ReservationStatus PLANNED_RESERVATION_STATUS_DOMAIN = com.application.hotelbooking.domain.ReservationStatus.PLANNED;
     private static final UUID TEST_UUID = UUID.fromString("2a167ea9-850c-4059-8163-6f941561c419");
     private static final LocalDate START_DATE = LocalDate.of(2024, 3, 1);
     private static final LocalDate END_DATE = LocalDate.of(2024, 3, 2);
-    private static final ReservationModel RESERVATION_MODEL = ReservationModel.builder().reservationStatus(ReservationStatus.PLANNED).build();
+    private static final ReservationModel RESERVATION_MODEL = ReservationModel.builder().reservationStatus(com.application.hotelbooking.models.ReservationStatus.PLANNED).build();
     private static final List<ReservationModel> RESERVATION_MODEL_LIST = List.of(RESERVATION_MODEL);
     private static final HotelView HOTEL_VIEW = HotelView.builder()
             .hotelName("Test Hotel")
@@ -43,14 +46,14 @@ public class MyReservationsControllerTest {
     private static final RoomView ROOM_VIEW = RoomView.builder()
             .roomNumber(1)
             .hotel(HOTEL_VIEW)
-            .roomType(RoomType.FAMILY_ROOM)
+            .roomType(FAMILY_ROOM_DOMAIN)
             .build();
     private static final ReservationView RESERVATION_VIEW = ReservationView.builder()
             .room(ROOM_VIEW)
             .startDate(START_DATE)
             .endDate(END_DATE)
             .totalPrice(100)
-            .reservationStatus(ReservationStatus.PLANNED)
+            .reservationStatus(PLANNED_RESERVATION_STATUS_DOMAIN)
             .build();
     private static final List<ReservationView> RESERVATION_VIEW_LIST = List.of(RESERVATION_VIEW);
 

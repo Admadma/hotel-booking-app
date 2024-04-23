@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.ReviewModel;
+import com.application.hotelbooking.models.ReviewModel;
 
 public interface ReviewService {
 

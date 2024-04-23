@@ -1,7 +1,7 @@
 package com.application.hotelbooking.services;
 
-import com.application.hotelbooking.domain.ConfirmationTokenModel;
-import com.application.hotelbooking.domain.UserModel;
+import com.application.hotelbooking.models.ConfirmationTokenModel;
+import com.application.hotelbooking.models.UserModel;
 import com.application.hotelbooking.exceptions.EmailAlreadyConfirmedException;
 import com.application.hotelbooking.exceptions.ExpiredTokenException;
 import com.application.hotelbooking.exceptions.InvalidTokenException;

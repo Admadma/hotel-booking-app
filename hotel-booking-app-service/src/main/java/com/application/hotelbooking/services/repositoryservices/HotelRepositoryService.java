@@ -1,6 +1,6 @@
 package com.application.hotelbooking.services.repositoryservices;
 
-import com.application.hotelbooking.domain.HotelModel;
+import com.application.hotelbooking.models.HotelModel;
 import com.application.hotelbooking.dto.HotelCreationServiceDTO;
 
 import java.util.List;
