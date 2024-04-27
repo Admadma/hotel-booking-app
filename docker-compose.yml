@@ -21,7 +21,7 @@ services:
 
   app:
     build: .
-    restart: on-failure:10
+    restart: unless-stopped
     volumes:
       - ./logs:/app/logs
       - files-volume:/app/images
