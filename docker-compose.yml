@@ -6,7 +6,7 @@ volumes:
 
 services:
   docker-mysql:
-    image: mysql:8
+    image: mysql:8.3
     env_file:
       - .env
     environment:
