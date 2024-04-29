@@ -2,15 +2,7 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-COPY hotel-booking-app-persistence .
-
-COPY hotel-booking-app-service .
-
-COPY hotel-booking-app-web .
-
-COPY pom.xml .
-
-COPY lombok.config .
+COPY . .
 
 RUN mvn clean install -DskipTests
 
