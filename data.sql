@@ -25,10 +25,10 @@ INSERT INTO confirmation_tokens (token, user_id, created_at, expires_at)
 INSERT INTO hotels (hotel_name, city, image_name, average_rating) VALUES
     ('Csillagfény Szálló', 'Debrecen', 'hotel_image_1.png', 0.0),
     ('Kristályhegy Fogadó', 'Budapest', 'hotel_image_2.png', 0.0),
-    ('Hotel 3', 'City 2', 'hotel_image_3.png', 0.0),
-    ('Hotel 4', 'City 2', 'hotel_image_4.png', 0.0),
-    ('Hotel 5', 'City 3', 'hotel_image_5.png', 0.0),
-    ('Hotel 6', 'City 4', 'hotel_image_6.png', 0.0);
+    ('Gyöngyvirág Szálloda', 'Debrecen', 'hotel_image_3.png', 0.0),
+    ('Vadvirág Wellness Hotel', 'Budapest', 'hotel_image_4.png', 0.0),
+    ('Zöldmező Fogadó és Étterem', 'Szeged', 'hotel_image_5.png', 0.0),
+    ('Gyémánt Palota Hotel', 'Győr', 'hotel_image_6.png', 0.0);
 
 INSERT INTO rooms (room_number, single_beds, double_beds, price_per_night, room_type, version, hotel_id) VALUES
     (1, 1, 0, 10000, 'SINGLE_ROOM', 1, 1),
