@@ -10,7 +10,7 @@
     <parent>
         <groupId>com.application</groupId>
         <artifactId>hotel-booking-app</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <properties>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.application</groupId>
             <artifactId>hotel-booking-app-persistence</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
