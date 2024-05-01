@@ -61,7 +61,7 @@ public class RoomServiceImplTest {
             .singleBeds(2)
             .doubleBeds(1)
             .roomType(RoomType.FAMILY_ROOM)
-            .pricePerNight(150)
+            .pricePerNight(100)
             .hotel(HOTEL_ONE)
             .build());
     private static final Optional<RoomModel> AVAILABLE_ROOM_3_HOTEL_1 = Optional.of(RoomModel.builder()
