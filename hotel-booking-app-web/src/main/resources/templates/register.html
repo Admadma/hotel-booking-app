@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <title th:text="#{title.register}" />
+</head>
+<body style="background-color: #73D89F">
+<div th:insert="~{fragments/navbar ::navbar}"/>
+
+<div class="container" style="width: 28rem; padding-top: 3em; justify-content: center; background-color: #white;">
+    <form th:class="list-group-item" th:action="@{/hotelbooking/register/create-new-user}" th:object="${newUserFormDTO}" method="POST">
+        <p th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}" class="alert alert-danger"/>
+        <label for="username" th:text="#{registration.username}"/>
+        <input class="form-control" type="text" th:field="*{username}" id="username">
+        <p  th:if="${#fields.hasErrors('username')}" th:class="${#fields.hasErrors('username')}? error" th:errors="*{username}" style="color: red;"></p>
+
+        <label for="password" th:text="#{registration.password}"/>
+        <input class="form-control" type="password" th:field="*{password}" id="password">
+        <p  th:if="${#fields.hasErrors('password')}" th:class="${#fields.hasErrors('password')}? error" th:errors="*{password}" style="color: red;"></p>
+
+        <label for="email" th:text="#{registration.email}"/>
+        <input class="form-control" type="text" th:field="*{email}" id="email">
+        <p  th:if="${#fields.hasErrors('email')}" th:class="${#fields.hasErrors('email')}? error" th:errors="*{email}" style="color: red;"></p>
+
+        <div class="row justify-content-center" style="padding: 1.5em;">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.8rem;" value="createuser" th:text="#{registration.button.sign.up}"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>

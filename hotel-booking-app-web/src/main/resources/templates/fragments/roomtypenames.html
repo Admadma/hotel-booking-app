@@ -1,0 +1,7 @@
+<div th:fragment="roomtypenames (roomType)" th:switch="${#strings.toString(roomType)}">
+  <td th:case="'DOUBLE_ROOM'" th:text="#{roomname.doubleroom}"/>
+  <td th:case="'FAMILY_ROOM'" th:text="#{roomname.familyroom}"/>
+  <td th:case="'SINGLE_ROOM'" th:text="#{roomname.singleroom}"/>
+  <td th:case="'SUITE_ROOM'" th:text="#{roomname.suiteroom}"/>
+  <td th:case="'TWIN_ROOM'" th:text="#{roomname.twinroom}"/>
+</div>
