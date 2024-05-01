@@ -39,6 +39,7 @@ public class RoomServiceImpl implements RoomService {
                 .number(roomModel.getRoomNumber()) // Despite the UniqueReservableRoomOfHotelServiceDTO not containing actual rooms, but their common attributes, I still use the roomNumber of the first room added to the list in order to easily look up the room attributes later.
                 .singleBeds(roomModel.getSingleBeds())
                 .doubleBeds(roomModel.getDoubleBeds())
+                .pricePerNight(roomModel.getPricePerNight())
                 .totalPrice(reservationService.calculateTotalPrice(
                         roomSearchFormServiceDTO.getStartDate(),
                         roomSearchFormServiceDTO.getEndDate(),
