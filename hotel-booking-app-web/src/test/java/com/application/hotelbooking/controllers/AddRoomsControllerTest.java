@@ -94,12 +94,11 @@ public class AddRoomsControllerTest {
                         .post("/hotelbooking/admin/add-rooms/create-new-room")
                         .flashAttr("roomCreationDTO", Matchers.any(RoomCreationDTO.class)))
                 .andExpect(status().isForbidden());
-
     }
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void testCreateNewHotelShouldReturnToAddHotelsPageWithErrorIfBindingResultHasErrors() throws Exception {
+    public void testCreateNewRoomShouldReturnToAddRoomsPageWithErrorIfBindingResultHasErrors() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/hotelbooking/admin/add-rooms/create-new-room")
                         .flashAttr("roomCreationDTO", ROOM_CREATION_DTO_WITH_FIVE_INVALID_FIELDS))
