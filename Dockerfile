@@ -22,6 +22,6 @@ RUN chmod +x copy_files.sh
 
 COPY data.sql .
 
-COPY --from=build /app/hotel-booking-app-web/target/hotel-booking-app-web-0.0.1-SNAPSHOT.jar hotel-booking-app.jar
+COPY --from=build /app/hotel-booking-app-web/target/*.jar hotel-booking-app.jar
 
 ENTRYPOINT ["java", "-jar", "hotel-booking-app.jar"]
